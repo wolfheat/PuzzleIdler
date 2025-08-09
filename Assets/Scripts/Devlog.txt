@@ -1,0 +1,46 @@
+PuzzleIdler 2025
+
+DEVLOG FOR Idle Game with a puzzle touch
+
+Aug 2025
+
+* IDEAS
+- Make an idle game that has some puzzle or other game mechanics in it.
+
+10/8	* Project started
+		* Made basic visualization for numbers and made a timerclass
+		* Added BigDouble class to handle large numbers
+
+
+
+		// Decide how to refill health - timer or potions?
+		// Implement ORBs upgrades after deaths
+
+		JAM 9/6 - 15/6 22:00
+
+		* Add timer for enemy movement in relation to player movement ???
+
+		// MUST HAVE
+		* Implement several stages
+		* Game Name
+		* Itch page
+		* Main Menu 
+		* Currency gold and orbs
+		* Character Animations
+
+		// LIKE TO HAVE
+		* Bosses?
+		* Random generated levels?
+		* Biomes?
+		* Implement shop between levels - every or every 5th etc??
+		* Fix color Palette for Characters
+		* Damage dealt effects
+		* Random Generated dungeons
+		* Maybe issue - can have no sword equipped but still attacks with melee
+		* Allow rotations? Make smooth transitions	
+
+		// PROB NOT
+
+
+
+		
