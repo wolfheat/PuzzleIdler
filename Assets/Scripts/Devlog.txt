@@ -12,6 +12,10 @@ Aug 2025
 		* Added BigDouble class to handle large numbers
 
 
+		* Have numbers fixed in size so they dont move around when changing values.
+		* Add k,m,t, etc for numbers
+
+
 
 		// Decide how to refill health - timer or potions?
 		// Implement ORBs upgrades after deaths

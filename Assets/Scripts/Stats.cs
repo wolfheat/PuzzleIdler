@@ -15,28 +15,24 @@ public static class Stats
 
     public static string CoinsHeldAsString => ReturnAsString(CoinsHeld);
     public static string GemsHeldAsString => ReturnAsString(GemsHeld);
-    public static string CPSAsString => ReturnAsString(GPSFinalCalculation());
+    public static string CPSAsString => ReturnAsString(CPSFinalCalculation());
 
     public static Action CoinUpdated;
 
-    private static double GPSFinalCalculation()
+    private static double CPSFinalCalculation()
     {
-        return GPSBase * MultiplierA;
+        Debug.Log("Returning CPS base "+CPSBase+" mult="+MultiplierA);
+        return CPSBase * MultiplierA;
     }
 
     private static string ReturnAsString(BigDouble item)
     {
-        if (item < 10)
-            return item.ToString("F2");
-        if (item < 100)
-            return item.ToString("F1");
-        if (item < 1000)
-            return item.ToString("E3");
-        if (item < 1000000)
-            return item.ToString("E3");
+        Debug.Log("Trying to format item:" + item + " consisting of " + item.Mantissa+"e"+item.Exponent);
+        // Use the new numberformatter class to decide how to show the number
+
         
-        // scientifical here?         
-        return item.ToString("E3");
+
+        return NumberFormatter.Format(item);        
     }
 
     public static void Tick()
@@ -47,7 +43,7 @@ public static class Stats
 
     private static void AddCoins()
     {
-        Debug.Log("Addcoins");
+        //Debug.Log("Addcoins");
         CoinsHeld += CPSBase * MultiplierA;
         CoinUpdated.Invoke();
     }
