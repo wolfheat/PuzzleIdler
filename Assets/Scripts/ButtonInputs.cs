@@ -1,3 +1,4 @@
+using BreakInfinity;
 using UnityEngine;
 
 public class ButtonInputs : MonoBehaviour
@@ -9,7 +10,21 @@ public class ButtonInputs : MonoBehaviour
     }
     public void Add(int amt = 1)
     {
-        Debug.Log("Add "+amt);
-        Stats.AddCoins(amt);
+        BigDouble toAdd = amt;
+        // If shift is held mult with 1000000000
+        if (Inputs.Instance.PlayerControls.Player.Shift.IsPressed()) {
+            Debug.Log("Holding shift multiply by 1G");
+            toAdd *= 1000000000;
+        }
+        if (Inputs.Instance.PlayerControls.Player.Ctrl.IsPressed()) {
+            Debug.Log("Holding ctrl multiply by 1G");
+            toAdd *= 1000000000;
+        }
+        if (Inputs.Instance.PlayerControls.Player.Alt.IsPressed()) {
+            Debug.Log("Holding alt multiply by 1G");
+            toAdd *= 1000000000;
+        }
+        Debug.Log("Add "+ toAdd);
+        Stats.AddCoins(toAdd);
     }
 }

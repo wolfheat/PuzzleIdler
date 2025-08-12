@@ -14,6 +14,11 @@ Aug 2025
 
 		* Have numbers fixed in size so they dont move around when changing values.
 		* Add k,m,t, etc for numbers
+		* Expand k,m numbers
+12/8	* Fixed issues with numbers
+		* Added settings page
+
+
 
 
 

@@ -170,6 +170,33 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Shift"",
+                    ""type"": ""Button"",
+                    ""id"": ""e33700b1-7255-4f82-959a-2579db7502db"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Ctrl"",
+                    ""type"": ""Button"",
+                    ""id"": ""73bd6428-76de-461e-8ba9-e242d52ecf61"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Alt"",
+                    ""type"": ""Button"",
+                    ""id"": ""473c0e7f-933c-46c0-a630-daf12c2435a8"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -632,6 +659,39 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Six"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""1e61d96c-3f13-46ea-81ed-ca87ce38af8c"",
+                    ""path"": ""<Keyboard>/shift"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Shift"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""13becf4f-ebe9-45d0-a431-a657915db52a"",
+                    ""path"": ""<Keyboard>/ctrl"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Ctrl"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""6fd3b075-7154-4c65-ab66-20e77f259988"",
+                    ""path"": ""<Keyboard>/leftAlt"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Alt"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -1235,6 +1295,9 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         m_Player_Four = m_Player.FindAction("Four", throwIfNotFound: true);
         m_Player_Five = m_Player.FindAction("Five", throwIfNotFound: true);
         m_Player_Six = m_Player.FindAction("Six", throwIfNotFound: true);
+        m_Player_Shift = m_Player.FindAction("Shift", throwIfNotFound: true);
+        m_Player_Ctrl = m_Player.FindAction("Ctrl", throwIfNotFound: true);
+        m_Player_Alt = m_Player.FindAction("Alt", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -1330,6 +1393,9 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Four;
     private readonly InputAction m_Player_Five;
     private readonly InputAction m_Player_Six;
+    private readonly InputAction m_Player_Shift;
+    private readonly InputAction m_Player_Ctrl;
+    private readonly InputAction m_Player_Alt;
     public struct PlayerActions
     {
         private @PlayerControls m_Wrapper;
@@ -1350,6 +1416,9 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         public InputAction @Four => m_Wrapper.m_Player_Four;
         public InputAction @Five => m_Wrapper.m_Player_Five;
         public InputAction @Six => m_Wrapper.m_Player_Six;
+        public InputAction @Shift => m_Wrapper.m_Player_Shift;
+        public InputAction @Ctrl => m_Wrapper.m_Player_Ctrl;
+        public InputAction @Alt => m_Wrapper.m_Player_Alt;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1407,6 +1476,15 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @Six.started += instance.OnSix;
             @Six.performed += instance.OnSix;
             @Six.canceled += instance.OnSix;
+            @Shift.started += instance.OnShift;
+            @Shift.performed += instance.OnShift;
+            @Shift.canceled += instance.OnShift;
+            @Ctrl.started += instance.OnCtrl;
+            @Ctrl.performed += instance.OnCtrl;
+            @Ctrl.canceled += instance.OnCtrl;
+            @Alt.started += instance.OnAlt;
+            @Alt.performed += instance.OnAlt;
+            @Alt.canceled += instance.OnAlt;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -1459,6 +1537,15 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @Six.started -= instance.OnSix;
             @Six.performed -= instance.OnSix;
             @Six.canceled -= instance.OnSix;
+            @Shift.started -= instance.OnShift;
+            @Shift.performed -= instance.OnShift;
+            @Shift.canceled -= instance.OnShift;
+            @Ctrl.started -= instance.OnCtrl;
+            @Ctrl.performed -= instance.OnCtrl;
+            @Ctrl.canceled -= instance.OnCtrl;
+            @Alt.started -= instance.OnAlt;
+            @Alt.performed -= instance.OnAlt;
+            @Alt.canceled -= instance.OnAlt;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -1657,6 +1744,9 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         void OnFour(InputAction.CallbackContext context);
         void OnFive(InputAction.CallbackContext context);
         void OnSix(InputAction.CallbackContext context);
+        void OnShift(InputAction.CallbackContext context);
+        void OnCtrl(InputAction.CallbackContext context);
+        void OnAlt(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {

@@ -19,20 +19,25 @@ public static class Stats
 
     public static Action CoinUpdated;
 
+    private static NumberNotation activeNumberNotation = NumberNotation.Scientific;
+
+
+    public static void ActiveNumberNotation(NumberNotation newNotation)
+    {
+        Debug.Log("Changing stats notation to "+newNotation);
+        activeNumberNotation = newNotation;
+    }
+
     private static double CPSFinalCalculation()
     {
-        Debug.Log("Returning CPS base "+CPSBase+" mult="+MultiplierA);
+        //Debug.Log("Returning CPS base "+CPSBase+" mult="+MultiplierA);
         return CPSBase * MultiplierA;
     }
 
     private static string ReturnAsString(BigDouble item)
     {
-        Debug.Log("Trying to format item:" + item + " consisting of " + item.Mantissa+"e"+item.Exponent);
         // Use the new numberformatter class to decide how to show the number
-
-        
-
-        return NumberFormatter.Format(item);        
+        return NumberFormatter.Format(item,activeNumberNotation);        
     }
 
     public static void Tick()
@@ -45,13 +50,24 @@ public static class Stats
     {
         //Debug.Log("Addcoins");
         CoinsHeld += CPSBase * MultiplierA;
-        CoinUpdated.Invoke();
+        //Debug.Log("Invoke added coins");
+        CoinUpdated?.Invoke();
     }
 
-    internal static void AddCoins(int amt)
+    internal static void AddCoins(long amt)
     {
+        Debug.Log("Adding coins A");
         CoinsHeld += amt;
-        Debug.Log("Added "+ amt+ " coins > [" + CoinsHeld.ToString("F2")+ "]");
-        CoinUpdated.Invoke();
+        Debug.Log("Adding coins B");
+        //Debug.Log("Added "+ amt+ " coins > [" + CoinsHeld.ToString("F2")+ "]");
+        CoinUpdated?.Invoke();
+    }
+    internal static void AddCoins(BigDouble amt)
+    {
+        Debug.Log("Adding coins A");
+        CoinsHeld += amt;
+        Debug.Log("Adding coins B");
+        //Debug.Log("Added "+ amt+ " coins > [" + CoinsHeld.ToString("F2")+ "]");
+        CoinUpdated?.Invoke();
     }
 }

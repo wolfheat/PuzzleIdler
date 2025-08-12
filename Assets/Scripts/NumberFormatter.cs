@@ -1,11 +1,14 @@
-using System;
-using BreakInfinity; // make sure BreakInfinity.cs is in your project
+﻿using System;
+using BreakInfinity;
+using NUnit.Framework; // make sure BreakInfinity.cs is in your project
 
 public enum NumberNotation
 {
-    ShortScale,       // Million, Billion, Trillion...
-    ShortAbbreviation, // M, B, T...
-    Scientific        // 1.23e45
+    Scientific,   // 1.23e14
+    Mathematical, // M, B, T...
+    Engineering,  // 123e12
+    Alphabetical  // a,b,c...
+    // "Mathematical", "Scientifical", "Engineering", "Alphabetical" };
 }
 
 public static class NumberFormatter 
@@ -19,22 +22,51 @@ public static class NumberFormatter
         "Octodecillion", "Novemdecillion", "Vigintillion"
     };
 
+
+    // Abbreviations (match index with above names)
+    private static readonly string[] shortAbbr = {
+    "", "K", "M", "B", "T", "Qa", "Qi", "Sx", "Sp", "Oc", "No",
+    "Dc", "UnDc", "DoDc", "TrDc", "QaDc", "QiDc", "SxDc", "SpDc", "OcDc", "NoDc",
+    "Vg", "UnVg", "DoVg", "TrVg", "QaVg", "QiVg", "SxVg", "SpVg", "OcVg", "NoVg",
+    "Tg", "UnTg", "DoTg", "TrTg", "QaTg", "QiTg", "SxTg", "SpTg", "OcTg", "NoTg",
+    "Ce", "UnCe", "DoCe", "TrCe", "QaCe", "QiCe", "SxCe", "SpCe", "OcCe", "NoCe",
+    "De", "UnDe", "DoDe", "TrDe", "QaDe", "QiDe", "SxDe", "SpDe", "OcDe", "NoDe",
+    "Hc", "UnHc", "DoHc", "TrHc", "QaHc", "QiHc", "SxHc", "SpHc", "OcHc", "NoHc",
+    "Ic", "UnIc", "DoIc", "TrIc", "QaIc", "QiIc", "SxIc", "SpIc", "OcIc", "NoIc",
+    "Lc", "UnLc", "DoLc", "TrLc", "QaLc", "QiLc", "SxLc", "SpLc", "OcLc", "NoLc",
+    "Mc", "UnMc", "DoMc", "TrMc", "QaMc", "QiMc", "SxMc", "SpMc", "OcMc", "NoMc",
+    "Na", "UnNa", "DoNa", "TrNa", "QaNa", "QiNa", "SxNa", "SpNa", "OcNa", "NoNa",
+    "Pc", "UnPc", "DoPc", "TrPc", "QaPc", "QiPc", "SxPc", "SpPc", "OcPc", "NoPc",
+    "Fc", "UnFc", "DoFc", "TrFc", "QaFc", "QiFc", "SxFc", "SpFc", "OcFc", "NoFc",
+    "Rg", "UnRg", "DoRg", "TrRg", "QaRg", "QiRg", "SxRg", "SpRg", "OcRg", "NoRg",
+    "Og", "UnOg", "DoOg", "TrOg", "QaOg", "QiOg", "SxOg", "SpOg", "OcOg", "NoOg"
+};
+
+    /* OLD VERSION
     // Abbreviations (match index with above names)
     private static readonly string[] shortAbbr = {
         "", "K", "M", "B", "T", "Qa",
         "Qi", "Sx", "Sp", "Oc", "No",
-        "Dc", "UDc", "DDc", "TDc",
-        "QaDc", "QuDc", "SxDc", "SpDc",
-        "OcDc", "NvDc", "V"
-    };
+        "Dc", "UDc", "DDc", "TDc", "QaDc", 
+        "QuDc", "SxDc", "SpDc", "OcDc", "NvDc", 
+        "Vg", "UVg", "DVg", "TVg", "QaVg", 
+        "QuVg", "SxVg", "SpVg", "OcVg", "NvVg",
+        "Tg", "UTg", "DTg", "TTg", "QaTg",
+        "QuTg", "SxTg", "SpTg", "OcTg", "NvTg",
+        "Ce", "UCe", "DCe", "TCe", "QaCe",
+        "QuCe", "SxCe", "SpCe", "OcCe", "NvCe"
+
+    };*/
+
+    private const int AlphabeticScientificEndsAt = 11;
 
     public static Action<BigDouble> ReceivedValue; 
     public static Action<double,string> ReceivedDouble; 
 
-    public static string Format(BigDouble value, NumberNotation notation = NumberNotation.ShortAbbreviation, int decimals = 2)
+    public static string Format(BigDouble value, NumberNotation notation = NumberNotation.Scientific, int decimals = 2)
     {
 
-        ReceivedValue.Invoke(value);
+        //ReceivedValue?.Invoke(value);
 
         double displayValue = value.Mantissa;
 
@@ -45,58 +77,67 @@ public static class NumberFormatter
         }
 
         // Get exponent in base 10
-        int exponent = (int)Math.Floor(value.Log10());
-        int group = exponent / 3;
-        int truncateAway = group * 3;
-        int mantissaStepMult = exponent - truncateAway;
+        ReceivedDouble?.Invoke(value.Mantissa, "Mantissa is : ");
+        ReceivedDouble?.Invoke(value.Exponent, "Exponent is : ");
+        long exponent = (long)Math.Floor(value.Log10());
+        ReceivedDouble?.Invoke(exponent, "Exponent is : ");
 
-        double mantissaMultiplier = Math.Pow(10,mantissaStepMult);
-        double mantissaMultiplierToTruncate = Math.Pow(10,mantissaStepMult+2);
+        long group = exponent / 3;
+        long truncateAway = group * 3;
+        long mantissaStepMult = exponent - truncateAway;
+
+        double mantissa = value.Mantissa;
+
+        // Only needed for scientific or engineer
+        double mantissaMultiplier = Math.Pow(10, mantissaStepMult);
+        double mantissaMultiplierToTruncate = Math.Pow(10, mantissaStepMult + 2);
 
         // take the steps + decimals to truncate before showing?
         double truncatedMantissa = Math.Truncate(displayValue * mantissaMultiplierToTruncate);
+        double mathematicalDisplayValue = Math.Truncate(value.Mantissa * 100)/100;
         displayValue = truncatedMantissa / 100;
 
-
-        ReceivedDouble.Invoke(exponent,"Exponent: ");
-        ReceivedDouble.Invoke(group,"Group: ");
-        ReceivedDouble.Invoke(truncateAway ,"Truncate away: ");
-        ReceivedDouble.Invoke(mantissaMultiplier ,"Mantissa multiplier: ");
-
-        //displayValue = value.Mantissa*mantissaMultiplier;
-        ReceivedDouble.Invoke(displayValue ,"Displayvalue: ");
-
-        double mantissa = value.Mantissa;
-        /*
-        BigDouble scale = BigDouble.Pow(10, group * 3);
-        double scaled = mantissa / scale;
-
-        double truncatedMantissa = Math.Truncate((double)scaled * Math.Pow(10, decimals)) / Math.Pow(10, decimals);
-
-        string suffix = GetSuffixForGroup(group); // your suffix logic here
-        */
-
         switch (notation) {
-            case NumberNotation.ShortScale:
-                if (group < shortScaleNames.Length) {
-                    return $"{displayValue.ToString($"F{decimals}")} {shortScaleNames[group]}";
-                }
-                else {
-                    // fallback to scientific
-                    return displayValue.ToString($"E{decimals}");
-                }
-
-            case NumberNotation.ShortAbbreviation:
+            case NumberNotation.Scientific:
                 if (group < shortAbbr.Length) {
+                    ReceivedDouble?.Invoke(group, "Group is : ");
+                    ReceivedDouble?.Invoke(shortAbbr.Length, "Array Length is : ");
+                    displayValue = truncatedMantissa / 100;
                     return $"{displayValue.ToString($"F{decimals}")}{shortAbbr[group]}";
                 }
-                else {
-                    return displayValue.ToString($"E{decimals}");
+                else { // Fallback if out of strings to show
+                    
+                    return displayValue.ToString($"E{decimals}e{exponent}");
                 }
+            case NumberNotation.Engineering: {
+                    exponent = group * 3;
+                    return displayValue.ToString("0.00") + "e" + (exponent < 100 ? exponent.ToString("00") : exponent.ToString("000"));
+                    //return displayValue.ToString($"E{decimals}e{exponent}");
+                }
+            case NumberNotation.Alphabetical: {
+                    // convert group to alpha
+                    // 10³⁶ = aa (10^36)
+                    displayValue = truncatedMantissa / 100;
+                    if (group < AlphabeticScientificEndsAt) {
+                        return $"{displayValue.ToString($"F{decimals}")}{shortAbbr[group]}";
+                    }
+                    else {
+                        group -= AlphabeticScientificEndsAt;
+                        // convert number to aa system
+                        string alphaName = ""+(char)('a' + (group / 26)) + (char)('a' + (group % 26));
 
-            case NumberNotation.Scientific:
-            default:
-                return displayValue.ToString($"E{decimals}");
+                        return $"{displayValue.ToString($"F{decimals}")}{alphaName}";
+                    }
+                }
+            case NumberNotation.Mathematical:
+            default: {
+
+                    ReceivedDouble?.Invoke(exponent,"Exponent: ");
+                    ReceivedDouble?.Invoke(mantissa,"Mantrissa: ");
+                    return mathematicalDisplayValue.ToString("0.00") + "e" + (exponent<100 ? exponent.ToString("00"): exponent.ToString("000"));
+                    //return displayValue.ToString($"E{decimals}e{exponent}");
+                }
+            
         }
     }
     public static BigDouble TruncateMantissa(BigDouble value, int decimals)

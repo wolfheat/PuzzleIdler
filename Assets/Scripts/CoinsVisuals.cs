@@ -32,11 +32,12 @@ public class CoinsVisuals : MonoBehaviour
         Stats.CoinUpdated -= UpdateTexts;        
     }
 
-
     public void UpdateTexts()
     {
+        //Debug.Log("Updating Texts");
         coins.text = Stats.CoinsHeldAsString;
         cps.text = Stats.CPSAsString;
         gems.text = Stats.GemsHeldAsString;
+        //Debug.Log("Updating Texts-Complete");
     }
 }
