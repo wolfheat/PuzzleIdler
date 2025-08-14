@@ -65,9 +65,7 @@ public static class NumberFormatter
 
     public static string Format(BigDouble value, NumberNotation notation = NumberNotation.Scientific, int decimals = 2)
     {
-
-        //ReceivedValue?.Invoke(value);
-
+        // Formats the number into the selected notation
         double displayValue = value.Mantissa;
 
         if (value.Sign() == 0) return "0";
@@ -76,48 +74,33 @@ public static class NumberFormatter
             return $"{value.ToString($"F{decimals}")}";
         }
 
-        // Get exponent in base 10
-        ReceivedDouble?.Invoke(value.Mantissa, "Mantissa is : ");
-        ReceivedDouble?.Invoke(value.Exponent, "Exponent is : ");
-        long exponent = (long)Math.Floor(value.Log10());
-        ReceivedDouble?.Invoke(exponent, "Exponent is : ");
+        // Get exponent in base 10 - Do I need this at all?
+        //long exponent = (long)Math.Floor(value.Log10());
+        long exponent = value.Exponent;
 
+        // Calculates which group the number belongs to as well as the digits to remove before truncation
         long group = exponent / 3;
-        long truncateAway = group * 3;
-        long mantissaStepMult = exponent - truncateAway;
 
-        double mantissa = value.Mantissa;
+        // scientific or engineer - Transform the mantissa into a number to be truncated
+        double mantissaMultiplierToTruncate = Math.Pow(10, exponent - group * 3 + 2);
 
-        // Only needed for scientific or engineer
-        double mantissaMultiplier = Math.Pow(10, mantissaStepMult);
-        double mantissaMultiplierToTruncate = Math.Pow(10, mantissaStepMult + 2);
-
-        // take the steps + decimals to truncate before showing?
-        double truncatedMantissa = Math.Truncate(displayValue * mantissaMultiplierToTruncate);
-        double mathematicalDisplayValue = Math.Truncate(value.Mantissa * 100)/100;
-        displayValue = truncatedMantissa / 100;
+        // Truncates and divides the number to the final to be shown
+        displayValue = Math.Truncate(displayValue * mantissaMultiplierToTruncate) / 100;
 
         switch (notation) {
             case NumberNotation.Scientific:
                 if (group < shortAbbr.Length) {
-                    ReceivedDouble?.Invoke(group, "Group is : ");
-                    ReceivedDouble?.Invoke(shortAbbr.Length, "Array Length is : ");
-                    displayValue = truncatedMantissa / 100;
                     return $"{displayValue.ToString($"F{decimals}")}{shortAbbr[group]}";
                 }
-                else { // Fallback if out of strings to show
-                    
-                    return displayValue.ToString($"E{decimals}e{exponent}");
-                }
+                // Fallback if out of strings to show                    
+                return displayValue.ToString($"E{decimals}e{exponent}");
             case NumberNotation.Engineering: {
                     exponent = group * 3;
                     return displayValue.ToString("0.00") + "e" + (exponent < 100 ? exponent.ToString("00") : exponent.ToString("000"));
-                    //return displayValue.ToString($"E{decimals}e{exponent}");
                 }
             case NumberNotation.Alphabetical: {
                     // convert group to alpha
                     // 10³⁶ = aa (10^36)
-                    displayValue = truncatedMantissa / 100;
                     if (group < AlphabeticScientificEndsAt) {
                         return $"{displayValue.ToString($"F{decimals}")}{shortAbbr[group]}";
                     }
@@ -131,13 +114,10 @@ public static class NumberFormatter
                 }
             case NumberNotation.Mathematical:
             default: {
-
-                    ReceivedDouble?.Invoke(exponent,"Exponent: ");
-                    ReceivedDouble?.Invoke(mantissa,"Mantrissa: ");
+                    double mathematicalDisplayValue = Math.Truncate(value.Mantissa * 100) / 100;
                     return mathematicalDisplayValue.ToString("0.00") + "e" + (exponent<100 ? exponent.ToString("00"): exponent.ToString("000"));
                     //return displayValue.ToString($"E{decimals}e{exponent}");
-                }
-            
+                }            
         }
     }
     public static BigDouble TruncateMantissa(BigDouble value, int decimals)

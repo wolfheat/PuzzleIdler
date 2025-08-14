@@ -8,6 +8,11 @@ public class ButtonInputs : MonoBehaviour
     {
         Debug.Log("Clicked Button!");
     }
+    public void Mult(int amt = 1000)
+    {
+        Stats.AddCoins(Stats.CoinsHeld*amt);
+    }
+
     public void Add(int amt = 1)
     {
         BigDouble toAdd = amt;

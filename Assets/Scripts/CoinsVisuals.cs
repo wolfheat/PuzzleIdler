@@ -1,5 +1,6 @@
 using System;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class CoinsVisuals : MonoBehaviour
@@ -24,13 +25,23 @@ public class CoinsVisuals : MonoBehaviour
     private void OnEnable()
     {
         // Add listener for added coin event
-        Stats.CoinUpdated += UpdateTexts;
+        Stats.CoinUpdated += UpdateNeeded;
+    }
+    private bool doUpdate = false;
+    private void UpdateNeeded() => doUpdate = true;
+    private void LateUpdate()
+    {
+        if (doUpdate) {
+            UpdateTexts();
+        }
+        doUpdate = false;
     }
 
     private void OnDisable()
     {
         Stats.CoinUpdated -= UpdateTexts;        
     }
+
 
     public void UpdateTexts()
     {

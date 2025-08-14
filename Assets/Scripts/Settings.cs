@@ -24,7 +24,7 @@ public class Settings : MonoBehaviour
     {
         if(dropDown != null) {
             Debug.Log("Notations changed to "+dropDown.value);
-            Stats.ActiveNumberNotation((NumberNotation)dropDown.value);
+            Stats.SetActiveNumberNotation((NumberNotation)dropDown.value);
 
         }
     }

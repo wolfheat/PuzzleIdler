@@ -10,17 +10,36 @@ Aug 2025
 10/8	* Project started
 		* Made basic visualization for numbers and made a timerclass
 		* Added BigDouble class to handle large numbers
+12/8	* Fixed issues with numbers
+		* Added settings page
+13/8	* Made buildings Upgrades panel and implemented it
+
+		* Have issue with adding multipliers for income and gain, need to store them in a list SO etc
+		* SO stores data for levels between play turns, fix this?
+		* Implement saving
+
+
+
+		* Increment: Cost = BaseCost*multiplier^n
+		* n = cost for building number n
+
+		* Bulk buy =>  TotalCost = BaseCost * Multiplier^n*(multiplier^k-1)/(Multiplier -1)
+
+
+
+
+		3. Typical Multipliers
+
+		Slow growth (idle-heavy games): 1.05–1.10 (+5–10% per buy)
+
+		Medium growth (balanced): 1.12–1.15
+
+		Fast growth (prestige resets often): 1.2–1.5
+
 
 
 		* Have numbers fixed in size so they dont move around when changing values.
-		* Add k,m,t, etc for numbers
-		* Expand k,m numbers
-12/8	* Fixed issues with numbers
-		* Added settings page
-
-
-
-
+		
 
 		// Decide how to refill health - timer or potions?
 		// Implement ORBs upgrades after deaths
