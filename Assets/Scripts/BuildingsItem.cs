@@ -78,7 +78,7 @@ public class BuildingsItem : MonoBehaviour
         // Amount to Buy
         upgradeAmoutText.text = "Buy x" + buyAmt;
         upgradeCostText.text = Stats.ReturnAsString(cost);
-        upgradeGain.text = Stats.ReturnAsString(gain);
+        upgradeGain.text = "+"+Stats.ReturnAsString(gain);  
     }
 
     public void UpdateLevelText() => SetLevelText(BuildingDatas.Instance.owned[index]);

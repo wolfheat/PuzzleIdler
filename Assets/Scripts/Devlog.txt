@@ -14,13 +14,16 @@ Aug 2025
 		* Added settings page
 13/8	* Made buildings Upgrades panel and implemented it
 17/8	* Implemented basic save system
+18/8	* Solved serialization issue with BigDoubles
+		* File saving implemented, Gems and Coins upgrades, Time
+
+		// Issue, gains are added as their values when added, but multipliers the player buy afterwards does not act on these earlier gains. Need to recalculate the entire gain every time gain changes?
+
 
 		* Have issue with adding multipliers for income and gain, need to store them in a list SO etc
-		* SO stores data for levels between play turns, fix this?
-		* Implement saving
+		
 
-		// Implement saving to file
-
+		// SAVING
 			* Building levels
 				every time a building is built update the buildings levels in player game data
 			* Upgrades purchased
@@ -29,6 +32,9 @@ Aug 2025
 				contantly update this to the player game data so it is up to date when a save is happening?
 			* GPS coins, gems
 				This is derived from the upgrades only so dont need to save?
+				Only need the base income? Base income is also constant so no
+
+		- AutoSave at regular interval?
 
 
 		// Make sure adding buildings or upgrades does not break old save files

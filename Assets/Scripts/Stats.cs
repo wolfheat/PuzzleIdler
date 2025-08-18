@@ -37,7 +37,7 @@ public static class Stats
     public static void SetActiveNumberNotation(NumberNotation newNotation) => ActiveNumberNotation = newNotation;
     private static BigDouble CPSFinalCalculation() => CPSBase * CoinIncomeMultiplier;
 
-        
+
     public static string ReturnAsString(BigDouble item) => NumberFormatter.Format(item, ActiveNumberNotation); // Use the new numberformatter class to decide how to show the number
 
     public static void Tick() => AddCoins(); // Tick the timer once
@@ -66,10 +66,17 @@ public static class Stats
     }
     internal static void AddCoins(BigDouble amt)
     {
-        Debug.Log("Adding coins A");
+        Debug.Log("");
+        Debug.Log("Adding coins A have:" + CoinsHeld+" adding "+amt);
         CoinsHeld += amt;
-        Debug.Log("Adding coins B");
+        Debug.Log("Adding coins B now have: "+CoinsHeld);
         //Debug.Log("Added "+ amt+ " coins > [" + CoinsHeld.ToString("F2")+ "]");
+        CoinUpdated?.Invoke();
+    }
+    
+    internal static void AddGems(BigDouble amt)
+    {
+        GemsHeld += amt;
         CoinUpdated?.Invoke();
     }
 

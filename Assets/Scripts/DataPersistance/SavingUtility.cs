@@ -85,6 +85,10 @@ public class SavingUtility : MonoBehaviour
             {
                 Debug.Log("  PlayerGameData loaded - Valid data!");
                 playerGameData = data;
+                Debug.Log("*** Loaded coins held "+playerGameData.coins);
+                Debug.Log("*** mantissa "+playerGameData.coins.Mantissa+" e"+playerGameData.coins.Exponent);
+                Debug.Log("*** Loaded play time "+playerGameData.PlayTime);
+                Debug.Log("*** Save time "+playerGameData.SaveTime);
             }
             else
             {
@@ -140,7 +144,7 @@ public class SavingUtility : MonoBehaviour
         {
             yield return new WaitForSeconds(60f);
             playerGameData.AddPlayTimeMinutes(1);
-            //Debug.Log("Tick ONE minute played Total: "+playerGameData.PlayTime);
+            Debug.Log("Tick ONE minute played Total: "+playerGameData.PlayTime);
         }
     }
 

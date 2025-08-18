@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Numerics;
+using BreakInfinity;
 
 public class AchievementData
 {
@@ -116,30 +117,21 @@ public class PlayerGameData
         PlayTime = 0;
     }
 
-    // Players Inventory
-    /*
-    // Position
-    public float[] PlayerPosition { get; set; }
-    public SaveItem[][] Destructables { get; set; }
-    public SaveItem[][] Resources { get; set; }
-    public SaveEnemy[][] Enemies { get; set; }
-    
-    // Totals
-    public float[] PlayerRotation { get; set; }
-    public int PlayerHealth { get; set; }
-    public float PlayerOxygen { get; set; }
-    public InventorySave Inventory { get; set; }
-    public SaveDroppedItem[] Pickables { get; set; }
-    */
+    // Held coins
+    public BigDouble coins{ get; set; } 
 
-    
+    // Held Gems
+    public BigDouble gems{ get; set; } 
+
     // Save buildings levels
     public int[] buildings = new int[0];
     // Save bought upgrades
     public Dictionary<string, bool> upgrades = new Dictionary<string, bool>();
 
+    public const int AutoSaveInterval = 15;
 
     public int PlayTime { get; set; } 
+    public DateTime SaveTime { get; set; } = DateTime.Now;
 
     // Action Events
     public static Action SaveNeeded;
@@ -147,8 +139,14 @@ public class PlayerGameData
 
     public void AddPlayTimeMinutes(int amt)
     {
+        // Also update local time in the save
+        SaveTime = DateTime.Now;
+
         PlayTime += amt;
         MinuteWatched?.Invoke();
+        if(PlayTime % AutoSaveInterval == 0) {
+            SaveNeeded?.Invoke();
+        }
     }
 }
 

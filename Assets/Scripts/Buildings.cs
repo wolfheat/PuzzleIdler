@@ -36,8 +36,9 @@ public class Buildings : MonoBehaviour
     void Start()
     {
         GenerateBuildingsList();
-        //React to changed coin amount
+        // React to changed coin amount
         Stats.CoinUpdated += UpdateNeeded;
+        // Stats.CoinUpdated += () => { doUpdate = true; };
 
         // Start by also doing one of the updates
         UpdateAvailabilityAndStats();
@@ -47,6 +48,7 @@ public class Buildings : MonoBehaviour
     private bool doUpdateLevel = false;
     private void UpdateNeeded() => doUpdate = true;
     public void UpdateLevelNeeded() => doUpdateLevel = true;
+
     private void LateUpdate()
     {
         if (doUpdate || doUpdateLevel) {

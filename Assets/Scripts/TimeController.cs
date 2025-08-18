@@ -15,7 +15,7 @@ public class TimeController : MonoBehaviour
     private IEnumerator Tick()
     {
         while (true) {
-            Debug.Log("Tick");
+            //Debug.Log("Tick");
             
             // Update the text
             Stats.Tick();

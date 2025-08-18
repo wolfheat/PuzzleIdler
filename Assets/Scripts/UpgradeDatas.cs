@@ -33,7 +33,28 @@ public class UpgradeDatas : MonoBehaviour
         UpdateCoinMultiplierValue();
         UpdateGemMultiplierValue();
 
-        // Write these numbers to Stats?
+        SavingUtility.LoadingComplete += OnSaveFileLoaded;
+    }
+
+    private void OnSaveFileLoaded()
+    {
+        Debug.Log("UpgradeDatas received load from file complete");
+
+        // Handle incomplete load file
+        // Handle set values from savefile
+        dictionary = SavingUtility.playerGameData.upgrades;
+
+        Debug.Log("Upgrades from save amt = " + dictionary.Count);
+
+        foreach (var upgrade in dictionary.Keys) {
+
+            Debug.Log("Loaded upgrade with id: " + upgrade);
+            // Make sure all these upgrades counts = are activated
+        }
+
+        // Make sure the visual updates the level
+        Buildings.Instance.UpdateLevelNeeded();
+
     }
 
     private void FillDictionary()
@@ -125,6 +146,7 @@ public class UpgradeDatas : MonoBehaviour
             UpdateGemMultiplierValue();
         }
 
+        // Updates Upgrades dictionary to save
         SavingUtility.playerGameData.upgrades = dictionary;
 
         // Send save needed event

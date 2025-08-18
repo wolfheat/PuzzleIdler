@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using BreakInfinity;
 using UnityEngine;
 
@@ -9,7 +7,7 @@ public class Upgrades : MonoBehaviour
 	public static Upgrades Instance { get; private set; }
 
 	private UpgradeData selectedData;
-
+		
 
 
     private void Awake()

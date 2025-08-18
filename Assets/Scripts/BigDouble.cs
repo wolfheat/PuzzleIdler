@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Globalization;
 using Random = System.Random;
+using Newtonsoft.Json;
+
 
 /*
  ToString() Formats
@@ -36,7 +38,8 @@ using UnityEngine;
 
 namespace BreakInfinity
 {
-#if UNITY_2017_1_OR_NEWER
+#if UNITY
+//#if UNITY_2017_1_OR_NEWER
     [Serializable]
 #endif
     public struct BigDouble : IFormattable, IComparable, IComparable<BigDouble>, IEquatable<BigDouble>
@@ -55,8 +58,10 @@ namespace BreakInfinity
         private const long DoubleExpMin = -324;
 
 #if UNITY_2017_1_OR_NEWER
+        [JsonProperty]
         [SerializeField]
-        private double mantissa;
+        private double mantissa;    
+        [JsonProperty]
         [SerializeField]
         private long exponent;
 #else

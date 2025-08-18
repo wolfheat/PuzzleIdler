@@ -41,7 +41,10 @@ public class BuildingDatas : MonoBehaviour
         for (int i = 0; i < buildingsFromSave.Length; i++) {
             owned[i] = buildingsFromSave[i];
             Debug.Log("loaded "+ owned[i]+" for building type: "+i);
+            // Calculate how much the player benefit from the upgrades and apply that value
+            AddBuildingIncome(i, owned[i]);
         }
+
 
         // Make sure the visual updates the level
         Buildings.Instance.UpdateLevelNeeded();
@@ -114,13 +117,26 @@ public class BuildingDatas : MonoBehaviour
         Stats.RemoveCoins(cost);
         Stats.AddCPS(gain);
 
-        // Update Save file with this new info
-        SavingUtility.playerGameData.buildings = owned;
+        // Updates Buildings array to save        
+        SavingUtility.playerGameData.buildings = owned; // Update Save file with this new info
 
         // Send save needed event
         PlayerGameData.SaveNeeded?.Invoke();
 
         return true;
+    }
+    internal void AddBuildingIncome(int index, int amt)
+    {
+        Debug.Log("Requesting to set index " + index + " - " + amt + " times");
+
+        // Double check that player can afford before buying
+        BigDouble fullGain = GetGain(index, amt);
+
+        // Update to new level
+        //AddLevels(index,amt);
+
+        // Remove cost from player coins
+        Stats.AddCPS(fullGain);
     }
 
     private void AddLevels(int index, int amt) => owned[index] += amt;
@@ -133,7 +149,7 @@ public class BuildingDatas : MonoBehaviour
     public BigDouble GetGain(int index, int amt)//(BigDouble baseCost, int owned, int amt)
     {
         BigDouble baseCost = buildingsDatas[index].baseCost;
-// BaseIncome = BaseCost × TargetROI
+        // BaseIncome = BaseCost × TargetROI
         // calculation for linear static income
 
         BigDouble gain = baseCost * TargetROI * amt * Stats.AllBuildingGainMultipliers();
