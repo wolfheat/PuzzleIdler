@@ -1,12 +1,10 @@
-﻿using System;
-using BreakInfinity;
+﻿using BreakInfinity;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class BuildingsItem : MonoBehaviour
 {
-
     [SerializeField] private TextMeshProUGUI imageText;
     [SerializeField] private Image image;
 
@@ -41,7 +39,7 @@ public class BuildingsItem : MonoBehaviour
         SetImageText(buildingsData.BuildingName);
         SetImage(buildingsData.BuildingImage);
 
-        SetLevelText(buildingsData.Level);
+        SetLevelText(BuildingDatas.Instance.owned[i]);
     }
 
     private void SetAvailableColor(bool v) => upgradeButtonImage.color = v ? available : unAvailable;
@@ -60,21 +58,20 @@ public class BuildingsItem : MonoBehaviour
 
     private int GetNextTierLevel(int level)
     {
-        int fifties = (level / 50 +1)*50;
+        int fifties = (level / 50+1)*50;
         return level switch
         {
             0 => 1,
             < 10 => 10,
             < 25 => 25,
-            < 50 => fifties,
-            _ => 10000
+            _ => fifties
         };
     }
 
     internal void UpdateStats(bool canBuy, int buyAmt, BigDouble cost, BigDouble gain)
     {
         // Color of Buy Button
-        SetAvailableColor(canBuy);
+        SetAvailableColor(canBuy && buyAmt > 0);
 
         amt = buyAmt;
 
@@ -84,9 +81,5 @@ public class BuildingsItem : MonoBehaviour
         upgradeGain.text = Stats.ReturnAsString(gain);
     }
 
-    internal void AddLevels(int amt)
-    {
-        data.Level += amt;
-        SetLevelText(data.Level);
-    }
+    public void UpdateLevelText() => SetLevelText(BuildingDatas.Instance.owned[index]);
 }

@@ -7,6 +7,4 @@ public class BuildingsData : ScriptableObject
     public Sprite BuildingImage;
     public int baseCost;
     public double costIncrement;
-    [HideInInspector] public int Level = 1;
-
 }

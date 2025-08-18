@@ -28,4 +28,11 @@ public class Settings : MonoBehaviour
 
         }
     }
+
+    public void RequestSaveToFile()
+    {
+        
+        Debug.Log("Settings - Requesting save to file");
+        SavingUtility.Instance.SavePlayerDataToFile();
+    }
 }

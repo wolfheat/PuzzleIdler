@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7eabaad411b8cac44b2f2c5e5ca0fd02, type: 3}
+  m_Name: IncomeImprover
+  m_EditorClassIdentifier: 
+  UpgradeName: Income Advance
+  Image: {fileID: 21300000, guid: f3f13319283696f4db834b3100e8c24e, type: 3}
+  type: 0
+  cost: 150
+  value:
+    mantissa: 1.06
+    exponent: 0
+  unlocked: 0
+  Description: Increase CPS by 6%
