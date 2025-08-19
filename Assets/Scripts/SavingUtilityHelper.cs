@@ -14,6 +14,9 @@ public class SavingUtilityHelper : MonoBehaviour
 
     private void LoadingComplete()
     {
+        // Set the correct Numberformation
+        Stats.ActiveNumberNotation = SavingUtility.gameSettingsData.ActiveNumberNotation;
+
         Debug.Log("  SAVINGUTILITY HELPER - LOADING COMPLETE");
         
         // Set the stats values - to the old values

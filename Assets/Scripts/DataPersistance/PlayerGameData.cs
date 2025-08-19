@@ -157,6 +157,8 @@ public class PlayerGameData
 public class GameSettingsData
 {
     // General Game Settings
+    public NumberNotation ActiveNumberNotation  { get; set; } // Having these private set wont let the load method write these values
+
     public int ActiveTouchControl { get; set; } // Having these private set wont let the load method write these values
     public int CameraPos { get; set; } // Having these private set wont let the load method write these values
 
@@ -165,7 +167,7 @@ public class GameSettingsData
     public PlayerInputSettings playerInputSettings = new PlayerInputSettings(); // Use shake etc
 
     // Action Events
-    public static Action GameSettingsUpdated;
+    public static Action SaveNeeded;
 
     // General Settings - methods
     public void SetSoundSettings(float master, float music, float SFX,bool setFromFile=false)
@@ -174,6 +176,6 @@ public class GameSettingsData
         soundSettings.MusicVolume = music;
         soundSettings.SFXVolume = SFX;
         if(!setFromFile)
-            GameSettingsUpdated?.Invoke();
+            SaveNeeded?.Invoke();
     }
 }

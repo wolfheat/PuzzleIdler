@@ -12,7 +12,8 @@ public class AwayIncomeNotice : BaseNotice
     }
     public void SetValues(BigDouble coins, BigDouble gems)
     {
-        coinText.text = coins.ToString();
-        gemText.text = gems.ToString();
+        // also Format these to look correctly
+        coinText.text = Stats.ReturnAsString(coins);
+        gemText.text = Stats.ReturnAsString(gems);
     }
 }

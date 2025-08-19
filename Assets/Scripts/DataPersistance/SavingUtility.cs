@@ -123,7 +123,7 @@ public class SavingUtility : MonoBehaviour
         {
             // Add listener to update of data to save
             PlayerGameData.SaveNeeded += SavePlayerDataToFile;
-            GameSettingsData.GameSettingsUpdated += SaveSettingsDataToFile;
+            GameSettingsData.SaveNeeded += SaveSettingsDataToFile;
 
             HasLoaded = true;
 
