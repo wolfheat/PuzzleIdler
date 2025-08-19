@@ -121,7 +121,7 @@ public class BuildingDatas : MonoBehaviour
         SavingUtility.playerGameData.buildings = owned; // Update Save file with this new info
 
         // Send save needed event
-        PlayerGameData.SaveNeeded?.Invoke();
+        SavingUtility.playerGameData.TriggerSave();
 
         return true;
     }

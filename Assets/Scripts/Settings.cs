@@ -33,7 +33,7 @@ public class Settings : MonoBehaviour
     {
         
         Debug.Log("Settings - Requesting save to file");
-        PlayerGameData.SaveNeeded?.Invoke();
+        SavingUtility.playerGameData.TriggerSave();
         //SavingUtility.Instance.SavePlayerDataToFile();
     }
 }

@@ -137,15 +137,18 @@ public class PlayerGameData
     public static Action SaveNeeded;
     public static Action MinuteWatched;
 
+    public void TriggerSave()
+    {
+        SaveTime = DateTime.Now;
+        SaveNeeded?.Invoke();
+    }
+
     public void AddPlayTimeMinutes(int amt)
     {
-        // Also update local time in the save
-        SaveTime = DateTime.Now;
-
         PlayTime += amt;
         MinuteWatched?.Invoke();
         if(PlayTime % AutoSaveInterval == 0) {
-            SaveNeeded?.Invoke();
+            TriggerSave();
         }
     }
 }

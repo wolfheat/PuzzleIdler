@@ -16,8 +16,14 @@ Aug 2025
 17/8	* Implemented basic save system
 18/8	* Solved serialization issue with BigDoubles
 		* File saving implemented, Gems and Coins upgrades, Time
+		* Fixed issue with saving dateTime, and rewarding player correctly
+
 
 		// Issue, gains are added as their values when added, but multipliers the player buy afterwards does not act on these earlier gains. Need to recalculate the entire gain every time gain changes?
+
+		* Show welcome box with away income when loading a game
+
+		* EveryTime a save is made also update the DateTime
 
 
 		* Have issue with adding multipliers for income and gain, need to store them in a list SO etc

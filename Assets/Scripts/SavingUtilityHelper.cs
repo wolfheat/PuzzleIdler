@@ -1,8 +1,11 @@
 using System;
+using System.Collections;
 using UnityEngine;
 
 public class SavingUtilityHelper : MonoBehaviour
 {
+    private const int MaxAwayTime = 172800; // 2 days = 48h
+
     void Start()
     {
         Stats.CoinUpdated += PlayerCoinsChanged;
@@ -11,12 +14,31 @@ public class SavingUtilityHelper : MonoBehaviour
 
     private void LoadingComplete()
     {
-        Debug.Log("SAVINGUTILITY HELPER - LOADING COMPLETE");
-        // Set the stats values
+        Debug.Log("  SAVINGUTILITY HELPER - LOADING COMPLETE");
+        
+        // Set the stats values - to the old values
         Stats.AddCoins(SavingUtility.playerGameData.coins);
         Stats.AddGems(SavingUtility.playerGameData.gems);
+
+        long seconds = (long)(DateTime.Now - SavingUtility.playerGameData.SaveTime).TotalSeconds;
+        Debug.Log("Save Date = " + SavingUtility.playerGameData.SaveTime);
+        Debug.Log("Current Date = " + DateTime.Now);
+        Debug.Log("Seconds passed = "+seconds);
+
+        // Calculate the away income and give the player that
+        int secondsPassedAway = (int)Math.Clamp(seconds,0, MaxAwayTime);
+
+        // Delay this so stats has time to get updated
+        StartCoroutine(DelayedAddAwayCurrency(secondsPassedAway));
     }
-        
+
+    private IEnumerator DelayedAddAwayCurrency(int secondsPassedAway)
+    {
+        yield return new WaitForSeconds(0.3f);
+        Debug.Log("  SAVINGUTILITY HELPER - ADD AWAY CURRENCY");
+        Stats.AddAwayCurrency(secondsPassedAway);
+    }
+
     private void PlayerCoinsChanged()
     {
         if (!SavingUtility.HasLoaded) {

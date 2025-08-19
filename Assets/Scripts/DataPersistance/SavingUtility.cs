@@ -130,6 +130,9 @@ public class SavingUtility : MonoBehaviour
             // Load Up settings with this data? No do it 
 
             Debug.Log(" -- Loading From File Completed --");
+
+            // Handle AwayIncome
+
             LoadingComplete?.Invoke();
             //SoundMaster.Instance.ReadDataFromSave(); // Used to set sound settings aftyer loading from file
 

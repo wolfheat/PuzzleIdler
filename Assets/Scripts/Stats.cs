@@ -40,13 +40,20 @@ public static class Stats
 
     public static string ReturnAsString(BigDouble item) => NumberFormatter.Format(item, ActiveNumberNotation); // Use the new numberformatter class to decide how to show the number
 
-    public static void Tick() => AddCoins(); // Tick the timer once
+    public static void Tick() => AddCoinByTicks(); // Tick the timer once
 
-    private static void AddCoins()
+    private static BigDouble AddCoinByTicks(long ticks = 1)
     {
+        BigDouble added = CPSBase * CoinIncomeMultiplier * ticks;
         //Debug.Log("Addcoins");
-        CoinsHeld += CPSBase * CoinIncomeMultiplier;
+        CoinsHeld += added;
         //Debug.Log("Invoke added coins");
+        CoinUpdated?.Invoke();
+        return added;
+    }
+    public static void AddCoins(BigDouble amt)
+    {
+        CoinsHeld += amt;
         CoinUpdated?.Invoke();
     }
 
@@ -56,28 +63,44 @@ public static class Stats
         //Debug.Log("Added "+ amt+ " coins > [" + CoinsHeld.ToString("F2")+ "]");
         CoinUpdated?.Invoke();
     }
-    internal static void AddCoins(long amt)
+
+
+    private static BigDouble AddGemsByTicks(long ticks = 1)
     {
-        Debug.Log("Adding coins A");
-        CoinsHeld += amt;
-        Debug.Log("Adding coins B");
-        //Debug.Log("Added "+ amt+ " coins > [" + CoinsHeld.ToString("F2")+ "]");
+        BigDouble added = GPSBase * GemIncomeMultiplier * ticks;
+        //Debug.Log("Addcoins");
+        GemsHeld += added;
+        //Debug.Log("Invoke added coins");
         CoinUpdated?.Invoke();
+        return added;
     }
-    internal static void AddCoins(BigDouble amt)
-    {
-        Debug.Log("");
-        Debug.Log("Adding coins A have:" + CoinsHeld+" adding "+amt);
-        CoinsHeld += amt;
-        Debug.Log("Adding coins B now have: "+CoinsHeld);
-        //Debug.Log("Added "+ amt+ " coins > [" + CoinsHeld.ToString("F2")+ "]");
-        CoinUpdated?.Invoke();
-    }
-    
-    internal static void AddGems(BigDouble amt)
+    public static void AddGems(BigDouble amt)
     {
         GemsHeld += amt;
         CoinUpdated?.Invoke();
+    }
+
+    internal static void AddGPS(BigDouble amt)
+    {
+        GPSBase += amt;
+        CoinUpdated?.Invoke();
+    }
+
+    public static void AddAwayCurrency(long ticks)
+    {
+        // Adds the income from the save time to the current time
+        Debug.Log("Added CPS and GPS for away");
+        BigDouble coinsAdded = AddCoinByTicks(ticks);
+        BigDouble gemsAdded = AddGemsByTicks(ticks);
+
+        Debug.Log("Coins "+coinsAdded+" for "+ticks+"s");
+
+        // Send a notice to player on these addons
+        NoticeController.Instance.ShowAwayIncomeNotice(coinsAdded,gemsAdded);
+
+        // Also Re-save this new info
+        SavingUtility.playerGameData.TriggerSave();
+
     }
 
     internal static bool CanAfford(int finalCoinCost)

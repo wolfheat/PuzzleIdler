@@ -150,6 +150,6 @@ public class UpgradeDatas : MonoBehaviour
         SavingUtility.playerGameData.upgrades = dictionary;
 
         // Send save needed event
-        PlayerGameData.SaveNeeded?.Invoke();
+        SavingUtility.playerGameData.TriggerSave();
     }
 }
