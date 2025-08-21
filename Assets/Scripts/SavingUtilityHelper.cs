@@ -20,8 +20,7 @@ public class SavingUtilityHelper : MonoBehaviour
         Debug.Log("  SAVINGUTILITY HELPER - LOADING COMPLETE");
         
         // Set the stats values - to the old values
-        Stats.AddCoins(SavingUtility.playerGameData.coins);
-        Stats.AddGems(SavingUtility.playerGameData.gems);
+        Stats.SetCoinsAndGems(SavingUtility.playerGameData.coins, SavingUtility.playerGameData.gems);
 
         long seconds = (long)(DateTime.Now - SavingUtility.playerGameData.SaveTime).TotalSeconds;
         Debug.Log("Save Date = " + SavingUtility.playerGameData.SaveTime);
@@ -49,7 +48,7 @@ public class SavingUtilityHelper : MonoBehaviour
             return;
         }
         SavingUtility.playerGameData.coins = Stats.CoinsHeld;
-        Debug.Log("Updating held currency to save file " + SavingUtility.playerGameData.coins);
+        //Debug.Log("Updating held currency to save file " + SavingUtility.playerGameData.coins);
         SavingUtility.playerGameData.gems = Stats.GemsHeld;
     }
 }

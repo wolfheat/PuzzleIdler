@@ -18,7 +18,8 @@ Aug 2025
 		* File saving implemented, Gems and Coins upgrades, Time
 		* Fixed issue with saving dateTime, and rewarding player correctly
 19/8	* Away Income now formats correctly for large numbers
-		* Settings now saves and load correctly for Active notation
+		* Settings now saves and load Active notation correctly
+20/8	
 
 
 		// Issue, gains are added as their values when added, but multipliers the player buy afterwards does not act on these earlier gains. Need to recalculate the entire gain every time gain changes?

@@ -13,6 +13,9 @@ public class ButtonInputs : MonoBehaviour
         Stats.AddCoins(Stats.CoinsHeld*amt);
     }
 
+    public void ResetCoins() => Stats.RemoveCoins(Stats.CoinsHeld);
+    public void ResetGems() => Stats.RemoveGems(Stats.GemsHeld);
+
     public void Add(int amt = 1)
     {
         BigDouble toAdd = amt;

@@ -25,12 +25,12 @@ public class NoticeController : MonoBehaviour
         //SavingUtility.LoadingComplete += ShowAwayIncomeNotice; // Call this by another method need to calculate the away income
     }
 
-    public void ShowAwayIncomeNotice(BigDouble coins, BigDouble gems)
+    public void ShowAwayIncomeNotice(BigDouble coins, BigDouble gems, long ticks)
     {
         AwayIncomeNotice notice = Instantiate(awayIncomeNoticePrefab,transform);
 
         // Send in the away values here
-        notice.SetValues(coins,gems);
+        notice.SetValues(coins,gems,ticks);
     }
 
     private void ShowSaveNotice()

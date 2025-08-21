@@ -51,9 +51,20 @@ public static class Stats
         CoinUpdated?.Invoke();
         return added;
     }
+
+    public static void SetCoinsAndGems(BigDouble coins, BigDouble gems)
+    {
+        CoinsHeld += coins;
+        GemsHeld += gems;
+
+        // Make sure not to call this before all values are written from the save file, since it overwrites all values on change
+        //CoinUpdated?.Invoke();
+    }
+
     public static void AddCoins(BigDouble amt)
     {
         CoinsHeld += amt;
+        Debug.Log("   Adding coins " + amt);
         CoinUpdated?.Invoke();
     }
 
@@ -76,6 +87,7 @@ public static class Stats
     }
     public static void AddGems(BigDouble amt)
     {
+        Debug.Log("   Adding gems "+amt);
         GemsHeld += amt;
         CoinUpdated?.Invoke();
     }
@@ -96,7 +108,7 @@ public static class Stats
         Debug.Log("Coins "+coinsAdded+" for "+ticks+"s");
 
         // Send a notice to player on these addons
-        NoticeController.Instance.ShowAwayIncomeNotice(coinsAdded,gemsAdded);
+        NoticeController.Instance.ShowAwayIncomeNotice(coinsAdded,gemsAdded,ticks);
 
         // Also Re-save this new info
         SavingUtility.playerGameData.TriggerSave();

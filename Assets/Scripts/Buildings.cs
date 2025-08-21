@@ -37,7 +37,7 @@ public class Buildings : MonoBehaviour
     {
         GenerateBuildingsList();
         // React to changed coin amount
-        Stats.CoinUpdated += UpdateNeeded;
+        Stats.CoinUpdated += UpdateLevelNeeded;
         // Stats.CoinUpdated += () => { doUpdate = true; };
 
         // Start by also doing one of the updates
@@ -62,7 +62,7 @@ public class Buildings : MonoBehaviour
     {
         for (int i = 0; i < buildings.Count; i++) {
             BuildingsItem item = buildings[i];
-            int buyAmt = Math.Min(1,BuildingDatas.Instance.GetBuyAmt(i,ActiveUpgradeMode));// Minimum to buy will allways be 1
+            int buyAmt = Math.Max(1,BuildingDatas.Instance.GetBuyAmt(i,ActiveUpgradeMode));// Minimum to buy will allways be 1
 
             BigDouble cost = BuildingDatas.Instance.GetCost(i, buyAmt);
             bool canBuy = Stats.CoinsHeld >= cost;
