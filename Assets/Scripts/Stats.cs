@@ -78,6 +78,8 @@ public static class Stats
 
     private static BigDouble AddGemsByTicks(long ticks = 1)
     {
+        // Maybe not have gems GPS added when away??
+
         BigDouble added = GPSBase * GemIncomeMultiplier * ticks;
         //Debug.Log("Addcoins");
         GemsHeld += added;

@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using System.Collections;
+using UnityEditor;
 
 public class SavingUtility : MonoBehaviour
 {
@@ -30,6 +31,24 @@ public class SavingUtility : MonoBehaviour
     {
         Debug.Log("Savingutility - Start");
         StartCoroutine(LoadFromFile());
+    }
+
+    public void PlayerInitiatedQuit()
+    {
+        Debug.Log("Saving on Quit");
+        PlayerGameData.SaveNeeded?.Invoke();
+        StartCoroutine(DelayedQuit());
+    }
+
+    private IEnumerator DelayedQuit()
+    {
+        yield return new WaitForSeconds(1.5f);
+#if UNITY_EDITOR
+        EditorApplication.ExitPlaymode();
+#else
+        Application.Quit();
+#endif
+        Debug.Log("Quit");
     }
 
     public void ResetSaveFile()

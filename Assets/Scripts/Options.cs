@@ -10,7 +10,7 @@ public class Options : MonoBehaviour
     public void SelectOption(int newSelected)
     {
         // if not same close all and open it
-
+        Debug.Log("Select Panel "+newSelected);
         if(newSelected == active)
             return;
 

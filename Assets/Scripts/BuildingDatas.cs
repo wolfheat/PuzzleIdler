@@ -1,6 +1,7 @@
-using System;
+﻿using System;
 using BreakInfinity;
 using UnityEngine;
+
 public class BuildingDatas : MonoBehaviour
 {
 	[SerializeField] private BuildingsData[] buildingsDatas;
@@ -36,8 +37,7 @@ public class BuildingDatas : MonoBehaviour
         int[] buildingsFromSave = SavingUtility.playerGameData.buildings;
 
         Debug.Log("buildings from save amt = "+buildingsFromSave.Length);
-
-
+        
         for (int i = 0; i < buildingsFromSave.Length; i++) {
             owned[i] = buildingsFromSave[i];
             Debug.Log("loaded "+ owned[i]+" for building type: "+i);
@@ -149,7 +149,7 @@ public class BuildingDatas : MonoBehaviour
     public BigDouble GetGain(int index, int amt)//(BigDouble baseCost, int owned, int amt)
     {
         BigDouble baseCost = buildingsDatas[index].baseCost;
-        // BaseIncome = BaseCost � TargetROI
+        // BaseIncome = BaseCost × TargetROI
         // calculation for linear static income
 
         BigDouble gain = baseCost * TargetROI * amt * Stats.AllBuildingGainMultipliers();

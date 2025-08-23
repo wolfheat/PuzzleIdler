@@ -6,6 +6,7 @@ public class Settings : MonoBehaviour
 {
 
     [SerializeField] private TMP_Dropdown dropDown; 
+    [SerializeField] private GameObject confirmQuitPanel; 
     private readonly List<string> dropDownOptionsNames = new List<string>{ "Scientifical 99.99M", "Mathematical 9.99e07", "Engineering 99.99e6", "Alphabetical" };
 
 
@@ -47,4 +48,7 @@ public class Settings : MonoBehaviour
         SavingUtility.playerGameData.TriggerSave();
         //SavingUtility.Instance.SavePlayerDataToFile();
     }
+
+    public void OpenConfirmQuitPanel() => confirmQuitPanel.SetActive(true);
+    public void ExitGameAndSave() => SavingUtility.Instance.PlayerInitiatedQuit();
 }

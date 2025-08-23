@@ -19,7 +19,12 @@ Aug 2025
 		* Fixed issue with saving dateTime, and rewarding player correctly
 19/8	* Away Income now formats correctly for large numbers
 		* Settings now saves and load Active notation correctly
-20/8	
+23/8	* Added research tab and implemented automatic loading from researchData 
+		
+		* Have closing application do a save before the close
+
+        // Maybe not have gems GPS added when away??
+
 
 
 		// Issue, gains are added as their values when added, but multipliers the player buy afterwards does not act on these earlier gains. Need to recalculate the entire gain every time gain changes?

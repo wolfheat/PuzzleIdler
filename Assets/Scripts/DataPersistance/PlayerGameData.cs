@@ -125,9 +125,13 @@ public class PlayerGameData
 
     // Save buildings levels
     public int[] buildings = new int[0];
+
     // Save bought upgrades
     public Dictionary<string, bool> upgrades = new Dictionary<string, bool>();
 
+    // Save bought upgrades
+    public Dictionary<string, int> researches = new Dictionary<string, int>();
+    
     public const int AutoSaveInterval = 15;
 
     public int PlayTime { get; set; } 

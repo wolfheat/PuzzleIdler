@@ -1,28 +1,19 @@
 ﻿using BreakInfinity;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
-public class BuildingsItem : MonoBehaviour
+public class BuildingsItem : BaseItem
 {
-    [SerializeField] private TextMeshProUGUI imageText;
-    [SerializeField] private Image image;
+    [Header("BUILDINGS")]
 
     [SerializeField] private TextMeshProUGUI levelText;
     [SerializeField] private TextMeshProUGUI upgradeGain;
     [SerializeField] private TextMeshProUGUI upgradeAmoutText;
-    [SerializeField] private TextMeshProUGUI upgradeCostText;
-    
-    [SerializeField] private Image upgradeButtonImage;
-    [SerializeField] private Color available;
-    [SerializeField] private Color unAvailable;
+    [SerializeField] private TextMeshProUGUI upgradeCostText;    
     BuildingsData data;
     int index;
     int amt = 1;
-    public BuildingsData Data => data;
-    private void SetImageText(string newText) => imageText.text = newText;
-    private void SetImage(Sprite sprite) => image.sprite = sprite;
-    
+    public BuildingsData Data => data;    
 
     public void ClickedUpgrade()
     {
@@ -40,14 +31,6 @@ public class BuildingsItem : MonoBehaviour
         SetImage(buildingsData.BuildingImage);
 
         SetLevelText(BuildingDatas.Instance.owned[i]);
-    }
-
-    private void SetAvailableColor(bool v) => upgradeButtonImage.color = v ? available : unAvailable;
-
-    private void SetUpgradeBenefitValue()
-    {
-        Debug.Log("Calculate what benefit an upgrade click would do, depends on current upgrade mode");
-        upgradeGain.text = "+1.23 UDc";
     }
 
     private void SetLevelText(int level)
