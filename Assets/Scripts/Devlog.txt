@@ -19,9 +19,14 @@ Aug 2025
 		* Fixed issue with saving dateTime, and rewarding player correctly
 19/8	* Away Income now formats correctly for large numbers
 		* Settings now saves and load Active notation correctly
-23/8	* Added research tab and implemented automatic loading from researchData 
-		
-		* Have closing application do a save before the close
+23/8	* Application saves before closing
+		* Added research tab and implemented automatic loading from researchData 
+		* Research list Items now show correctly
+
+		* Make sure rewards are rewarded for resources
+		* Make sure description text for rewards show correctly with different text fonts
+
+		* Make percent show on each resourceDataItem
 
         // Maybe not have gems GPS added when away??
 

@@ -1,6 +1,8 @@
 ﻿using System;
-using BreakInfinity;
 using UnityEngine;
+
+
+public enum ResearchRewardType { CPS, GPS }
 
 [CreateAssetMenu(menuName = "ResearchData", fileName = "Scriptable Objects/")]
 public class ResearchData : ScriptableObject
@@ -10,6 +12,8 @@ public class ResearchData : ScriptableObject
     public BigDoubleStruct baseCost;
     public double costIncrementMultiplier;
     public int steps = 1;
+    public ResearchRewardType RewardType;
+    public float RewardValueInPercent;
 
     internal int GetCost(int ownedAmt)
     {

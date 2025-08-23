@@ -19,3 +19,5 @@ MonoBehaviour:
     Exponent: 2
   costIncrementMultiplier: 1.25
   steps: 5
+  RewardType: 0
+  RewardValueInPercent: 100

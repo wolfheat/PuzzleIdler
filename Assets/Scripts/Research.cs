@@ -59,7 +59,7 @@ public class Research : MonoBehaviour
             BigDouble cost = ResearchDatas.Instance.GetCost(researchItem.Data);
             bool canBuy = Stats.CoinsHeld >= cost;
 
-            researchItem.UpdateStats(canBuy, cost);
+            researchItem.UpdateStats(canBuy, cost, amtOwned);
         }
     }
 

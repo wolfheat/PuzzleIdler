@@ -1075,9 +1075,9 @@ MonoBehaviour:
   researchName: {fileID: 6530745093969307900}
   researchDescription: {fileID: 8874439910611831040}
   upgradeCostText: {fileID: 5581442161203926841}
-  upgradeSlider: {fileID: 5881763220991811199}
+  slider: {fileID: 5881763220991811199}
   sliderText: {fileID: 3616884832701036565}
-  upgradeButtonCompletedImage: {fileID: 0}
+  upgradeButtonCompletedImage: {fileID: 1911124702270296435}
 --- !u!1 &5783127320041952860
 GameObject:
   m_ObjectHideFlags: 0

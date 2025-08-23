@@ -29,11 +29,11 @@ public class ResearchItem : BaseItem
     [SerializeField] private TextMeshProUGUI researchDescription;
 
     [SerializeField] private TextMeshProUGUI upgradeCostText;
-    [SerializeField] private Slider upgradeSlider;
+    [SerializeField] private Slider slider;
     [SerializeField] private TextMeshProUGUI sliderText;
     
     ResearchData data;
-
+    int amtStepsOwned = 0;
     public ResearchData Data => data;
 
     [SerializeField] private Image upgradeButtonCompletedImage;
@@ -41,6 +41,9 @@ public class ResearchItem : BaseItem
     {
         upgradeButtonImage.gameObject.SetActive(false);
         upgradeButtonCompletedImage.gameObject.SetActive(true);
+
+        // Set the amount text percent
+        SetPercentCompleteText(data.steps);
     }
 
     public void ClickedUpgrade()
@@ -56,7 +59,7 @@ public class ResearchItem : BaseItem
         data = resourceData;    
         
         // Set the percent complete text here
-        SetCompleteText(owned);
+        SetPercentCompleteText(owned);
 
         // Image Text is the name here
         SetImageText(resourceData.ResearchName);
@@ -64,13 +67,21 @@ public class ResearchItem : BaseItem
         SetImage(resourceData.ResearchImage);
     }
 
-    private void SetCompleteText(int owned)
+    private void SetPercentCompleteText(int owned)
     {
         // Figure out the complete text here
-        float percent = owned / data.steps /100;
+        float fraction = (float)owned / data.steps;
+        float percent = fraction * 100;
+        float benefit = fraction * data.RewardValueInPercent;
+
+        amtStepsOwned = owned;
+
+        Debug.Log("*** percent is "+percent+" benefit = "+benefit.ToString("F2"));  
 
         // If maxed dont show anything
-        sliderText.text = owned == 100 ? "" : percent.ToString(); 
+        sliderText.text = (owned == 0) ? "" : benefit.ToString("F2");
+
+        slider.value = fraction;
     }
 
     // Only called when not maxed
@@ -84,12 +95,17 @@ public class ResearchItem : BaseItem
     }
 
     // Only called when not maxed
-    internal void UpdateStats(bool canBuy, BigDouble cost)
+    internal void UpdateStats(bool canBuy, BigDouble cost, int amtOwned)
     {
         // Color of Buy Button
         SetAvailableColor(canBuy);
 
         // Cost of next Upgrade
         upgradeCostText.text = Stats.ReturnAsString(cost);
+
+        if (amtStepsOwned == amtOwned) return;
+
+        // Set the amount text percent
+        SetPercentCompleteText(amtOwned);
     }
 }

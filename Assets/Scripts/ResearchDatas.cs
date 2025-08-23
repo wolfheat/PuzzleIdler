@@ -124,7 +124,11 @@ public class ResearchDatas : MonoBehaviour
         dictionaryAmount[researchName]++;
 
         // Updates Research array to save        
-        SavingUtility.playerGameData.researches = (Dictionary<string, int>) dictionaryAmount.Where(x => x.Value != 0);
+        SavingUtility.playerGameData.researches = dictionaryAmount.Where(x => x.Value != 0).ToDictionary(x => x.Key,x => x.Value);
+
+
+        // Force Update
+        Stats.CoinUpdated?.Invoke();
 
         // Send save needed event
         SavingUtility.playerGameData.TriggerSave();
