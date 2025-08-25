@@ -104,4 +104,9 @@ public class Research : MonoBehaviour
     {
         throw new NotImplementedException();
     }
+
+    internal void UpdateAllItems()
+    {
+        UpdateAvailabilityAndStats();
+    }
 }

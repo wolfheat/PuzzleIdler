@@ -160,4 +160,11 @@ public class ResearchDatas : MonoBehaviour
         }
         return (0,false);
     }
+
+    internal void ResetAll()
+    {
+        FillDictionary();
+        Research.Instance.UpdateAllItems();
+        Stats.CoinUpdated?.Invoke();
+    }
 }

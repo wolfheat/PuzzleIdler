@@ -14,6 +14,7 @@ public class ResearchData : ScriptableObject
     public int steps = 1;
     public ResearchRewardType RewardType;
     public float RewardValueInPercent;
+    public bool isPercent = true;
 
     internal int GetCost(int ownedAmt)
     {

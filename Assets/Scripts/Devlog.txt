@@ -22,14 +22,16 @@ Aug 2025
 23/8	* Application saves before closing
 		* Added research tab and implemented automatic loading from researchData 
 		* Research list Items now show correctly
+24/8	* Percent shows
+
+		
+
 
 		* Make sure rewards are rewarded for resources
+
 		* Make sure description text for rewards show correctly with different text fonts
-
-		* Make percent show on each resourceDataItem
-
+				
         // Maybe not have gems GPS added when away??
-
 
 
 		// Issue, gains are added as their values when added, but multipliers the player buy afterwards does not act on these earlier gains. Need to recalculate the entire gain every time gain changes?

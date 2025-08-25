@@ -37,6 +37,13 @@ public class ResearchItem : BaseItem
     public ResearchData Data => data;
 
     [SerializeField] private Image upgradeButtonCompletedImage;
+
+    public void SetAsNotOwned()
+    {
+        upgradeButtonImage.gameObject.SetActive(true);
+        upgradeButtonCompletedImage.gameObject.SetActive(false);
+    }
+        
     public void SetAsOwned()
     {
         upgradeButtonImage.gameObject.SetActive(false);
@@ -74,12 +81,29 @@ public class ResearchItem : BaseItem
         float percent = fraction * 100;
         float benefit = fraction * data.RewardValueInPercent;
 
+
+        string formattedBenefit;
+        if (Mathf.Approximately(benefit % 1f, 0f)) // integer
+        {
+            formattedBenefit = benefit.ToString("F0");
+        }
+        else if (benefit >= 1f) {
+            formattedBenefit = benefit.ToString("F2"); // up to 2 decimals
+        }
+        else {
+            // Use significant digits for small numbers
+            formattedBenefit = benefit.ToString("G2");
+        }
+
+
         amtStepsOwned = owned;
 
-        Debug.Log("*** percent is "+percent+" benefit = "+benefit.ToString("F2"));  
+
+
+        //Debug.Log("*** percent is "+percent+" benefit = "+benefit.ToString("F2"));  
 
         // If maxed dont show anything
-        sliderText.text = (owned == 0) ? "" : benefit.ToString("F2");
+        sliderText.text = (owned == 0) ? "" : formattedBenefit+ (data.isPercent?"%":"");
 
         slider.value = fraction;
     }
@@ -97,6 +121,8 @@ public class ResearchItem : BaseItem
     // Only called when not maxed
     internal void UpdateStats(bool canBuy, BigDouble cost, int amtOwned)
     {
+        SetAsNotOwned();
+
         // Color of Buy Button
         SetAvailableColor(canBuy);
 

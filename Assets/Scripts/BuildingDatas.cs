@@ -167,4 +167,9 @@ public class BuildingDatas : MonoBehaviour
         return baseCost * Math.Pow(CostMultiplier, ownedAmt) * (Math.Pow(CostMultiplier, amt) - 1) / (CostMultiplier - 1);
     }
 
+    internal void ResetAll()
+    {
+        owned = new int[owned.Length];
+        Stats.CoinUpdated?.Invoke();
+    }
 }

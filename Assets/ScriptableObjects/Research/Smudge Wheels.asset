@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 151b4c754dcf5be45865de06c1bbd32d, type: 3}
+  m_Name: Smudge Wheels
+  m_EditorClassIdentifier: 
+  ResearchName: Smudge Wheels
+  ResearchImage: {fileID: 705505371, guid: 4bb0080517715ee47944566536bf9754, type: 3}
+  baseCost:
+    Mantissa: 1.03
+    Exponent: 4
+  costIncrementMultiplier: 1.2
+  steps: 25
+  RewardType: 0
+  RewardValueInPercent: 250

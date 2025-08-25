@@ -13,6 +13,9 @@ public class ButtonInputs : MonoBehaviour
         Stats.AddCoins(Stats.CoinsHeld*amt);
     }
 
+    public void ResetBuildings() => BuildingDatas.Instance.ResetAll();
+    public void ResetResearch() => ResearchDatas.Instance.ResetAll();
+
     public void ResetCoins() => Stats.RemoveCoins(Stats.CoinsHeld);
     public void ResetGems() => Stats.RemoveGems(Stats.GemsHeld);
 
