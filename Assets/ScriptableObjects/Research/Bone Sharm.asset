@@ -18,6 +18,7 @@ MonoBehaviour:
     Mantissa: 1.03
     Exponent: 2
   costIncrementMultiplier: 1.25
-  steps: 5
   RewardType: 0
-  RewardValueInPercent: 100
+  RewardValueInPerStepsInPercent: 25
+  steps: 8
+  isPercent: 1

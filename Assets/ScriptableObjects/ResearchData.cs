@@ -11,9 +11,9 @@ public class ResearchData : ScriptableObject
     public Sprite ResearchImage;
     public BigDoubleStruct baseCost;
     public double costIncrementMultiplier;
-    public int steps = 1;
     public ResearchRewardType RewardType;
-    public float RewardValueInPercent;
+    public float RewardValueInPerStepsInPercent;
+    public int steps = 1;
     public bool isPercent = true;
 
     internal int GetCost(int ownedAmt)

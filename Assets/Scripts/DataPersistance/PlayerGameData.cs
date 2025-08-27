@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Numerics;
 using BreakInfinity;
 
 public class AchievementData
@@ -143,6 +142,8 @@ public class PlayerGameData
 
     public void TriggerSave()
     {
+        // also have this just trigger the even that happens on lateUpdate ones
+        NoticeController.Instance.ShowDebugText("TRIGGER SAVE");
         SaveTime = DateTime.Now;
         SaveNeeded?.Invoke();
     }

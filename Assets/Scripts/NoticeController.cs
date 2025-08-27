@@ -37,5 +37,10 @@ public class NoticeController : MonoBehaviour
     {
         Instantiate(saveNotice, transform);
     }
+    
+    public void ShowDebugText(string text)
+    {
+        Debug.Log("LOGGED: "+text);
+    }
 
 }

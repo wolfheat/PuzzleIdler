@@ -84,8 +84,7 @@ public class ResearchItem : BaseItem
         // Figure out the complete text here
         float fraction = (float)owned / data.steps;
         float percent = fraction * 100;
-        float benefit = fraction * data.RewardValueInPercent;
-
+        float benefit = owned * data.RewardValueInPerStepsInPercent;
 
         string formattedBenefit;
         if (Mathf.Approximately(benefit % 1f, 0f)) // integer
@@ -147,7 +146,7 @@ public class ResearchItem : BaseItem
         //string resultText = "Increase <sprite name=\"coin\"> by " + data.RewardValueInPercent + "%";
         //string resultText = "Increase <sprite name=\"coin\"> by <style=\"Percent\">{FormatPercent(data.RewardValueInPercent)}</style> % ";
         string resultText = "Increase <sprite name=\"cps\"> by " +
-    $"<style=\"percent\">{data.RewardValueInPercent:0.##}%</style>";
+    $"<style=\"percent\">{data.RewardValueInPerStepsInPercent:0.##}%</style>";
 
 
         //string resultText = "Increase <sprite=\"IconsA\" name=coin> by " + data.RewardValueInPercent + "%";

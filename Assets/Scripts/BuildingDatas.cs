@@ -117,14 +117,22 @@ public class BuildingDatas : MonoBehaviour
         Stats.RemoveCoins(cost);
         Stats.AddCPS(gain);
 
+        OwnedAmountChange();
+        
+        return true;
+    }
+
+
+    private void OwnedAmountChange()
+    {
         // Updates Buildings array to save        
         SavingUtility.playerGameData.buildings = owned; // Update Save file with this new info
 
         // Send save needed event
         SavingUtility.playerGameData.TriggerSave();
-
-        return true;
     }
+
+
     internal void AddBuildingIncome(int index, int amt)
     {
         Debug.Log("Requesting to set index " + index + " - " + amt + " times");
@@ -171,5 +179,7 @@ public class BuildingDatas : MonoBehaviour
     {
         owned = new int[owned.Length];
         Stats.CoinUpdated?.Invoke();
+
+        OwnedAmountChange();
     }
 }

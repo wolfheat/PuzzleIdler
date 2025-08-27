@@ -85,7 +85,8 @@ public class Research : MonoBehaviour
                 Debug.Log("Creating a building " + (i + 1));
                 // Reset Level
                 ResearchItem item = Instantiate(researchItemPrefab, researchParent.transform);
-                item.SetAllInfo(researchTier[i], i);
+                (int owned, bool allOwned) = ResearchDatas.Instance.GetAmtOwned(researchTier[i]);
+                item.SetAllInfo(researchTier[i], owned);
                 researches.Add(item);
             }
         }

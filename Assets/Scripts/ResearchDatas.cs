@@ -123,17 +123,21 @@ public class ResearchDatas : MonoBehaviour
         // Add one to owned
         dictionaryAmount[researchName]++;
 
-        // Updates Research array to save        
-        SavingUtility.playerGameData.researches = dictionaryAmount.Where(x => x.Value != 0).ToDictionary(x => x.Key,x => x.Value);
-
-
         // Force Update
         Stats.CoinUpdated?.Invoke();
 
+        OwnedAmountChange();
+        
+        return true;
+    }
+
+    private void OwnedAmountChange()
+    {
+        // Updates Research array to save        
+        SavingUtility.playerGameData.researches = dictionaryAmount.Where(x => x.Value != 0).ToDictionary(x => x.Key, x => x.Value);
+
         // Send save needed event
         SavingUtility.playerGameData.TriggerSave();
-
-        return true;
     }
 
     public BigDouble GetCost(ResearchData data, int ownAmt)
@@ -166,5 +170,7 @@ public class ResearchDatas : MonoBehaviour
         FillDictionary();
         Research.Instance.UpdateAllItems();
         Stats.CoinUpdated?.Invoke();
+
+        OwnedAmountChange();
     }
 }
