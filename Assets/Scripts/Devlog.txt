@@ -23,7 +23,8 @@ Aug 2025
 		* Added research tab and implemented automatic loading from researchData 
 		* Research list Items now show correctly
 24/8	* Percent shows
-
+27/8	* Added sprite Assets for showing coins inside texts as emojis
+		* Added option to show some text in another style sheet	font 
 		
 
 

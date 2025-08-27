@@ -2,7 +2,9 @@
 using BreakInfinity;
 using TMPro;
 using UnityEngine;
+using UnityEngine.U2D;
 using UnityEngine.UI;
+using static UnityEngine.Rendering.DebugUI.MessageBox;
 
 public class BaseItem : MonoBehaviour
 {
@@ -72,6 +74,9 @@ public class ResearchItem : BaseItem
         SetImageText(resourceData.ResearchName);
 
         SetImage(resourceData.ResearchImage);
+
+        // Create and Set Description
+        SetCPSText();
     }
 
     private void SetPercentCompleteText(int owned)
@@ -134,4 +139,20 @@ public class ResearchItem : BaseItem
         // Set the amount text percent
         SetPercentCompleteText(amtOwned);
     }
+
+    public void SetCPSText()
+    {
+
+        //string resultText = "Increase <sprite index=0> by " + data.RewardValueInPercent + "%";
+        //string resultText = "Increase <sprite name=\"coin\"> by " + data.RewardValueInPercent + "%";
+        //string resultText = "Increase <sprite name=\"coin\"> by <style=\"Percent\">{FormatPercent(data.RewardValueInPercent)}</style> % ";
+        string resultText = "Increase <sprite name=\"cps\"> by " +
+    $"<style=\"percent\">{data.RewardValueInPercent:0.##}%</style>";
+
+
+        //string resultText = "Increase <sprite=\"IconsA\" name=coin> by " + data.RewardValueInPercent + "%";
+        //return resultText;
+        researchDescription.text = resultText;
+    }
+
 }

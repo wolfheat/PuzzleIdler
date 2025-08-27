@@ -305,15 +305,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 56e6ab50cbc3df94dae196d903d5381e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  imageText: {fileID: 9049499945668018587}
   image: {fileID: 3466406966586494077}
+  imageText: {fileID: 9049499945668018587}
+  upgradeButtonImage: {fileID: 1420094799744315225}
+  available: {r: 0.3494035, g: 0.766, b: 0.36956137, a: 1}
+  unAvailable: {r: 0.49056602, g: 0.49056602, b: 0.49056602, a: 1}
   levelText: {fileID: 7460765148220346081}
   upgradeGain: {fileID: 1087181041278098319}
   upgradeAmoutText: {fileID: 1588021590942470804}
   upgradeCostText: {fileID: 1316299318594739077}
-  upgradeButtonImage: {fileID: 1420094799744315225}
-  available: {r: 0.3494035, g: 0.766, b: 0.36956137, a: 1}
-  unAvailable: {r: 0.49056602, g: 0.49056602, b: 0.49056602, a: 1}
 --- !u!1 &5192083912097247984
 GameObject:
   m_ObjectHideFlags: 0
@@ -649,7 +649,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 272943223, guid: 4bb0080517715ee47944566536bf9754, type: 3}
+  m_Sprite: {fileID: -1003654709, guid: 4bb0080517715ee47944566536bf9754, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -724,7 +724,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 272943223, guid: 4bb0080517715ee47944566536bf9754, type: 3}
+  m_Sprite: {fileID: 609601216, guid: 4bb0080517715ee47944566536bf9754, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
