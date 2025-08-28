@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using BreakInfinity;
@@ -15,7 +16,7 @@ public class ResearchDatas : MonoBehaviour
     public List<ResearchData[]> ResearchList => researchDatas;
 
     private Dictionary<string, int> dictionaryAmount = new Dictionary<string, int>();
-    //private Dictionary<string, ResearchData> dictionaryData = new Dictionary<string, ResearchData>();
+    private Dictionary<string, ResearchData> dictionaryData = new Dictionary<string, ResearchData>();
 
 	private void Awake()
 	{
@@ -48,7 +49,7 @@ public class ResearchDatas : MonoBehaviour
         foreach (var tier in researchDatas) {
             foreach (var researchData in tier) {
                 dictionaryAmount[researchData.ResearchName] = 0;
-                //dictionaryData[researchData.ResearchName] = researchData;
+                dictionaryData[researchData.ResearchName] = researchData;
             }
         }
         Debug.Log("Created an research Dictionary containing " + dictionaryAmount.Count + " Items. ");
@@ -60,24 +61,21 @@ public class ResearchDatas : MonoBehaviour
 
     private void OnSaveFileLoaded()
     {
-        Debug.Log("ResearchDatas received load from file complete");
+        // Load Research From File
 
-        // Handle incomplete load file
-        // Handle set values from savefile
+        Debug.Log("");
+        Debug.Log("---  LOADING "+ SavingUtility.playerGameData.researches.Count +" Research  ---");
 
         // Should only non null be saved = yes
-
-        //Dictionary<string, int> fromSave = SavingUtility.playerGameData.researches;
-
-        //dictionaryAmount = SavingUtility.playerGameData.researches;
 
         foreach (var ownedUpgrade in SavingUtility.playerGameData.researches) {
 
             if (!dictionaryAmount.ContainsKey(ownedUpgrade.Key)) {
-                Debug.Log("The upgrade "+ownedUpgrade.Key+" does not exist in the research dictionary list. It is ignored.");
+                Debug.Log("Loaded research: "+ownedUpgrade.Key+" FAILED - does not exist in the research dictionary list. It is ignored.");
                 continue;
             }
-            Debug.Log("Loaded resource with name: " + ownedUpgrade.Key);
+
+            Debug.Log(" Loaded research: " + ownedUpgrade.Key);
 
             // Make sure all these upgrades counts = are activated
             dictionaryAmount[ownedUpgrade.Key] = ownedUpgrade.Value;
@@ -87,6 +85,8 @@ public class ResearchDatas : MonoBehaviour
         // Make sure the visual updates the level
         Buildings.Instance.UpdateLevelNeeded();
 
+        // Make sure the multiplier is recalculated and not invoking saving
+        OwnedAmountChange(false);
     }
 
     internal bool BuyResearch(ResearchData data)
@@ -131,8 +131,15 @@ public class ResearchDatas : MonoBehaviour
         return true;
     }
 
-    private void OwnedAmountChange()
+    private void OwnedAmountChange(bool alsoSave = true)
     {
+
+        // Every time amount of buildings change, recalculate how it affects the multipliers in stats?
+        Stats.UpdateResearchBaseIncome();
+
+        if (!alsoSave)
+            return;
+
         // Updates Research array to save        
         SavingUtility.playerGameData.researches = dictionaryAmount.Where(x => x.Value != 0).ToDictionary(x => x.Key, x => x.Value);
 
@@ -172,5 +179,19 @@ public class ResearchDatas : MonoBehaviour
         Stats.CoinUpdated?.Invoke();
 
         OwnedAmountChange();
+    }
+
+    internal BigDouble GetAllResearchMultipliers()
+    {
+        BigDouble allResearchMultipliers = 1;
+        foreach(var dictionaryKey in dictionaryAmount.Keys) {
+            if (!dictionaryData.ContainsKey(dictionaryKey) && dictionaryAmount[dictionaryKey] != 0) continue; // Shouldnt have to check for 0 owned? Maybe have to since they are all in the dictionary
+
+            if (dictionaryData[dictionaryKey].RewardType == ResearchRewardType.CPS) {
+                allResearchMultipliers *= (1+dictionaryData[dictionaryKey].RewardValueInPerStepsInPercent * dictionaryAmount[dictionaryKey] / 100);
+                Debug.Log("Multiply research mult with "+(1+(dictionaryData[dictionaryKey].RewardValueInPerStepsInPercent * dictionaryAmount[dictionaryKey] / 100))+" SUM = "+allResearchMultipliers);
+            }
+        }
+        return allResearchMultipliers;
     }
 }

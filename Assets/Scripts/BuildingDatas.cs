@@ -31,24 +31,22 @@ public class BuildingDatas : MonoBehaviour
 
     private void OnSaveFileLoaded()
     {
-        Debug.Log("BuildingDatas received load from file complete");
-        // Handle incomplete load file
-        // Handle set values from savefile
+        // Load Buildings From File
         int[] buildingsFromSave = SavingUtility.playerGameData.buildings;
 
-        Debug.Log("buildings from save amt = "+buildingsFromSave.Length);
-        
+        Debug.Log("");
+        Debug.Log("---  LOADING " + buildingsFromSave.Length + " Buildings  ---");
+
         for (int i = 0; i < buildingsFromSave.Length; i++) {
             owned[i] = buildingsFromSave[i];
-            Debug.Log("loaded "+ owned[i]+" for building type: "+i);
-            // Calculate how much the player benefit from the upgrades and apply that value
-            AddBuildingIncome(i, owned[i]);
+            Debug.Log(" Loaded building "+ (i+1) + " => " + owned[i]);            
         }
-
 
         // Make sure the visual updates the level
         Buildings.Instance.UpdateLevelNeeded();
 
+        // Make sure the CPS is updated correctly
+        OwnedAmountChange(false);
     }
 
     private void FillOwned()
@@ -103,8 +101,7 @@ public class BuildingDatas : MonoBehaviour
 
         // Double check that player can afford before buying
         BigDouble cost = GetCost(index, amt);
-        BigDouble gain = GetGain(index, amt);
-
+                
         if (Stats.CoinsHeld < cost)
             return false;
 
@@ -115,7 +112,6 @@ public class BuildingDatas : MonoBehaviour
 
         // Remove cost from player coins
         Stats.RemoveCoins(cost);
-        Stats.AddCPS(gain);
 
         OwnedAmountChange();
         
@@ -123,28 +119,19 @@ public class BuildingDatas : MonoBehaviour
     }
 
 
-    private void OwnedAmountChange()
+    private void OwnedAmountChange(bool alsoSave = true)
     {
+        // Every time amount of buildings change, recalculate how it affects the multipliers in stats?
+        Stats.UpdateBuildingsBaseIncome();
+
+        if (!alsoSave)
+            return;
+
         // Updates Buildings array to save        
         SavingUtility.playerGameData.buildings = owned; // Update Save file with this new info
 
         // Send save needed event
         SavingUtility.playerGameData.TriggerSave();
-    }
-
-
-    internal void AddBuildingIncome(int index, int amt)
-    {
-        Debug.Log("Requesting to set index " + index + " - " + amt + " times");
-
-        // Double check that player can afford before buying
-        BigDouble fullGain = GetGain(index, amt);
-
-        // Update to new level
-        //AddLevels(index,amt);
-
-        // Remove cost from player coins
-        Stats.AddCPS(fullGain);
     }
 
     private void AddLevels(int index, int amt) => owned[index] += amt;
@@ -154,15 +141,10 @@ public class BuildingDatas : MonoBehaviour
     public static double RewardMultiplier = 1.07;
 
 
-    public BigDouble GetGain(int index, int amt)//(BigDouble baseCost, int owned, int amt)
-    {
-        BigDouble baseCost = buildingsDatas[index].baseCost;
-        // BaseIncome = BaseCost × TargetROI
-        // calculation for linear static income
+        
+    public BigDouble GetBaseGain(int index, int amt) => buildingsDatas[index].baseCost * TargetROI * amt; // BaseIncome = BaseCost × TargetROI        
+    public BigDouble GetGain(int index, int amt) => GetBaseGain(index, amt) * Stats.CPSMultiplier;
 
-        BigDouble gain = baseCost * TargetROI * amt * Stats.AllBuildingGainMultipliers();
-        return gain;
-    }
 
     public BigDouble GetCost(int index, int amt)
     {
@@ -181,5 +163,15 @@ public class BuildingDatas : MonoBehaviour
         Stats.CoinUpdated?.Invoke();
 
         OwnedAmountChange();
+    }
+
+    internal BigDouble GetAllBuildingsIncome()
+    {
+        BigDouble allBuildingsIncomeSum = 0;
+        for (int i = 0; i < owned.Length; i++) {
+            int index = owned[i];
+            allBuildingsIncomeSum += GetBaseGain(i, owned[i]);
+        }
+        return allBuildingsIncomeSum;
     }
 }

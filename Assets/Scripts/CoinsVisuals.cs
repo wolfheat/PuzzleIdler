@@ -24,15 +24,22 @@ public class CoinsVisuals : MonoBehaviour
     {
         // Add listener for added coin event
         Stats.CoinUpdated += UpdateNeeded;
+        Stats.CPSUpdated += UpdateCPSNeeded;
     }
     private bool doUpdate = false;
+    private bool doCPSUpdate = false;
     private void UpdateNeeded() => doUpdate = true;
+    private void UpdateCPSNeeded() => doCPSUpdate = true;
     private void LateUpdate()
     {
         if (doUpdate) {
             UpdateTexts();
         }
+        if (doCPSUpdate) {
+            UpdateCPSTexts();
+        }
         doUpdate = false;
+        doCPSUpdate = false;
     }
 
     private void OnDisable()
@@ -45,6 +52,15 @@ public class CoinsVisuals : MonoBehaviour
     {
         //Debug.Log("Updating Texts");
         coins.text = Stats.CoinsHeldAsString;
+
+        // Remove CPS AND GPS FROM HERE??
+        //cps.text = Stats.CPSAsString;
+        //gems.text = Stats.GemsHeldAsString;
+        //Debug.Log("Updating Texts-Complete");
+    }
+    public void UpdateCPSTexts()
+    {
+        Debug.Log("** Updating Texts Stats.CPSAsString = "+ Stats.CPSAsString);
         cps.text = Stats.CPSAsString;
         gems.text = Stats.GemsHeldAsString;
         //Debug.Log("Updating Texts-Complete");

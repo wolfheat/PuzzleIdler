@@ -38,23 +38,21 @@ public class UpgradeDatas : MonoBehaviour
 
     private void OnSaveFileLoaded()
     {
-        Debug.Log("UpgradeDatas received load from file complete");
+        // Load Upgrades From File
 
-        // Handle incomplete load file
-        // Handle set values from savefile
         dictionary = SavingUtility.playerGameData.upgrades;
 
-        Debug.Log("Upgrades from save amt = " + dictionary.Count);
+        Debug.Log("");
+        Debug.Log("---  LOADING " + dictionary.Count+ " Upgrades  ---");
 
         foreach (var upgrade in dictionary.Keys) {
 
-            Debug.Log("Loaded upgrade with id: " + upgrade);
+            Debug.Log(" Loaded upgrade: " + upgrade);
             // Make sure all these upgrades counts = are activated
         }
 
         // Make sure the visual updates the level
         Buildings.Instance.UpdateLevelNeeded();
-
     }
 
     private void FillDictionary()

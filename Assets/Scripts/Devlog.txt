@@ -26,7 +26,7 @@ Aug 2025
 27/8	* Added sprite Assets for showing coins inside texts as emojis
 		* Added option to show some text in another style sheet	font 
 		* Resetting buildings or research aut saves to file correctly		
-
+		* Gain is now calculated correctly for buildings items
 
 		* Make sure rewards are rewarded for resources
 
