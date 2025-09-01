@@ -16,14 +16,21 @@ public static class Stats
     public static BigDouble GPSBase { get; private set; } = 0.1d;
 
     // Multipliers
-    public static BigDouble CPSMultiplier { get; private set; } = 1f;
-    public static BigDouble GPSMultiplier { get; private set; } = 1f;
+    public static BigDouble CPSResearchMultiplier { get; private set; } = 1f;
+    public static BigDouble CPSUpgradesMultiplier { get; private set; } = 1f;
+
+    public static BigDouble GPSMultiplier { get; private set; } = 0.0f;
     public static BigDouble BuildingCostMultiplerA { get; private set; } = 1.1f;
     public static BigDouble BuildingsBaseIncome { get; private set; } = 1f;
 
     // Multipliers - Set methods
-    public static void SetCoinMultiplier(BigDouble newValue) => CPSMultiplier = newValue;
+    public static void SetCPSResearchMultiplier(BigDouble newValue) { CPSResearchMultiplier = newValue; CPSUpdated?.Invoke();}
+    public static void SetCPSUpgradeMultiplier(BigDouble newValue) { CPSUpgradesMultiplier = newValue; CPSUpdated?.Invoke();}
+    public static void SetBuildingBaseIncome(BigDouble newValue) { BuildingsBaseIncome = newValue; CPSUpdated?.Invoke();}
+    public static BigDouble GetCPSTotalMultiplier() => CPSResearchMultiplier * CPSUpgradesMultiplier;
+
     public static void SetGemMultiplier(BigDouble newValue) => GPSMultiplier = newValue;
+
 
     // Strings - Get value strings
     public static string CoinsHeldAsString => ReturnAsString(CoinsHeld);
@@ -40,7 +47,7 @@ public static class Stats
 
 
     public static void SetActiveNumberNotation(NumberNotation newNotation) => ActiveNumberNotation = newNotation;
-    private static BigDouble CPSPerTick() => BuildingsBaseIncome * CPSMultiplier;
+    private static BigDouble CPSPerTick() => BuildingsBaseIncome * CPSResearchMultiplier * CPSUpgradesMultiplier;
 
 
     public static string ReturnAsString(BigDouble item) => NumberFormatter.Format(item, ActiveNumberNotation); // Use the new numberformatter class to decide how to show the number
@@ -102,6 +109,7 @@ public static class Stats
         // Adds the income from the save time to the current time
         Debug.Log("Added CPS and GPS for away");
         BigDouble coinsAdded = AddCoinByTicks(ticks);
+
         BigDouble gemsAdded = AddGemsByTicks(ticks);
 
         Debug.Log("Coins "+coinsAdded+" for "+ticks+"s");
@@ -131,37 +139,4 @@ public static class Stats
         Debug.Log("Removed coins, now have "+CoinsHeld);
     }
 
-    public static BigDouble AllBuildingGainMultipliers()
-    {
-        // Calculate the new multiplier and store it - dont want to calculate this every time, only when the value changes ie getting new buildings or getting upgrades that affect it
-        return CPSMultiplier;
-    }
-    
-    public static BigDouble AllBuildingCostMultipliers()
-    {
-        // Get the entire list of multipliers?
-        return BuildingCostMultiplerA;
-    }
-
-    internal static void UpdateResearchBaseIncome()
-    {
-        Debug.Log("");
-        Debug.Log("*** Recalculating Research multiplier");
-
-        // Calculates the resulting research multiplier
-        CPSMultiplier = ResearchDatas.Instance.GetAllResearchMultipliers();
-        Debug.Log("*** GetAllResearchMultipliers= " + CPSMultiplier);
-
-        CPSUpdated?.Invoke();
-    }
-    internal static void UpdateBuildingsBaseIncome()
-    {
-        Debug.Log("");
-        Debug.Log("*** Recalculating Building base income");
-        // Calculates the resulting base buildings CPS
-        BuildingsBaseIncome = BuildingDatas.Instance.GetAllBuildingsIncome();
-        Debug.Log("*** BuildingsBaseIncome income = "+ BuildingsBaseIncome);    
-
-        CPSUpdated?.Invoke();
-    }
 }

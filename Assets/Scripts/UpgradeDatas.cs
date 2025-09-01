@@ -97,7 +97,7 @@ public class UpgradeDatas : MonoBehaviour
             if(upgradeData.unlocked)
                 coinIncomeMultiplier *= upgradeData.value;            
         }
-        Stats.SetCoinMultiplier(coinIncomeMultiplier);
+        Stats.SetCPSUpgradeMultiplier(coinIncomeMultiplier);
     }
 
     public void UpdateGemMultiplierValue()
@@ -149,5 +149,20 @@ public class UpgradeDatas : MonoBehaviour
 
         // Send save needed event
         SavingUtility.playerGameData.TriggerSave();
+    }
+
+    internal (List<BigDouble> incomeList, List<string> researchNames) GetAllResearchCPSList()
+    {
+        List<BigDouble> list = new();
+        List<string> names = dictionary.Keys.ToList();
+
+        foreach (var data in upgradeDatas) {
+            string name = data.UpgradeName;
+            if (!dictionary.ContainsKey(name) || dictionary[data.UpgradeName]==false)
+                continue; 
+            list.Add(data.value);
+            names.Add(name);
+        }
+        return (list, names);
     }
 }

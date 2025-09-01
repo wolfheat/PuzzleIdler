@@ -135,7 +135,7 @@ public class ResearchDatas : MonoBehaviour
     {
 
         // Every time amount of buildings change, recalculate how it affects the multipliers in stats?
-        Stats.UpdateResearchBaseIncome();
+        Stats.SetCPSResearchMultiplier(GetAllResearchMultipliers());
 
         if (!alsoSave)
             return;
@@ -194,4 +194,22 @@ public class ResearchDatas : MonoBehaviour
         }
         return allResearchMultipliers;
     }
+
+    internal (List<BigDouble>, List<string>) GetAllResearchCPSList()
+    {
+        List<BigDouble> list = new();
+        List<string> names = new();
+        foreach (var dictionaryKey in dictionaryAmount.Keys) {
+            if (!dictionaryData.ContainsKey(dictionaryKey) && dictionaryAmount[dictionaryKey] != 0) continue; // Shouldnt have to check for 0 owned? Maybe have to since they are all in the dictionary
+
+            if (dictionaryData[dictionaryKey].RewardType == ResearchRewardType.CPS) {
+                //list.Add(dictionaryData[dictionaryKey].RewardValueInPerStepsInPercent * dictionaryAmount[dictionaryKey]);
+                list.Add((1 + (float)dictionaryData[dictionaryKey].RewardValueInPerStepsInPercent * dictionaryAmount[dictionaryKey] / 100));
+                Debug.Log("**- Adding value " + list[list.Count-1]);
+                names.Add(dictionaryKey);
+            }
+        }
+        return (list, names);
+    }
+
 }

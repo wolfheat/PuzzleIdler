@@ -27,9 +27,20 @@ Aug 2025
 		* Added option to show some text in another style sheet	font 
 		* Resetting buildings or research aut saves to file correctly		
 		* Gain is now calculated correctly for buildings items
+		* Research is now giving CPS benefits
+1/9		* Added stats panel
+		
 
-		* Make sure rewards are rewarded for resources
+		* Implement buying of Upgrades with gems
+		* Make sure upgrades benefits are calculated correctly
 
+		* Add complete tiers amount and multiplier?
+
+
+		* RESEARCH
+		* Move to first unbought when completing a tier
+
+		
 		* Make sure description text for rewards show correctly with different text fonts
 				
         // Maybe not have gems GPS added when away??

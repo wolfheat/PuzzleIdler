@@ -19,12 +19,12 @@ public class AwayIncomeNotice : BaseNotice
         gemText.text = "+" + Stats.ReturnAsString(gems);
         
         // Convert seconds to time
-        time.text = "Away for " + CreatePasseTimeString(passedTime);
+        time.text = "Away for " + CreatePassedTimeString(passedTime);
 
 
     }
 
-    private string CreatePasseTimeString(long passedTime)
+    private string CreatePassedTimeString(long passedTime)
     {
         Debug.Log("Passed ticks: "+passedTime);
 

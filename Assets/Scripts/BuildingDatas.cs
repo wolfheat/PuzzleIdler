@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using BreakInfinity;
 using UnityEngine;
 
@@ -52,7 +54,7 @@ public class BuildingDatas : MonoBehaviour
     private void FillOwned()
     {
 		owned = new int[buildingsDatas.Length];
-		Debug.Log("Created a building owned array containing "+owned.Length+" Items.");
+		Debug.Log("** Created a building owned array containing "+owned.Length+" Items.");
     }
 
     private int CalculateRemainingToMilestone(int heldAmount)
@@ -122,7 +124,7 @@ public class BuildingDatas : MonoBehaviour
     private void OwnedAmountChange(bool alsoSave = true)
     {
         // Every time amount of buildings change, recalculate how it affects the multipliers in stats?
-        Stats.UpdateBuildingsBaseIncome();
+        Stats.SetBuildingBaseIncome(GetAllBuildingsBaseIncome());
 
         if (!alsoSave)
             return;
@@ -143,11 +145,14 @@ public class BuildingDatas : MonoBehaviour
 
         
     public BigDouble GetBaseGain(int index, int amt) => buildingsDatas[index].baseCost * TargetROI * amt; // BaseIncome = BaseCost × TargetROI        
-    public BigDouble GetGain(int index, int amt) => GetBaseGain(index, amt) * Stats.CPSMultiplier;
-
-
+    public BigDouble GetGain(int index, int amt) => GetBaseGain(index, amt) * Stats.GetCPSTotalMultiplier();
     public BigDouble GetCost(int index, int amt)
     {
+        for (int i = 0; i < buildingsDatas.Length; i++) {
+
+        }
+
+
         BigDouble baseCost = buildingsDatas[index].baseCost;
         int ownedAmt = owned[index];
         BigDouble gold = Stats.CoinsHeld;
@@ -165,7 +170,7 @@ public class BuildingDatas : MonoBehaviour
         OwnedAmountChange();
     }
 
-    internal BigDouble GetAllBuildingsIncome()
+    internal BigDouble GetAllBuildingsBaseIncome()
     {
         BigDouble allBuildingsIncomeSum = 0;
         for (int i = 0; i < owned.Length; i++) {
@@ -173,5 +178,20 @@ public class BuildingDatas : MonoBehaviour
             allBuildingsIncomeSum += GetBaseGain(i, owned[i]);
         }
         return allBuildingsIncomeSum;
+    }
+
+    public List<BigDouble> GetAllBuildingsBaseIncomeList()
+    {
+        Debug.Log("** Getting all base incomes when owning " + owned[0]);
+        List<BigDouble> incomeList = new List<BigDouble>();
+        for (int i = 0; i < owned.Length; i++) {
+            incomeList.Add(GetBaseGain(i, owned[i]));
+        }
+        return incomeList;
+    }
+
+    internal List<string> GetAllBuildingsNameList()
+    {
+        return buildingsDatas.Select(x => x.BuildingName).ToList();
     }
 }

@@ -5,6 +5,7 @@ public class Options : MonoBehaviour
 {
     [SerializeField] private GameObject[] panels; 
     [SerializeField] private GameObject settings; 
+    [SerializeField] private GameObject stats; 
 
     private int active = -1;
     public void SelectOption(int newSelected)
@@ -26,6 +27,7 @@ public class Options : MonoBehaviour
     }
 
     public void ToggleSettings() => settings.SetActive(!settings.activeSelf);
+    public void ToggleStats() => stats.SetActive(!stats.activeSelf);
 
     private void OpenPanel(int newPanel) => panels[newPanel].SetActive(true);
 }
