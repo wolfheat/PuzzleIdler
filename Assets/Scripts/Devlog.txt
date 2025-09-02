@@ -29,10 +29,10 @@ Aug 2025
 		* Gain is now calculated correctly for buildings items
 		* Research is now giving CPS benefits
 1/9		* Added stats panel
-		
+		* Implemented buying of Upgrades with gems
+		* Made sure upgrades benefits are calculated correctly
+		* Upgrades show on stats page
 
-		* Implement buying of Upgrades with gems
-		* Make sure upgrades benefits are calculated correctly
 
 		* Add complete tiers amount and multiplier?
 

@@ -410,7 +410,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.46226418, g: 0.18016918, b: 0, a: 1}
+  m_Color: {r: 0.112719364, g: 0.582, b: 0.2576443, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -443,6 +443,7 @@ MonoBehaviour:
   Checkmark: {fileID: 313976853007388369}
   BuyTextObject: {fileID: 7231469547611099305}
   ownedColor: {r: 0.4627451, g: 0.18039216, b: 0, a: 1}
+  affordColor: {r: 0.19157171, g: 0.990566, b: 0.4394744, a: 1}
   notOwnedColor: {r: 0.49019608, g: 0.49019608, b: 0.49019608, a: 1}
   imageBackground: {fileID: 6049324715579363675}
 --- !u!114 &4911091178957287742

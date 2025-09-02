@@ -1,9 +1,12 @@
+using System.Collections.Generic;
 using BreakInfinity;
 using UnityEngine;
 
 public class Upgrades : MonoBehaviour
 {
 	[SerializeField] private InfoPanel infoPanel; 
+	[SerializeField] private Transform upgradeHolder; 
+	[SerializeField] private GameObject panel; 
 	public static Upgrades Instance { get; private set; }
 
 	private UpgradeData selectedData;
@@ -27,10 +30,32 @@ public class Upgrades : MonoBehaviour
 
 	}
 
+    internal void UpdateOwned(List<string> strings)
+    {
+		Debug.Log(" -** Updating Owned Upgrades so they show in correct colors");
+		UpgradeButton[] buttons = upgradeHolder.GetComponentsInChildren<UpgradeButton>();
+		Debug.Log(" -** Buttons amount "+buttons.Length);
+
+        foreach (UpgradeButton button in buttons) {
+			foreach (string name in strings) {
+				Debug.Log("Name: "+name+" compare to "+button.Data.UpgradeName);
+				if(button.Data.UpgradeName == name) {
+					Debug.Log("Found " +button.Data.UpgradeName);
+					button.SetAsOwned(true);
+					continue;
+				}
+			}
+		}
+    }
+	
     internal void UpdateInfoPanel(UpgradeData data)
     {
-		infoPanel?.UpdateInfo(data);
+		bool owned = UpgradeDatas.Instance.Owns(data);
+		infoPanel?.UpdateInfo(data, owned);
 		selectedData = data;
+
+		// also set the button
+
     }
 
     internal void RequestBuyUpgrade()

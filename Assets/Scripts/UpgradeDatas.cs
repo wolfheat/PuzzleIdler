@@ -40,16 +40,21 @@ public class UpgradeDatas : MonoBehaviour
     {
         // Load Upgrades From File
 
-        dictionary = SavingUtility.playerGameData.upgrades;
+        //dictionary = SavingUtility.playerGameData.upgrades;
 
         Debug.Log("");
         Debug.Log("---  LOADING " + dictionary.Count+ " Upgrades  ---");
 
-        foreach (var upgrade in dictionary.Keys) {
+        foreach (var upgrade in SavingUtility.playerGameData.upgrades) {
 
+            if (!dictionary.ContainsKey(upgrade.Key)) continue;
+
+            dictionary[upgrade.Key] = upgrade.Value;
             Debug.Log(" Loaded upgrade: " + upgrade);
             // Make sure all these upgrades counts = are activated
         }
+
+        Upgrades.Instance.UpdateOwned(dictionary.Where(x => x.Value == true).Select(x => x.Key).ToList());
 
         // Make sure the visual updates the level
         Buildings.Instance.UpdateLevelNeeded();
@@ -59,6 +64,7 @@ public class UpgradeDatas : MonoBehaviour
     {
         foreach (var data in upgradeDatas) {
             dictionary[data.UpgradeName] = false;
+            Debug.Log("*-* Filled Upgrade: "+data.UpgradeName);
         }
         Debug.Log("Created an upgrade Dictionary containing " + dictionary.Count + " Items.");
     }
@@ -70,9 +76,15 @@ public class UpgradeDatas : MonoBehaviour
 			Debug.Log("Can not ulock this upgrade, can not find it in the upgrade list");
 			return;
 		}
-		data.unlocked = true;
+        if (dictionary[data.UpgradeName] == true) {
+			Debug.Log("Can not unlock this upgrade, already Owned");
+			return;
+		}
 
-		if (data.type == UpgradeType.IncomeBoosters)
+        // make owned
+        dictionary[data.UpgradeName] = true;
+
+        if (data.type == UpgradeType.IncomeBoosters)
 			UpdateCoinMultiplierValue();
         else if(data.type == UpgradeType.GemBoosters)
             UpdateGemMultiplierValue();
@@ -93,9 +105,9 @@ public class UpgradeDatas : MonoBehaviour
     public void UpdateCoinMultiplierValue()
     {
         BigDouble coinIncomeMultiplier = 1;
-        foreach (UpgradeData upgradeData in coinIncomeDatas) {
-            if(upgradeData.unlocked)
-                coinIncomeMultiplier *= upgradeData.value;            
+        foreach (UpgradeData data in coinIncomeDatas) {
+            if(coinIncomeDatas.Contains(data) && dictionary.ContainsKey(data.UpgradeName) && dictionary[data.UpgradeName] == true)
+                coinIncomeMultiplier *= data.UpgradeValue;            
         }
         Stats.SetCPSUpgradeMultiplier(coinIncomeMultiplier);
     }
@@ -103,9 +115,9 @@ public class UpgradeDatas : MonoBehaviour
     public void UpdateGemMultiplierValue()
     {
         BigDouble gemIncomeMultiplier = 1;
-        foreach (UpgradeData upgradeData in gemIncomeDatas) {
-            if (upgradeData.unlocked)
-                gemIncomeMultiplier *= upgradeData.value;
+        foreach (UpgradeData data in gemIncomeDatas) {
+            if(coinIncomeDatas.Contains(data) && dictionary.ContainsKey(data.UpgradeName) && dictionary[data.UpgradeName] == true)
+                gemIncomeMultiplier *= data.UpgradeValue;
         }
         Stats.SetGemMultiplier(gemIncomeMultiplier);
     }
@@ -123,10 +135,16 @@ public class UpgradeDatas : MonoBehaviour
 
         if (!dictionary.ContainsKey(selectedData.UpgradeName)) {
             Debug.Log("The name " + selectedData.UpgradeName + " does not exist in the upgradesOwned dictionary.");
+            Debug.Log("Dictionary size:  " + dictionary.Count);
+
+            foreach (var item in dictionary.Keys) {
+                Debug.Log("Dictionary item: "+item);
+            }
+
             return;
         }
         if (dictionary[selectedData.UpgradeName] == true) {
-            Debug.Log("Upgrade " + selectedData.UpgradeName + " allready owned.");
+            Debug.Log("Upgrade " + selectedData.UpgradeName + " already owned.");
             return;
         }
 
@@ -140,11 +158,13 @@ public class UpgradeDatas : MonoBehaviour
         if (selectedData.type == UpgradeType.IncomeBoosters) {
             UpdateCoinMultiplierValue();
         }
-        else if (selectedData.type == UpgradeType.IncomeBoosters) {
+        else if (selectedData.type == UpgradeType.GemBoosters) {
             UpdateGemMultiplierValue();
         }
 
         // Updates Upgrades dictionary to save
+        // Dont save all dictionary... check how it is done in research
+
         SavingUtility.playerGameData.upgrades = dictionary;
 
         // Send save needed event
@@ -160,9 +180,11 @@ public class UpgradeDatas : MonoBehaviour
             string name = data.UpgradeName;
             if (!dictionary.ContainsKey(name) || dictionary[data.UpgradeName]==false)
                 continue; 
-            list.Add(data.value);
+            list.Add(data.UpgradeValue);
             names.Add(name);
         }
         return (list, names);
     }
+
+    internal bool Owns(UpgradeData data) => dictionary.ContainsKey(data.UpgradeName) && dictionary[data.UpgradeName];
 }

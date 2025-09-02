@@ -151,8 +151,7 @@ public class BuildingDatas : MonoBehaviour
         for (int i = 0; i < buildingsDatas.Length; i++) {
 
         }
-
-
+        
         BigDouble baseCost = buildingsDatas[index].baseCost;
         int ownedAmt = owned[index];
         BigDouble gold = Stats.CoinsHeld;

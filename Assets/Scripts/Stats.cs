@@ -47,7 +47,7 @@ public static class Stats
 
 
     public static void SetActiveNumberNotation(NumberNotation newNotation) => ActiveNumberNotation = newNotation;
-    private static BigDouble CPSPerTick() => BuildingsBaseIncome * CPSResearchMultiplier * CPSUpgradesMultiplier;
+    private static BigDouble CPSPerTick() => BuildingsBaseIncome * GetCPSTotalMultiplier();
 
 
     public static string ReturnAsString(BigDouble item) => NumberFormatter.Format(item, ActiveNumberNotation); // Use the new numberformatter class to decide how to show the number

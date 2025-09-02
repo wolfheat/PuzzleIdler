@@ -16,8 +16,6 @@ MonoBehaviour:
   Image: {fileID: 54654473, guid: 4bb0080517715ee47944566536bf9754, type: 3}
   type: 0
   cost: 15
-  value:
-    mantissa: 1.03
-    exponent: 0
+  UpgradeValue: 1.03
   unlocked: 0
   Description: Increase CPS by 3%

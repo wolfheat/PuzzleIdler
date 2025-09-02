@@ -10,8 +10,7 @@ public class UpgradeData : ScriptableObject
     public Sprite Image;
     public UpgradeType type= UpgradeType.IncomeBoosters;
     public int cost;
-    public BigDouble value = 1;
-    public bool unlocked = false;
+    public double UpgradeValue = 1;
 
     [TextArea(15, 20)]
     public string Description;
