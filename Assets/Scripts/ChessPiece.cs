@@ -1,7 +1,6 @@
 using System;
 using UnityEngine;
 using UnityEngine.UI;
-
 public class ChessPiece : MonoBehaviour
 {
     [SerializeField] private ChessPieceData chessPieceData;
@@ -11,6 +10,13 @@ public class ChessPiece : MonoBehaviour
 
     public Vector2Int Pos { get; private set; }
     public Vector3 HomePosition { get; private set; }
+
+    internal void SetType(int type)
+    {
+        Type = type;
+        // Set its visual
+        image.sprite = chessPieceData.Sprites[Type];
+    }
 
     internal void SetPositionAndType(Vector3Int piecePosition, Vector3 homePos)
     {

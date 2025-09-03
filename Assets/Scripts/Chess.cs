@@ -14,10 +14,17 @@ public struct ChessWinCondition
         to = SetTo;
     }
     public bool CheckIfWon(Vector2Int testFrom, Vector2Int TestTo) => (testFrom == from && TestTo == to);
+
+    internal int[] asArray()
+    {
+        return new int[4] {from.x,from.y,to.x,to.y };
+    }
 }
 
 public class Chess : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPointerMoveHandler
 {
+    [SerializeField] private bool isGenerator = false;
+
     [SerializeField] private ChessPiece piecePrefab;
     [SerializeField] private ChessPiece ghost;
 
@@ -177,6 +184,13 @@ public class Chess : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPoi
         // Hide ghost
         ghost.Hide(true);
 
+
+        if(isGenerator)
+            return;
+
+        // only if in play mode
+
+
         if (won) {
             Debug.Log("YOU WIN");
         }
@@ -204,8 +218,15 @@ public class Chess : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPoi
         int row = (int)localPosition.y / SquareSize;
         //Debug.Log("Clicking on ["+col+","+row+"]");
 
+
+        if (isGenerator) {
+            OnPointerDownGenerator(eventData, col, row);
+            return;
+        }
+
         // Get the piece
-        if (pieces[col,row] == null) return;
+        if (pieces[col, row] == null) return;
+
 
         Debug.Log("Starting to Drag a piece");
         draggedPiece = pieces[col, row];
@@ -222,6 +243,71 @@ public class Chess : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPoi
         ghost.transform.localPosition = localPosition;
 
         dragging = true;
+    }
+
+    private void OnPointerDownGenerator(PointerEventData eventData, int col, int row)
+    {
+        // Check if there is a placed item here that is allready this type, if so remove it
+
+        localPosition = new Vector2(SquareSize/2 + col * SquareSize, SquareSize / 2 + row * SquareSize);
+
+        int newType = PieceSelector.Instance.ActiveType;
+        Debug.Log("Place " + newType + " on this square " + col + "," + row);
+
+        ChessPiece placed = pieces[col, row];
+
+        if(placed != null) {
+
+            // If shift is held just copy type
+            if (Inputs.Instance.PlayerControls.Player.Shift.IsPressed()) {
+                PieceSelector.Instance.ChangeSelected(placed.Type);
+                return;
+            }
+            if(placed.Type == newType) {
+                // Remove it
+                Destroy(placed.gameObject);
+            }
+            else {
+                // Replace it
+                placed.ChangeType(newType);
+            }
+        }
+        else {
+            // Create new At
+            ChessPiece newPiece = Instantiate(piecePrefab, pieceHolder.transform);
+            pieces[col, row] = newPiece;
+            newPiece.ChangeType(newType);
+            newPiece.transform.localPosition = localPosition;
+        }
+    }
+
+    internal int[] GetBoardData()
+    {
+        int[] boardData = new int[64];
+
+        int i = 0;
+        int zeroes = 0;
+        Debug.Log("Zeroes = ");
+        for(var pieceRow = 0; pieceRow < pieces.GetLength(1); pieceRow++) {
+            for(var pieceCol = 0; pieceCol < pieces.GetLength(0); pieceCol++) {
+                boardData[i] = pieces[pieceCol, pieceRow] == null ? 0 : pieces[pieceCol, pieceRow].Type;
+                Debug.Log("Spot ["+pieceCol+","+pieceRow+"] = " + boardData[i]);
+                if (boardData[i] != 0) {
+                    zeroes++;
+                }
+                i++;
+            }
+        }
+        Debug.Log("Non ZERO spots in game board: "+zeroes);
+
+        return boardData;
+    }
+
+    internal int[] GetSolution()
+    {
+        int[] solution = new int[4];
+        solution = winCondition.asArray();
+        return solution;
     }
 
     // Have a grid for the piece positions
