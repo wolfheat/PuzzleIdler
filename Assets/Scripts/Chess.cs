@@ -67,7 +67,7 @@ public class Chess : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPoi
         winCondition = new ChessWinCondition(fromWin,toWin);
 
         // Create Holders for each position?
-        CreateSquares();
+        //CreateSquares();
 
         // Create all Pieces on the game board
         CreatePieces(positions);

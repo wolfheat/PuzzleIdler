@@ -22,6 +22,11 @@ public class GamePanel : MonoBehaviour
         Debug.Log("Starting game "+gameIndex);
         panel.SetActive(false);
     }
+    
+    public void RequestClose()
+    {
+        panel.SetActive(false);
+    }
 
 
 }

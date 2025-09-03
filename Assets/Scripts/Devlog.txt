@@ -33,7 +33,7 @@ Aug 2025
 		* Made sure upgrades benefits are calculated correctly
 		* Upgrades show on stats page
 2/9		* Created basic chessgame with working setup and win determination
-
+		* Gamepanel Fixups
 
 		* Add reset button for Upgrades on cheatbar
 		* Add complete tiers amount and multiplier?
