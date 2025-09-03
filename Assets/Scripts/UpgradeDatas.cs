@@ -54,10 +54,21 @@ public class UpgradeDatas : MonoBehaviour
             // Make sure all these upgrades counts = are activated
         }
 
+        // Update the stats
+        UpdateStatsValues();
+
+        // Activates bought items on Upgrades screen
         Upgrades.Instance.UpdateOwned(dictionary.Where(x => x.Value == true).Select(x => x.Key).ToList());
 
-        // Make sure the visual updates the level
+        // Make sure the buildings panel updates
         Buildings.Instance.UpdateLevelNeeded();
+    }
+
+    private void UpdateStatsValues()
+    {
+        Debug.Log("**- STATS values update");
+        UpdateCoinMultiplierValue();
+        UpdateGemMultiplierValue();
     }
 
     private void FillDictionary()

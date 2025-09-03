@@ -46,8 +46,15 @@ public class Upgrades : MonoBehaviour
 				}
 			}
 		}
+
+
     }
-	
+
+
+
+
+
+
     internal void UpdateInfoPanel(UpgradeData data)
     {
 		bool owned = UpgradeDatas.Instance.Owns(data);

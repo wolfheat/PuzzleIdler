@@ -32,8 +32,10 @@ Aug 2025
 		* Implemented buying of Upgrades with gems
 		* Made sure upgrades benefits are calculated correctly
 		* Upgrades show on stats page
+2/9		* Created basic chessgame with working setup and win determination
 
 
+		* Add reset button for Upgrades on cheatbar
 		* Add complete tiers amount and multiplier?
 
 

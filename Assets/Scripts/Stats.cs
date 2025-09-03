@@ -22,6 +22,7 @@ public static class Stats
     public static BigDouble GPSMultiplier { get; private set; } = 0.0f;
     public static BigDouble BuildingCostMultiplerA { get; private set; } = 1.1f;
     public static BigDouble BuildingsBaseIncome { get; private set; } = 1f;
+    public static float[] MiniGamesMultipliers { get; private set; } = {1,1,1,1,1,1,1};
 
     // Multipliers - Set methods
     public static void SetCPSResearchMultiplier(BigDouble newValue) { CPSResearchMultiplier = newValue; CPSUpdated?.Invoke();}
