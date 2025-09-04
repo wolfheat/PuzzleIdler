@@ -1,9 +1,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using UnityEngine.Animations;
 using UnityEngine.EventSystems;
-using static UnityEngine.Rendering.DebugUI.Table;
 
 public struct ChessWinCondition
 {
@@ -44,6 +45,11 @@ public class Chess : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPoi
     [SerializeField] private GameObject fromSelector;
     [SerializeField] private GameObject toSelector;
 
+    [SerializeField] private ChessWinNotice winNotice;
+
+
+    [SerializeField] private TextMeshProUGUI ratingText;
+
     private const int SquareSize = 50;
     private float squareSizeScaled = 50;
 
@@ -69,6 +75,11 @@ public class Chess : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPoi
         squareSizeScaled = squareHolder.GetComponent<RectTransform>().sizeDelta.x;
         Debug.Log("**-- SquareSize = "+squareSizeScaled);
 
+    }
+
+    private void OnEnable()
+    {
+        UpdateRating();
     }
 
     void Start()
@@ -114,8 +125,12 @@ public class Chess : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPoi
         // Clear last problem
         ClearBoard();
 
+        // Remove Win Screen Notice
+        winNotice.gameObject.SetActive(false);
+
         ChessPuzzleData data = ChessProblemDatas.Instance.GetRandomProblem(Stats.ChessRating);
         // Set the Placement of all pieces
+        Debug.Log("");
         Debug.Log("Loading chess problem: "+data.name);
 
 
@@ -127,7 +142,9 @@ public class Chess : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPoi
             int row = i / 8;
             int col = i % 8;
             Vector3Int newPositionData = new Vector3Int(col, row, setup[i]);
-            //Debug.Log("Add a " + setup[i]+" on "+col+","+row);
+            
+            Debug.Log("* Adding a piece " + setup[i]+" on ["+col+","+row+"]");
+            
             positions.Add(newPositionData);
         }
 
@@ -153,6 +170,7 @@ public class Chess : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPoi
 
     private IEnumerator AnimateComputerMove()
     {
+        yield return null; // Needed to make sure ghost hidden can be changed again even if player just disabled it
         Debug.Log("Winconditions = "+winCondition.Count);
         if(winCondition.Count == 0) {
             Debug.Log("No Conditions");
@@ -164,32 +182,79 @@ public class Chess : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPoi
         
         Debug.Log("Wincondition = "+oponentMove.from.x+","+oponentMove.from.y+" => "+oponentMove.to.x+","+oponentMove.to.y);
 
-        yield return new WaitForSeconds(0.1f);
+
 
         // Do the enemys Move
+        int col = oponentMove.from.x;
+        int row = oponentMove.from.y;
+
+        int colTo = oponentMove.to.x;
+        int rowTo = oponentMove.to.y;
 
         // Get Moved Piece
-        ChessPiece movedPiece = pieces[oponentMove.from.x, oponentMove.from.y];
+        ChessPiece movedPiece = pieces[col, row];
+
+        // Hide original item
+
+        // Hide ghost
+        movedPiece.Hide(true);
+
+        // Show Ghost
+        ghost.Hide(false);
+
+        // Show ghost as moved piece
+        ghost.ChangeType(movedPiece.Type);
+
+
+        const float AnimationTime = 0.2f;
+        float animationTimer = 0;
+
+        Vector3 localFromLocation = movedPiece.transform.localPosition;
+        Vector3 localToLocation = new Vector3(SquareSize / 2 + oponentMove.to.x * SquareSize, SquareSize / 2 + oponentMove.to.y * SquareSize, 0);
+
+        // Animate Ghost
+        while (animationTimer < AnimationTime) {
+            float percent = animationTimer / AnimationTime;
+            ghost.transform.localPosition = Vector3.Lerp(localFromLocation,localToLocation,percent);
+            animationTimer += Time.deltaTime;
+            yield return null;
+        }
+
+        // Hide Ghost again
+        ghost.Hide(true);
+
+        // Show Original Item if not Cathing a Piece
+        movedPiece.Hide(false);
+
+        Debug.Log("Computer move from : [" + col + "," + row +"] => ["+ colTo + "," + rowTo +"]");
+        Debug.Log("[" + col + "," + row +"] = " + movedPiece?.Type);
+
+        //Debug.Log("MovedPiece: " + (pieces[col, row] != null)+ (pieces[row, col] != null)+ (pieces[col,8 - row] != null)+ (pieces[8 - col, row] != null));
+
         if (movedPiece != null) {
+            Debug.Log("There is a piece here of type "+movedPiece.Type);
+        }
+        else {
             Debug.Log("There is no piece to move from this position - invalid solution");
         }
 
         // Get any replaced Piece
-        ChessPiece replacedPiece = pieces[oponentMove.to.x, oponentMove.to.y];
+        ChessPiece replacedPiece = pieces[colTo, rowTo];
+        Debug.Log("[" + colTo + "," +rowTo +"] = " + replacedPiece?.Type);
+
         if (replacedPiece != null) {
+            Debug.Log("Changing target piece "+replacedPiece.Type+" at ["+ colTo + ","+ rowTo + "]");
             replacedPiece.ChangeType(movedPiece.Type);
             Destroy(movedPiece.gameObject);
         }
         else {
             if(movedPiece == null)
                 Debug.Log("NULL moved piece");
-            movedPiece.SetPositionAndType(new Vector3Int(oponentMove.to.x, oponentMove.to.y, movedPiece.Type), new Vector3(SquareSize / 2 + oponentMove.to.x * SquareSize, SquareSize / 2 + oponentMove.to.y * SquareSize, 0));
+            movedPiece.SetPositionAndType(new Vector3Int(oponentMove.to.x, oponentMove.to.y, movedPiece.Type), localToLocation);
+            
+            // Move dragged to new position
+            pieces[oponentMove.to.x, oponentMove.to.y] = movedPiece;
         }
-
-        // Update Data Array
-
-        // Move dragged to new position
-        pieces[oponentMove.to.x, oponentMove.to.y] = movedPiece;
 
         // Unset the moved pieces last position
         pieces[oponentMove.from.x, oponentMove.from.y] = null;
@@ -257,11 +322,11 @@ public class Chess : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPoi
         GetMouseLocalPosition(eventData);
 
         //Debug.Log("EventPosition UP = [" + eventData.position.x + " , " + eventData.position.y + "] - [" + squareHolder.transform.position.x + " , " + squareHolder.transform.position.y + "]");
-        int col = (int)localPosition.x / SquareSize;
-        int row = (int)localPosition.y / SquareSize;
-        //Debug.Log("Releasing on [" + col + "," + row + "]");
+        int targetCol = (int)localPosition.x / SquareSize;
+        int targetRow = (int)localPosition.y / SquareSize;
 
-        if (!InsideBoard(col, row)) {
+        
+        if (!InsideBoard(targetCol, targetRow)) {
             // Return it to its origin
             dragging = false;
 
@@ -279,60 +344,81 @@ public class Chess : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPoi
         // 
         dragging = false;
 
+        int sourceCol = draggedPiece.Pos.x;
+        int sourceRow = draggedPiece.Pos.y;
+
+        // Check the target square
+        ChessPiece replacedPiece = pieces[targetCol, targetRow];
+
+        // Check if player returned the piece
+        if(draggedPiece != replacedPiece) {
+
+            Debug.Log("ReplacedItem = "+replacedPiece);
+            Debug.Log("it index is  = " + pieces[targetCol, targetRow]?.Type);
+
+            // Destroy the item if its there
+            if (replacedPiece != null)
+                Destroy(replacedPiece.gameObject);
+
+            // Move dragged to new position
+            Vector3Int piecePosition = new Vector3Int(targetCol, targetRow, draggedPiece.Type);
+            draggedPiece.SetPositionAndType(piecePosition, new Vector3(SquareSize / 2 + piecePosition.x * SquareSize, SquareSize / 2 + piecePosition.y * SquareSize, 0));
+
+            pieces[targetCol,targetRow] = draggedPiece;
+            Debug.Log("it index becomes  = " + pieces[targetCol, targetRow]?.Type);
+
+            // Unset the source position data
+            pieces[sourceCol, sourceRow] = null;
+
+            Debug.Log("Dragged the piece from [" + draggedPiece.Pos.x + ", " + draggedPiece.Pos.y + "] => [" + targetCol + "," + targetRow + "] " + (replacedPiece == null ? "" : ("Took "+replacedPiece.Type)));
+
+            // Check if Won        
+            ChessWinCondition winningMove = winCondition[0];
+            winCondition.RemoveAt(0);
+
+            bool correct = winningMove.CheckIfCorrect(new Vector2Int(sourceCol,sourceRow), new Vector2Int(targetCol,targetRow));
+
+            if(isGenerator)
+                return;
 
 
+            // Win Notice
 
-        ChessPiece replacedPiece = pieces[col, row];
+            if (!correct) {
+                Win(false);           
 
-
-        if (replacedPiece != null)
-            Destroy(replacedPiece.gameObject);
-
-        // Move dragged to new position
-        pieces[col,row] = draggedPiece;
-
-        // Unset the moved pieces last position
-        pieces[draggedPiece.Pos.x, draggedPiece.Pos.y] = null;
-
-        Debug.Log("Dragged the piece from [" + draggedPiece.Pos.x + ", " + draggedPiece.Pos.y + "] => [" + col + "," + row + "] " + (replacedPiece == null ? "" : ("Took "+replacedPiece.Type)));
-
-        Vector3Int piecePosition = new Vector3Int(col, row, draggedPiece.Type);
-        draggedPiece.SetPositionAndType(piecePosition, new Vector3(SquareSize / 2 + piecePosition.x * SquareSize, SquareSize / 2 + piecePosition.y * SquareSize, 0));
-
-
+            }
+            else if(winCondition.Count == 0) {
+                Win(true);
+            }
+            else {
+                // Correct but not last move, do next computer move
+                StartCoroutine(AnimateComputerMove());
+            }
+        }
 
         // Show the dragged again
         draggedPiece.Hide(false);
 
         // Hide ghost
         ghost.Hide(true);
+    }
 
+    private void Win(bool didWin)
+    {
+        Debug.Log(didWin ? "YOU WIN" : "LOST");
+        GameActive = false;
+        winNotice.gameObject.SetActive(true);
+        winNotice.SetWin(didWin);
 
-        // Check if Won        
-        ChessWinCondition winningMove = winCondition[0];
-        winCondition.RemoveAt(0);
+        // Award Rating and reward
+        Stats.ChessRating += didWin ? 10 : ((Stats.ChessRating <= Stats.MinimumChessRating) ? 0 : - 20);
+        UpdateRating();
+    }
 
-
-        Debug.Log("Checking win condition "+ winningMove.from.x+","+ winningMove.from.y+" => " + winningMove.to.x + "," + winningMove.to.y);
-        bool correct = winningMove.CheckIfCorrect(draggedPiece.Pos, new Vector2Int(col,row));
-        
-        if(isGenerator)
-            return;
-
-
-        if (!correct) {
-            Debug.Log("YOU LOSE");
-            GameActive = false;
-        }
-        else if(winCondition.Count == 0) {
-            Debug.Log("YOU WIN");
-            GameActive = false;
-        }
-        else {
-            // Correct but not last move, do next computer move
-            StartCoroutine(AnimateComputerMove());
-        }
-
+    private void UpdateRating()
+    {
+        ratingText.text = "Rating: " + Stats.ChessRating;
     }
 
     private bool InsideBoard(int col, int row) => col >= 0 && row >= 0 && col < 8 && row < 8;

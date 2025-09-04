@@ -1,7 +1,6 @@
 using System;
 using System.Linq;
 using UnityEngine;
-
 public class ChessProblemDatas : MonoBehaviour
 {
 
@@ -24,7 +23,7 @@ public class ChessProblemDatas : MonoBehaviour
     {
         int section = rating / 100;
 
-        section = 11;
+        section = 14;
 
 
         Debug.Log("X");
@@ -52,11 +51,11 @@ public class ChessProblemDatas : MonoBehaviour
 
         data.rating = Int32.Parse(levelParts[3]);
 
-        data.solution = GetSolution(levelParts[2]);
-        Debug.Log("Solution: "+ levelParts[2]+" => " + data.solution[0]+ data.solution[1]+ data.solution[2]+ data.solution[3]);
-
         data.setup = GetSetup(levelParts[1]);
 
+        data.solution = GetSolution(levelParts[2], data.setup[64] == 0);
+        Debug.Log("Solution: "+ levelParts[2]+" => " + data.solution[0]+ data.solution[1]+ data.solution[2]+ data.solution[3]);
+        
         return data; 
     }
 
@@ -96,6 +95,20 @@ public class ChessProblemDatas : MonoBehaviour
         // Add the turn
         ans[index] = moves[1] == "b" ? 1 : 0;
 
+        if(ans[index] == 0) {
+
+            int[] copy = new int[65];
+            copy[64] = ans[64];
+
+            // Player plays black Rotate all
+            for (int row = 0; row < 8; row++) {
+                for (int col = 0; col < 8; col++) {
+                    copy[row*8+col] = ans[(7-row)*8+(7-col)];
+                }
+            }
+            ans = copy;
+        }
+
         if(index != 64)
             Debug.Log("Warning: Index is not 64: "+index);
 
@@ -122,7 +135,7 @@ public class ChessProblemDatas : MonoBehaviour
         };
     }
 
-    private int[] GetSolution(string v)
+    private int[] GetSolution(string v, bool flip)
     {
         // Parse the solution int correct values
         string[] moves = v.Split(" ");
@@ -136,8 +149,8 @@ public class ChessProblemDatas : MonoBehaviour
             char[] chars = move.ToCharArray();
             for (int i = 0; i < chars.Length; i++) {
                 char c = chars[i];
-                int asInt = i%2==0 ? c - 'a' : (c-'0');
-                ans[index] = asInt;
+                int asInt = i%2==0 ? c - 'a' : (c-'1');
+                ans[index] = flip ? (7-asInt) : asInt;
                 index++;
             }
         }

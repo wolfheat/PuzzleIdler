@@ -1,10 +1,12 @@
 using System;
 using BreakInfinity;
-using NUnit.Framework;
 using UnityEngine;
 
 public static class Stats
 {
+
+    public const int MinimumChessRating = 1000;
+
     // Coinds and Gems - Held
     public static BigDouble CoinsHeld { get; private set; } = 0;
     public static BigDouble GemsHeld { get; private set; } = 0;

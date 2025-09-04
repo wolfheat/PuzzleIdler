@@ -20,7 +20,7 @@ public class ChessPiece : MonoBehaviour
 
     internal void SetPositionAndType(Vector3Int piecePosition, Vector3 homePos)
     {
-        Debug.Log("SET POSITION AND TYPE");
+        //Debug.Log("SET POSITION AND TYPE");
         // Set its index
         Pos = new Vector2Int(piecePosition.x,piecePosition.y);
 

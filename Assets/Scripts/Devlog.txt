@@ -38,14 +38,16 @@ Aug 2025
 		* Problems are stored with setup, solution and rating
 		* Problems can be loaded by button in play mode.
 		* Made problems loadable from CSV file and as text database.
+4/9		* Both black and white as player now works correctly
+		* Added animated moves for computer inbetween players inputs
+		* Added Win or lose notice after problem is over
 
-		* Figure out why solution moves not corrspond to pieces placements
-
-		* Make player unable to move anything after losing. Show lose message and wait for next game press. Next press can be timed to not work for X minutes when failing.
 
 
-		* Implement working chess problems
-
+		* Make sure invalid chess moves are ignored
+			* Moving to unreachable tile
+			* Placing on a piece of same color
+		
 
 		* Add reset button for Upgrades on cheatbar
 		* Add complete tiers amount and multiplier?
