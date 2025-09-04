@@ -38,6 +38,10 @@ public static class Stats
     public static string GemsHeldAsString => ReturnAsString(GemsHeld);
     public static string CPSAsString => ReturnAsString(CPSPerTick());
 
+    // Games Stats
+    public static int ChessRating { get; internal set; } = 1000;
+
+
     // Action - Events
     public static Action CoinUpdated;
 

@@ -8,10 +8,24 @@ public class ChessProblemGenerator : MonoBehaviour
     [SerializeField] private TMP_InputField ratingInput;
 
 
+    public static ChessProblemGenerator Instance { get; private set; }
+
+    private void Awake()
+    {
+        if (Instance != null) {
+            Destroy(gameObject);
+            return;
+        }
+        Instance = this;
+    }
+
+
     public void ClickTest()
     {
         Debug.Log("CLICKED REGISTERED");
     }
+    
+    /*
 
     // Runs when in editor and play mode
 #if UNITY_EDITOR
@@ -46,5 +60,5 @@ public class ChessProblemGenerator : MonoBehaviour
         AssetDatabase.SaveAssets();
     }
 #endif
-
+    */
 }

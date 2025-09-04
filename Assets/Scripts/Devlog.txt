@@ -36,7 +36,12 @@ Aug 2025
 		* Gamepanel Fixups
 3/9		* Chess problem Generator created
 		* Problems are stored with setup, solution and rating
+		* Problems can be loaded by button in play mode.
+		* Made problems loadable from CSV file and as text database.
 
+		* Figure out why solution moves not corrspond to pieces placements
+
+		* Make player unable to move anything after losing. Show lose message and wait for next game press. Next press can be timed to not work for X minutes when failing.
 
 
 		* Implement working chess problems

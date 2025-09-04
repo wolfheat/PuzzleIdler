@@ -3218,7 +3218,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 623470482}
   m_Direction: 2
   m_Value: 1
-  m_Size: 0.34437096
+  m_Size: 0.34428647
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -4483,7 +4483,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 655050263}
   m_Direction: 2
   m_Value: 0.9999999
-  m_Size: 0.4029667
+  m_Size: 0.40286586
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -7765,11 +7765,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4ff6e8e6489b68341b809d718ee283b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isGenerator: 0
   piecePrefab: {fileID: 8447927200838707428, guid: 385f17ef803afdd40bd145954c011bcc, type: 3}
   ghost: {fileID: 883895086}
   squarePrefab: {fileID: 8322470882751536961, guid: ab593a5ec1bf2244f8249c4ccebdfd7f, type: 3}
   pieceHolder: {fileID: 1573527272}
   squareHolder: {fileID: 2031907417}
+  fromSelector: {fileID: 0}
+  toSelector: {fileID: 0}
 --- !u!1001 &558838690
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -15071,6 +15074,51 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 22024aa7b236b4941809328e6991cd3c, type: 3}
+--- !u!1 &1191276745
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1191276746}
+  - component: {fileID: 1191276747}
+  m_Layer: 0
+  m_Name: ChessProblemDatas
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1191276746
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1191276745}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1623527526}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1191276747
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1191276745}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e89835829400ec84fbe142dc50df0687, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  database: {fileID: 11400000, guid: f6ec9f19bfb24da47997cf8cb5ebe09b, type: 2}
 --- !u!1 &1206400910
 GameObject:
   m_ObjectHideFlags: 0
@@ -17268,6 +17316,7 @@ Transform:
   - {fileID: 1056343531}
   - {fileID: 249063879}
   - {fileID: 1694194210}
+  - {fileID: 1623527526}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1402405941
@@ -19126,9 +19175,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 214954178}
-        m_TargetAssemblyTypeName: GamePanel, Assembly-CSharp
-        m_MethodName: RequestStartGame
+      - m_Target: {fileID: 555943512}
+        m_TargetAssemblyTypeName: Chess, Assembly-CSharp
+        m_MethodName: LoadRandomProblem
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -19392,6 +19441,38 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1622681158}
   m_CullTransparentMesh: 1
+--- !u!1 &1623527525
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1623527526}
+  m_Layer: 0
+  m_Name: Games
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1623527526
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1623527525}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1191276746}
+  m_Father: {fileID: 1394219781}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1628413345
 GameObject:
   m_ObjectHideFlags: 0
