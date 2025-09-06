@@ -23,6 +23,8 @@ public class PiecePromotion : MonoBehaviour
         Instance = this;
     }
 
+    public void HidePanel() => panel.SetActive(false);
+
     public void InitiateWithColor(ChessMove PlayersMove, int color = 0)
     {
         playersMove = PlayersMove;

@@ -42,7 +42,23 @@ Aug 2025
 		* Added animated moves for computer inbetween players inputs
 		* Added Win or lose notice after problem is over
 5/9		* Added promotion support
-		
+6/9		* Win creen color change
+		* Black promotion works
+		* Computer promotion works
+
+
+		// White promotion
+		00ryU,4r1k1/8/2PP1bp1/p7/1p5p/1P2p3/4K2B/8 b - - 0 40,g6g5 d6d7 e8d8 c6c7 d8d7 c7c8q,1399,138,69,8,advancedPawn advantage endgame long promotion,https://lichess.org/aKt8hwuq/black#80,
+
+		// Black promotion
+		01Opl,8/8/4n3/4B3/2k1K3/1p6/5P2/8 w - - 0 56,e4f5 e6d4 f5e4 b3b2 e5d4 b2b1q,1382,75,85,359,advancedPawn crushing endgame long promotion,https://lichess.org/ND7kZ8aU#111,
+
+		// Computer promotes
+		04h1H,2Q5/1P3pk1/4pq2/p2p2p1/P6p/2P4P/5r2/6RK w - - 0 39,b7b8q f6f3 g1g2 f3g2,1305,78,94,782,endgame mate mateIn2 short,https://lichess.org/FLS1PxgW#77,
+
+
+
+
 
 		* Issue with promotions as solution
 			* Make player unable to move pieces when picking a promotion

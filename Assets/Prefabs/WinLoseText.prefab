@@ -226,3 +226,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   textMeshProText: {fileID: 5448372804592699282}
+  backgroundImage: {fileID: 3222165645540388436}
+  winColor: {r: 0.14117648, g: 0.30980393, b: 0.14901961, a: 1}
+  loseColor: {r: 0.46226418, g: 0.18016918, b: 0, a: 1}

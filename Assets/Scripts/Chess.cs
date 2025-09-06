@@ -94,6 +94,9 @@ public class Chess : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPoi
 
     void Start()
     {
+        if(isGenerator)
+            return;
+
         PiecePromotion.Instance.OnPlayerSelect += Promote;
         /*
         List<Vector3Int> positions = new List<Vector3Int>();
@@ -139,12 +142,17 @@ public class Chess : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPoi
         // Remove Win Screen Notice
         winNotice.gameObject.SetActive(false);
 
+        // Remove any Promotion panel
+        piecePromotion.HidePanel();
+
         
 
 
 
         //ChessPuzzleData data = ChessProblemDatas.Instance.GetRandomProblem(Stats.ChessRating);
-        //ChessProblemDatas.Instance.FindPromotionProblem();
+        // ChessProblemDatas.Instance.FindPromotionProblem();
+
+
         //return;
         ChessPuzzleData data = ChessProblemDatas.Instance.GetPromotionProblem(Stats.ChessRating);
         
@@ -276,7 +284,11 @@ public class Chess : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPoi
         // Show Original Item if not Cathing a Piece
         movedPiece.Hide(false);
 
-        Debug.Log("Computer move from : [" + col + "," + row +"] => ["+ colTo + "," + rowTo +"]");
+        // Promotion Handeling
+
+        int targetRow = oponentMove.to.y;
+
+            Debug.Log("Computer move from : [" + col + "," + row +"] => ["+ colTo + "," + rowTo +"]");
         Debug.Log("[" + col + "," + row +"] = " + movedPiece?.Type);
 
         //Debug.Log("MovedPiece: " + (pieces[col, row] != null)+ (pieces[row, col] != null)+ (pieces[col,8 - row] != null)+ (pieces[8 - col, row] != null));
@@ -294,13 +306,25 @@ public class Chess : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPoi
 
         if (replacedPiece != null) {
             Debug.Log("Changing target piece "+replacedPiece.Type+" at ["+ colTo + ","+ rowTo + "]");
-            replacedPiece.ChangeType(movedPiece.Type);
+            
+
+            if ((movedPiece.Type == 5 || movedPiece.Type == 11) && targetRow == 0) { // white or black pawn - but since player always on its side only row 7 is a promotion
+                // Fixed this for black pieces ??
+                replacedPiece.SetType((playerColor == 0 ? 1 : 0) * 6 + oponentMove.promote - 8);
+            }else
+                replacedPiece.ChangeType(movedPiece.Type);
+
             Destroy(movedPiece.gameObject);
         }
         else {
             if(movedPiece == null)
                 Debug.Log("NULL moved piece");
-            movedPiece.SetPositionAndType(new Vector3Int(oponentMove.to.x, oponentMove.to.y, movedPiece.Type), localToLocation);
+            if ((movedPiece.Type == 5 || movedPiece.Type == 11) && targetRow == 0) { // white or black pawn - but since player always on its side only row 7 is a promotion
+                // Fixed this for black pieces ??
+                movedPiece.SetPositionAndType(new Vector3Int(oponentMove.to.x, oponentMove.to.y, (playerColor == 0 ? 1 : 0) * 6 + oponentMove.promote - 8), localToLocation);
+            }
+            else
+                movedPiece.SetPositionAndType(new Vector3Int(oponentMove.to.x, oponentMove.to.y, movedPiece.Type), localToLocation);
             
             // Move dragged to new position
             pieces[oponentMove.to.x, oponentMove.to.y] = movedPiece;
@@ -460,7 +484,7 @@ public class Chess : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPoi
         piecePromotion.gameObject.SetActive(true);
 
         // Do we have players color?
-        piecePromotion.InitiateWithColor(playersMove, 0);
+        piecePromotion.InitiateWithColor(playersMove, playerColor);
     }
 
     private void Promote(ChessMove playersMove)

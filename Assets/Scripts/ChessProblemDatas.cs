@@ -7,6 +7,8 @@ public class ChessProblemDatas : MonoBehaviour
 
     [SerializeField] private PuzzleDatabase database;
     [SerializeField] private string promotionExampleProblem;
+    [SerializeField] private string blackPromotion;
+    [SerializeField] private string computerPromotion;
     //[SerializeField] private ChessDatabase chessDatabase;
 
     public static ChessProblemDatas Instance { get; private set; }
@@ -25,7 +27,9 @@ public class ChessProblemDatas : MonoBehaviour
     {
         int section = rating / 100;
 
-        string selectedLevel = promotionExampleProblem;
+        // string selectedLevel = promotionExampleProblem;
+        // string selectedLevel = blackPromotion;
+         string selectedLevel = computerPromotion;
 
         // Here we have the compact level as one string
         ChessPuzzleData data = GetStringAsPuzzleData(selectedLevel);
@@ -160,14 +164,14 @@ public class ChessProblemDatas : MonoBehaviour
             'R' => 0,
             'N' => 1,
             'B' => 2,
-            'K' => 3,
-            'Q' => 4,
+            'Q' => 3,
+            'K' => 4,
             'P' => 5,
             'r' => 6,
             'n' => 7,
             'b' => 8,
-            'k' => 9,
-            'q' => 10,
+            'q' => 9,
+            'k' => 10,
             'p' => 11,
             _ => 12
         };

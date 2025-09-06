@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: ChessPieces
   m_EditorClassIdentifier: 
   Sprites:
+  - {fileID: -5619150752979459227, guid: e7b3868c1709dc045bda08b7e56a9245, type: 3}
   - {fileID: 6835995104348828855, guid: e7b3868c1709dc045bda08b7e56a9245, type: 3}
   - {fileID: -5391753709267269744, guid: e7b3868c1709dc045bda08b7e56a9245, type: 3}
   - {fileID: 3659358165985340574, guid: e7b3868c1709dc045bda08b7e56a9245, type: 3}
@@ -24,4 +25,3 @@ MonoBehaviour:
   - {fileID: 3654758903977178377, guid: e7b3868c1709dc045bda08b7e56a9245, type: 3}
   - {fileID: -8043906449996607461, guid: e7b3868c1709dc045bda08b7e56a9245, type: 3}
   - {fileID: -4333177638012667817, guid: e7b3868c1709dc045bda08b7e56a9245, type: 3}
-  - {fileID: -6515335884325011057, guid: e7b3868c1709dc045bda08b7e56a9245, type: 3}
