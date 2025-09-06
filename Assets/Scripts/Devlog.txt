@@ -41,6 +41,15 @@ Aug 2025
 4/9		* Both black and white as player now works correctly
 		* Added animated moves for computer inbetween players inputs
 		* Added Win or lose notice after problem is over
+5/9		* Added promotion support
+		
+
+		* Issue with promotions as solution
+			* Make player unable to move pieces when picking a promotion
+			* Implement Computer promotions
+
+		* Issue with castles? - Prob just a regular move, but needs implementation in my code correctly
+		* Issue with en passent as solutions?
 
 
 

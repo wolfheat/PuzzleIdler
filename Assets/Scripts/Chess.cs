@@ -1,22 +1,28 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Text;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Animations;
 using UnityEngine.EventSystems;
 
-public struct ChessWinCondition
+public struct ChessMove
 {
     public Vector2Int from;
     public Vector2Int to;
+    public int promote;
 
-    public ChessWinCondition(Vector2Int setFrom, Vector2Int SetTo)
+    public ChessMove(Vector2Int setFrom, Vector2Int SetTo, int promoteSetTo = 0)
     {
         from = setFrom;
         to = SetTo;
+        promote = promoteSetTo;
     }
-    public bool CheckIfCorrect(Vector2Int testFrom, Vector2Int TestTo) => (testFrom == from && TestTo == to);
+
+    public bool CheckIfCorrect(ChessMove move) => move.from.x == from.x && move.from.y == from.y && move.to.x == to.x && move.to.y == to.y && move.promote == promote;
+
+    // public bool CheckIfCorrect(Vector2Int testFrom, Vector2Int TestTo) => (testFrom == from && TestTo == to);
+    //public bool CheckIfCorrect(Vector2Int testFrom, Vector2Int TestTo, int PromoteTo) => (testFrom == from && TestTo == to && PromoteTo = promote);
 
     internal int[] asArray()
     {
@@ -45,10 +51,13 @@ public class Chess : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPoi
     [SerializeField] private GameObject fromSelector;
     [SerializeField] private GameObject toSelector;
 
+    [SerializeField] private PiecePromotion piecePromotion;
+
     [SerializeField] private ChessWinNotice winNotice;
 
 
-    [SerializeField] private TextMeshProUGUI ratingText;
+    [SerializeField] private TextMeshProUGUI playerRating;
+    [SerializeField] private TextMeshProUGUI problemRating;
 
     private const int SquareSize = 50;
     private float squareSizeScaled = 50;
@@ -59,7 +68,8 @@ public class Chess : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPoi
     private bool GameActive = false;
 
     private ChessPiece draggedPiece = null;
-    private List<ChessWinCondition> winCondition;
+    private List<ChessMove> winCondition;
+    private int playerColor = 0;
 
     public static Chess Instance { get; private set; }
 
@@ -84,6 +94,7 @@ public class Chess : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPoi
 
     void Start()
     {
+        PiecePromotion.Instance.OnPlayerSelect += Promote;
         /*
         List<Vector3Int> positions = new List<Vector3Int>();
 
@@ -128,12 +139,15 @@ public class Chess : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPoi
         // Remove Win Screen Notice
         winNotice.gameObject.SetActive(false);
 
-        ChessPuzzleData data = ChessProblemDatas.Instance.GetRandomProblem(Stats.ChessRating);
-        // Set the Placement of all pieces
-        Debug.Log("");
-        Debug.Log("Loading chess problem: "+data.name);
+        
 
 
+
+        //ChessPuzzleData data = ChessProblemDatas.Instance.GetRandomProblem(Stats.ChessRating);
+        //ChessProblemDatas.Instance.FindPromotionProblem();
+        //return;
+        ChessPuzzleData data = ChessProblemDatas.Instance.GetPromotionProblem(Stats.ChessRating);
+        
         List<Vector3Int> positions = new List<Vector3Int>();
 
         int[] setup = data.setup;
@@ -148,14 +162,38 @@ public class Chess : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPoi
             positions.Add(newPositionData);
         }
 
+        // PLayer is inverse of the one making first move
+        playerColor = setup[64] == 1 ? 0 : 1;
+
         // Set new list of winMoves
-        winCondition = new List<ChessWinCondition>();
+        winCondition = new List<ChessMove>();
+
+        Debug.Log("");
+        Debug.Log("Solution = "+ ArrayString(data.solution));
 
         for (int i = 0; i < data.solution.Length; i += 4) {
             // Set the solution
             Vector2Int fromWin  = new Vector2Int(data.solution[i + 0], data.solution[i + 1]);
             Vector2Int toWin    = new Vector2Int(data.solution[i + 2], data.solution[i + 3]);
-            winCondition.Add(new ChessWinCondition(fromWin, toWin));
+
+            int promotion = 0;
+
+            // If there is a promotion add it here
+            if(i + 4 < data.solution.Length) {
+                // There is more data that can be read
+                int nextValue = data.solution[i + 4];
+
+                // If this is a promotion add it and increment i
+                if(nextValue > 7) {
+                    // This is a promotion
+                    // 8 = R, 9 = N, 10 = B, 11 = Q  - Is the color not needed? We know who is moving
+                    promotion = nextValue;
+                    Debug.Log("Adding a promotion with value "+nextValue);
+                    i++;
+                }
+            }
+
+            winCondition.Add(new ChessMove(fromWin, toWin, promotion));
         }
 
 
@@ -164,8 +202,20 @@ public class Chess : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPoi
 
         GameActive = true;
 
+        //Rating
+        UpdateProblemRating(data.rating);
+
         StartCoroutine(AnimateComputerMove());
 
+    }
+
+    private string ArrayString(int[] solution)
+    {
+        StringBuilder sb = new StringBuilder();
+        foreach (var item in solution) {
+            sb.Append(item.ToString()+",");
+        }
+        return sb.ToString();
     }
 
     private IEnumerator AnimateComputerMove()
@@ -176,7 +226,7 @@ public class Chess : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPoi
             Debug.Log("No Conditions");
             yield break;
         }
-        ChessWinCondition oponentMove = winCondition[0];
+        ChessMove oponentMove = winCondition[0];
 
         winCondition.RemoveAt(0);
         
@@ -353,7 +403,7 @@ public class Chess : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPoi
         // Check if player returned the piece
         if(draggedPiece != replacedPiece) {
 
-            Debug.Log("ReplacedItem = "+replacedPiece);
+            Debug.Log("ReplacedItem = " + replacedPiece);
             Debug.Log("it index is  = " + pieces[targetCol, targetRow]?.Type);
 
             // Destroy the item if its there
@@ -364,37 +414,35 @@ public class Chess : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPoi
             Vector3Int piecePosition = new Vector3Int(targetCol, targetRow, draggedPiece.Type);
             draggedPiece.SetPositionAndType(piecePosition, new Vector3(SquareSize / 2 + piecePosition.x * SquareSize, SquareSize / 2 + piecePosition.y * SquareSize, 0));
 
-            pieces[targetCol,targetRow] = draggedPiece;
+            pieces[targetCol, targetRow] = draggedPiece;
             Debug.Log("it index becomes  = " + pieces[targetCol, targetRow]?.Type);
 
             // Unset the source position data
             pieces[sourceCol, sourceRow] = null;
 
-            Debug.Log("Dragged the piece from [" + draggedPiece.Pos.x + ", " + draggedPiece.Pos.y + "] => [" + targetCol + "," + targetRow + "] " + (replacedPiece == null ? "" : ("Took "+replacedPiece.Type)));
+            Debug.Log("Dragged the piece from [" + draggedPiece.Pos.x + ", " + draggedPiece.Pos.y + "] => [" + targetCol + "," + targetRow + "] " + (replacedPiece == null ? "" : ("Took " + replacedPiece.Type)));
 
-            // Check if Won        
-            ChessWinCondition winningMove = winCondition[0];
-            winCondition.RemoveAt(0);
+            // If a promotion do promotion here - before checking if correct?
 
-            bool correct = winningMove.CheckIfCorrect(new Vector2Int(sourceCol,sourceRow), new Vector2Int(targetCol,targetRow));
+            ChessMove playersMove = new ChessMove(new Vector2Int(sourceCol, sourceRow), new Vector2Int(targetCol, targetRow));
 
-            if(isGenerator)
+
+
+            if ((draggedPiece.Type == 5 || draggedPiece.Type == 11) && targetRow == 7) { // white or black pawn - but since player always on its side only row 7 is a promotion
+
+                // Show the dragged again
+                draggedPiece.Hide(false);
+
+                // Hide ghost
+                ghost.Hide(true);
+
+                // Player promotes a pawn
+                OpenPromotionPanel(playersMove);
+
                 return;
-
-
-            // Win Notice
-
-            if (!correct) {
-                Win(false);           
-
             }
-            else if(winCondition.Count == 0) {
-                Win(true);
-            }
-            else {
-                // Correct but not last move, do next computer move
-                StartCoroutine(AnimateComputerMove());
-            }
+
+            CheckMove(playersMove);
         }
 
         // Show the dragged again
@@ -402,6 +450,61 @@ public class Chess : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPoi
 
         // Hide ghost
         ghost.Hide(true);
+
+
+    }
+
+    private void OpenPromotionPanel(ChessMove playersMove)
+    {
+        // Make player pick the promotion - then continue checking
+        piecePromotion.gameObject.SetActive(true);
+
+        // Do we have players color?
+        piecePromotion.InitiateWithColor(playersMove, 0);
+    }
+
+    private void Promote(ChessMove playersMove)
+    {
+        Debug.Log("Promote player to "+playersMove.promote);
+
+        // Change into this piece
+
+        // Fixed this for black pieces ??
+        draggedPiece.SetType(playerColor * 6 + playersMove.promote-8); 
+
+        // Check for this as solution
+        CheckMove(playersMove);
+    }
+
+    private void CheckMove(ChessMove playersMove)
+    {
+        Debug.Log("Checking Move "+playersMove.to.x+" "+playersMove.to.y+" promotion = "+playersMove.promote);
+
+        // Check if Won        
+        ChessMove winningMove = winCondition[0];
+        winCondition.RemoveAt(0);
+
+        bool correct = winningMove.CheckIfCorrect(playersMove);
+
+        //bool correct = winningMove.CheckIfCorrect(new Vector2Int(sourceCol,sourceRow), new Vector2Int(targetCol,targetRow));
+
+        if (isGenerator)
+            return;
+
+
+        // Win Notice
+
+        if (!correct) {
+            Win(false);
+
+        }
+        else if (winCondition.Count == 0) {
+            Win(true);
+        }
+        else {
+            // Correct but not last move, do next computer move
+            StartCoroutine(AnimateComputerMove());
+        }
     }
 
     private void Win(bool didWin)
@@ -416,10 +519,16 @@ public class Chess : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPoi
         UpdateRating();
     }
 
+
+    // RATING
     private void UpdateRating()
     {
-        ratingText.text = "Rating: " + Stats.ChessRating;
+        playerRating.text = "Rating: " + Stats.ChessRating;
+        //problemRating.text = "Problem: " + Stats.ChessRating;
     }
+
+    private void UpdateProblemRating(int rating) => problemRating.text = rating.ToString();
+
 
     private bool InsideBoard(int col, int row) => col >= 0 && row >= 0 && col < 8 && row < 8;
 

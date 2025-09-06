@@ -1,10 +1,12 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 public class ChessProblemDatas : MonoBehaviour
 {
 
     [SerializeField] private PuzzleDatabase database;
+    [SerializeField] private string promotionExampleProblem;
     //[SerializeField] private ChessDatabase chessDatabase;
 
     public static ChessProblemDatas Instance { get; private set; }
@@ -19,24 +21,60 @@ public class ChessProblemDatas : MonoBehaviour
     }
 
 
+    public ChessPuzzleData GetPromotionProblem(int rating = 1000)
+    {
+        int section = rating / 100;
+
+        string selectedLevel = promotionExampleProblem;
+
+        // Here we have the compact level as one string
+        ChessPuzzleData data = GetStringAsPuzzleData(selectedLevel);
+
+        return data;
+    }
+        
     public ChessPuzzleData GetRandomProblem(int rating = 1000)
     {
         int section = rating / 100;
 
-        section = 14;
+
+        // Section 3-30
+
+        // Make sure it is within the range of lists
+        section = Math.Clamp(section, 3, 30);
 
 
-        Debug.Log("X");
-        Debug.Log("database.data "+ database.data);
-        Debug.Log("database.data.CountLength "+ database.data.Count);
-        Debug.Log("database.data[section] " + database.data[section]);
-        Debug.Log("database.data[section].Count " + database.data[section].values.Count);
+        //section = 14;
 
-        string selectedLevel = database.data[section].values[UnityEngine.Random.Range(0, database.data[section].values.Count)];
-        Debug.Log("Selected random level from section: "+section+" that consists of "+ database.data[section].values.Count+" levels.");
+        //Debug.Log("X");
+        //Debug.Log("database.data " + database.data);
+        //Debug.Log("database.data.CountLength " + database.data.Count);
+        //Debug.Log("database.data[section] " + database.data[section]);
+        //Debug.Log("database.data[section].Count " + database.data[section].values.Count);
+
+        // Finds next available problem with rollover
+        while(database.data[section].values.Count == 0) {
+            section++;
+
+            // If reaching end of list - go backwards
+            if (section == database.data.Count) {
+                section--;
+                while (database.data[section].values.Count == 0) {
+                    section--;
+                }
+            }
+        }
+        // Should have correct list here
+
+
+
+        string selectedLevel = database?.data[section].values[UnityEngine.Random.Range(0, database.data[section].values.Count)];
+        //Debug.Log("Selected random level from section: "+section+" that consists of "+ database.data[section].values.Count+" levels.");
 
         // Here we have the compact level as one string
         ChessPuzzleData data = GetStringAsPuzzleData(selectedLevel);
+
+        Debug.Log("PLayer Rating: "+rating+" Problem: "+data.rating);
 
         return data;
     }
@@ -54,7 +92,7 @@ public class ChessProblemDatas : MonoBehaviour
         data.setup = GetSetup(levelParts[1]);
 
         data.solution = GetSolution(levelParts[2], data.setup[64] == 0);
-        Debug.Log("Solution: "+ levelParts[2]+" => " + data.solution[0]+ data.solution[1]+ data.solution[2]+ data.solution[3]);
+        //Debug.Log("Solution: "+ levelParts[2]+" => " + data.solution[0]+ data.solution[1]+ data.solution[2]+ data.solution[3]);
         
         return data; 
     }
@@ -142,18 +180,70 @@ public class ChessProblemDatas : MonoBehaviour
 
         // Using only first step
         // Got a move in first spot that looks like d4e6
-        Debug.Log("Chars = " + moves[0]);
-        int[] ans = new int[moves.Length * 4];
+        Debug.Log("Chars = " + moves[0]+" full solution  = "+v);
+        List<int> ans = new();
+
         int index = 0;
+
         foreach(string move in moves) {
             char[] chars = move.ToCharArray();
-            for (int i = 0; i < chars.Length; i++) {
+            for (int i = 0; i < 4; i++) {
                 char c = chars[i];
                 int asInt = i%2==0 ? c - 'a' : (c-'1');
-                ans[index] = flip ? (7-asInt) : asInt;
+                //Debug.Log("ans["+index+"] = "+asInt+" flip = "+flip);
+
+                ans.Add(flip ? (7-asInt) : asInt);
                 index++;
             }
+
+            if(chars.Length >= 5) {
+                ans.Add(PromotionIndexConverter(chars[4]));
+                Debug.Log("<color=red>Added promotion: </color>"+ ans[ans.Count-1]);
+                Debug.Log("Full solution  = "+v);
+            }
         }
-        return ans;
+        return ans.ToArray();
+    }
+
+    private int PromotionIndexConverter(char v)
+    {
+        return v switch
+        {
+            'r' => 8,
+            'n' => 9,
+            'b' => 10,
+            'q' => 11,
+            _ => 0
+            /*
+            'r' => 12,
+            'n' => 13,
+            'b' => 14,
+            'q' => 15,
+            */
+        };
+    }
+    internal void FindPromotionProblem()
+    {
+        int index = 0;
+
+        int totAmt = database.data[13].values.Count;
+
+        for (int i = 0; i < totAmt; i++) {
+
+            string selectedLevel = database?.data[13].values[index];
+
+            string[] parts = selectedLevel.Split(',');
+
+            string[] solution = parts[2].Split(" ");
+
+            foreach (string part in solution) {
+                if(part.Length == 5) {
+                    Debug.Log(""+selectedLevel);
+                    break;
+                }
+            }
+            index++;
+        }
+        // Found promotion problem show it
     }
 }

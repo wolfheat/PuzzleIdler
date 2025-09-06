@@ -7,7 +7,7 @@ using UnityEngine;
 
 public class ChessProblemImporter :EditorWindow
 {
-    private const string CSV_PATH = "Assets/Data/ChessProblems.csv";
+    private const string CSV_PATH = "Assets/Data/50kProblems_CSV.csv";
     private const string SCRIPTABLE_OBJECT_FOLDER = "Assets/Data/ChessProblems/";
 
     [MenuItem("Tools/Import ChessProblems.csv")]

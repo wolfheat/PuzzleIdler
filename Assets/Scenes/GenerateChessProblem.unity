@@ -751,6 +751,9 @@ MonoBehaviour:
   squareHolder: {fileID: 1842029804}
   fromSelector: {fileID: 2122696502}
   toSelector: {fileID: 149542386}
+  winNotice: {fileID: 0}
+  playerRating: {fileID: 0}
+  problemRating: {fileID: 0}
 --- !u!1 &291229268
 GameObject:
   m_ObjectHideFlags: 0
