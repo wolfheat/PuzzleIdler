@@ -44,4 +44,22 @@ public class ChessPiece : MonoBehaviour
         // Set its visual
         image.sprite = chessPieceData.Sprites[Type];
     }
+
+    internal bool EnPassent(ChessMove playersMove)
+    {
+        return false;
+    }
+
+    internal bool PlayerCastle(ChessMove playersMove)
+    {
+        // King is in start position and is moved 2 steps to left or right - does not check for pieces in the way or no rooks
+        return (playersMove.from.x == 4 && playersMove.from.y == 0 && playersMove.to.y == 0 && (playersMove.to.x == 2 || playersMove.to.x == 6)) ||
+               (playersMove.from.x == 3 && playersMove.from.y == 0 && playersMove.to.y == 0 && (playersMove.to.x == 1 || playersMove.to.x == 5));
+    }
+    internal bool ComputerCastle(ChessMove computerMove)
+    {
+        // King is in start position and is moved 2 steps to left or right - does not check for pieces in the way or no rooks
+        return (computerMove.from.x == 4 && computerMove.from.y == 7 && computerMove.to.y == 7 && (computerMove.to.x == 2 || computerMove.to.x == 6)) ||
+               (computerMove.from.x == 3 && computerMove.from.y == 7 && computerMove.to.y == 7 && (computerMove.to.x == 1 || computerMove.to.x == 5));
+    }
 }

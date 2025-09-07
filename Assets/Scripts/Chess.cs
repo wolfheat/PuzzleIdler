@@ -134,7 +134,7 @@ public class Chess : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPoi
         }
     }
 
-    public void LoadRandomProblem()
+    public void LoadRandomProblem(int specificType = 0)
     {
         // Clear last problem
         ClearBoard();
@@ -146,15 +146,17 @@ public class Chess : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPoi
         piecePromotion.HidePanel();
 
         
+        ChessPuzzleData data = new ChessPuzzleData();
+        
+        if(specificType == 0)
+            data = ChessProblemDatas.Instance.GetRandomProblem(Stats.ChessRating);
+        else if(specificType == -1) {
+            ChessProblemDatas.Instance.FindCastleProblem();
+            return;
+        }
+        else
+            data = ChessProblemDatas.Instance.GetSpecificProblem(specificType);
 
-
-
-        //ChessPuzzleData data = ChessProblemDatas.Instance.GetRandomProblem(Stats.ChessRating);
-        // ChessProblemDatas.Instance.FindPromotionProblem();
-
-
-        //return;
-        ChessPuzzleData data = ChessProblemDatas.Instance.GetPromotionProblem(Stats.ChessRating);
         
         List<Vector3Int> positions = new List<Vector3Int>();
 
@@ -333,6 +335,43 @@ public class Chess : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPoi
         // Unset the moved pieces last position
         pieces[oponentMove.from.x, oponentMove.from.y] = null;
 
+
+
+        // If castling - Currently only for W at bottom (fix so it doesnt matter later)
+        if (movedPiece.ComputerCastle(oponentMove)) {
+            bool leftCastle = oponentMove.to.x == 2 || oponentMove.to.x == 1;
+
+            ChessPiece computerRook = pieces[leftCastle ? 0 : 7, 7];
+
+            int rookNewCol = oponentMove.to.x + (leftCastle ? 1 : -1); 
+
+            // Doesnt matter ? COmputer is always correct and these positions are changed above already
+            ChessPiece computerKnight = pieces[leftCastle ? 1 : 6, 7];
+            ChessPiece computerBishop = pieces[leftCastle ? 2 : 5, 7];
+
+            if (computerRook == null) {
+                Debug.Log("WARNING - castling without a rook present");
+            }else {
+                // Move the Rook to castle resulting position
+                Vector3Int oldPosition = new Vector3Int(leftCastle ? 0 : 7, 7, computerRook.Type);
+                Vector3Int newPosition = new Vector3Int(rookNewCol, 7, computerRook.Type);
+
+                Vector3 rooksPlacement = new Vector3(SquareSize / 2 + newPosition.x * SquareSize, SquareSize / 2 + newPosition.y * SquareSize, 0);
+                computerRook.SetPositionAndType(newPosition, rooksPlacement);
+
+                Debug.Log("Moving castling rook to [" + newPosition.x + "," + newPosition.y + "]");
+
+                // Remove the data
+                pieces[oldPosition.x, oldPosition.y] = null;
+
+                // Set new data for rook
+                pieces[newPosition.x, newPosition.y] = computerRook;
+            }
+        }
+
+
+
+
     }
 
 
@@ -401,17 +440,7 @@ public class Chess : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPoi
 
         
         if (!InsideBoard(targetCol, targetRow)) {
-            // Return it to its origin
-            dragging = false;
-
-            // Show the dragged again
-            draggedPiece.Hide(false);
-
-            // Hide ghost
-            ghost.Hide(true);
-
-            draggedPiece = null;
-
+            ReturnDraggedPiece();
             return;
         }
 
@@ -430,9 +459,76 @@ public class Chess : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPoi
             Debug.Log("ReplacedItem = " + replacedPiece);
             Debug.Log("it index is  = " + pieces[targetCol, targetRow]?.Type);
 
+            // Create The Players Move
+            ChessMove playersMove = new ChessMove(new Vector2Int(sourceCol, sourceRow), new Vector2Int(targetCol, targetRow));
+
+            // En passent
+            if (draggedPiece.EnPassent(playersMove)) {
+                Vector3Int oponentsPawnPosition = new Vector3Int(targetCol, targetRow - 1, draggedPiece.Type);
+                ChessPiece opponentsPawn = pieces[targetCol, targetRow - 1];
+
+                if (opponentsPawn == null) {
+                    Debug.Log("WARNING - en passenting but no oponents pawn present");
+                }
+                else {
+
+                    Debug.Log("Destroying en passent pawn at [" + targetCol + "," + (targetRow - 1) + "]");
+                    // Destroy the pawn
+                    Destroy(opponentsPawn.gameObject);
+
+                    // Remove the data
+                    pieces[targetCol, targetRow - 1] = null;
+                }
+            }
+
+            // Castle
+            if (draggedPiece.PlayerCastle(playersMove)) {
+                bool leftCastle = playersMove.to.x == 2 || playersMove.to.x == 1;
+
+                ChessPiece playerRook = pieces[leftCastle ? 0 : 7, 0];
+
+                // Doesnt matter ? COmputer is always correct and these positions are changed above already
+                ChessPiece playerKnight = pieces[leftCastle ? 1 : 6, 0];
+                ChessPiece playerBishop = pieces[leftCastle ? 2 : 5, 0];
+
+                int rookNewCol = playersMove.to.x + (leftCastle ? 1 : -1);
+
+                if (playerRook == null) {
+                    Debug.Log("WARNING - castling without a rook present");
+                    ReturnDraggedPiece();
+                    return;
+                }
+
+                // Have to make sure this is run before the pieces are actually moved
+                if (playerKnight != null || playerBishop != null) {
+                    Debug.Log("WARNING - castling with knight or Bishop in the way");
+                    ReturnDraggedPiece();
+                    return;
+                }
+
+
+                else {
+                    // Move the Rook to castle resulting position
+                    Vector3Int oldPosition = new Vector3Int(leftCastle ? 0 : 7, 0, playerRook.Type);
+                    Vector3Int newPosition = new Vector3Int(rookNewCol, 0, playerRook.Type);
+
+                    Vector3 rooksPlacement = new Vector3(SquareSize / 2 + newPosition.x * SquareSize, SquareSize / 2 + newPosition.y * SquareSize, 0);
+                    playerRook.SetPositionAndType(newPosition, rooksPlacement);
+
+                    Debug.Log("Moving castling rook to [" + newPosition.x + "," + newPosition.y + "]");
+
+                    // Remove the data
+                    pieces[oldPosition.x, oldPosition.y] = null;
+
+                    // Set new data for rook
+                    pieces[newPosition.x, newPosition.y] = playerRook;
+                }
+            }
+
             // Destroy the item if its there
             if (replacedPiece != null)
                 Destroy(replacedPiece.gameObject);
+
 
             // Move dragged to new position
             Vector3Int piecePosition = new Vector3Int(targetCol, targetRow, draggedPiece.Type);
@@ -446,9 +542,8 @@ public class Chess : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPoi
 
             Debug.Log("Dragged the piece from [" + draggedPiece.Pos.x + ", " + draggedPiece.Pos.y + "] => [" + targetCol + "," + targetRow + "] " + (replacedPiece == null ? "" : ("Took " + replacedPiece.Type)));
 
-            // If a promotion do promotion here - before checking if correct?
+            
 
-            ChessMove playersMove = new ChessMove(new Vector2Int(sourceCol, sourceRow), new Vector2Int(targetCol, targetRow));
 
 
 
@@ -476,6 +571,20 @@ public class Chess : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPoi
         ghost.Hide(true);
 
 
+    }
+
+    private void ReturnDraggedPiece()
+    {
+        // Return it to its origin
+        dragging = false;
+
+        // Show the dragged again
+        draggedPiece.Hide(false);
+
+        // Hide ghost
+        ghost.Hide(true);
+
+        draggedPiece = null;
     }
 
     private void OpenPromotionPanel(ChessMove playersMove)

@@ -45,7 +45,9 @@ Aug 2025
 6/9		* Win creen color change
 		* Black promotion works
 		* Computer promotion works
+		* Castling works
 
+		// Fix en passent
 
 		// White promotion
 		00ryU,4r1k1/8/2PP1bp1/p7/1p5p/1P2p3/4K2B/8 b - - 0 40,g6g5 d6d7 e8d8 c6c7 d8d7 c7c8q,1399,138,69,8,advancedPawn advantage endgame long promotion,https://lichess.org/aKt8hwuq/black#80,
@@ -56,9 +58,23 @@ Aug 2025
 		// Computer promotes
 		04h1H,2Q5/1P3pk1/4pq2/p2p2p1/P6p/2P4P/5r2/6RK w - - 0 39,b7b8q f6f3 g1g2 f3g2,1305,78,94,782,endgame mate mateIn2 short,https://lichess.org/FLS1PxgW#77,
 
+		// Enpassent Player move
+		04h1H,2Q5/1P3pk1/4pq2/p2p2p1/P6p/2P4P/5r2/6RK w - - 0 39,b7b8q f6f3 g1g2 f3g2,1305,78,94,782,endgame mate mateIn2 short,https://lichess.org/FLS1PxgW#77,
+
+		// Enpassent Computer move
+		04h1H,2Q5/1P3pk1/4pq2/p2p2p1/P6p/2P4P/5r2/6RK w - - 0 39,b7b8q f6f3 g1g2 f3g2,1305,78,94,782,endgame mate mateIn2 short,https://lichess.org/FLS1PxgW#77,
+
+		// Player Castle	
+		06K84,1r1k1b1r/2q2ppp/p3p3/n3P1N1/Q1BP2b1/4P3/PP4PP/2R1K2R b K - 3 15,b8b2 e1g1 b2b4 g5f7 c7f7 a4a5,2576,90,91,610,castling crushing deflection exposedKing fork long middlegame,https://lichess.org/P5qa1Wnf/black#30,Queens_Gambit_Accepted Queens_Gambit_Accepted_Central_Variation
+
+		// Player Long Castle	
+		00Qpu,3r1b1r/2pn4/1p1p3p/2kP2qn/Q3Pp2/4Bp2/1P4PP/4R1K1 b - - 3 26,f4e3 e1c1,1156,75,97,669,mate mateIn1 middlegame oneMove,https://lichess.org/GLsIyi7p/black#52,
+
+		// Computer castle
+		0UKoL,r2q1rk1/ppp1bppp/2b2n2/4N3/4P3/2NP4/PPP3PP/R1BQK2R w KQ - 1 10,e1g1 d8d4 g1h1 d4e5,1528,75,95,32890,advantage fork opening short,https://lichess.org/FwSCXBKc#19,Rat_Defense Rat_Defense_Harmonist
 
 
-
+		* Make sure a loaded level is stored so player faces it next login
 
 		* Issue with promotions as solution
 			* Make player unable to move pieces when picking a promotion

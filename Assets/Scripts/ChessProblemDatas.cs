@@ -9,6 +9,14 @@ public class ChessProblemDatas : MonoBehaviour
     [SerializeField] private string promotionExampleProblem;
     [SerializeField] private string blackPromotion;
     [SerializeField] private string computerPromotion;
+    [SerializeField] private string computerBlackPromotion;
+
+    [SerializeField] private string playerCastle;
+    [SerializeField] private string playerCastleLong;
+    [SerializeField] private string computerCastle;
+
+    [SerializeField] private string computerEnPassent;
+    [SerializeField] private string playerEnPassent;
     //[SerializeField] private ChessDatabase chessDatabase;
 
     public static ChessProblemDatas Instance { get; private set; }
@@ -23,13 +31,32 @@ public class ChessProblemDatas : MonoBehaviour
     }
 
 
+    public ChessPuzzleData GetSpecificProblem(int problemType = 0)
+    {
+        string problem = problemType switch {
+            1 => promotionExampleProblem,
+            2 => blackPromotion,
+            3 => computerPromotion,
+            4 => computerBlackPromotion,
+            5 => playerCastle,
+            6 => playerCastleLong,
+            7 => computerCastle,
+            8 => computerEnPassent,
+            9 => playerEnPassent,
+            _ => ""
+        };
+
+        return GetStringAsPuzzleData(problem);
+    }
+
     public ChessPuzzleData GetPromotionProblem(int rating = 1000)
     {
         int section = rating / 100;
 
         // string selectedLevel = promotionExampleProblem;
         // string selectedLevel = blackPromotion;
-         string selectedLevel = computerPromotion;
+         //string selectedLevel = computerPromotion;
+         string selectedLevel = computerBlackPromotion;
 
         // Here we have the compact level as one string
         ChessPuzzleData data = GetStringAsPuzzleData(selectedLevel);
@@ -226,28 +253,81 @@ public class ChessProblemDatas : MonoBehaviour
             */
         };
     }
+
     internal void FindPromotionProblem()
     {
+        Debug.Log("Finding Promotion Problem");
+
         int index = 0;
 
-        int totAmt = database.data[13].values.Count;
+        int section = 14;
 
-        for (int i = 0; i < totAmt; i++) {
 
-            string selectedLevel = database?.data[13].values[index];
+        for (int k = 10; k < 12; k++) {
 
-            string[] parts = selectedLevel.Split(',');
+            int totAmt = database.data[section].values.Count;
+            for (int i = 0; i < totAmt; i++) {
+                string selectedLevel = database?.data[section].values[index];
+                //Debug.Log("["+section+","+index+"] "+"Level: "+selectedLevel);
 
-            string[] solution = parts[2].Split(" ");
+                string[] parts = selectedLevel.Split(',');
+            
+                string[] setup = parts[1].Split(' ');
 
-            foreach (string part in solution) {
-                if(part.Length == 5) {
-                    Debug.Log(""+selectedLevel);
-                    break;
+                //Debug.Log("Checkingif 'b': " + setup[1]);
+                
+                index++;
+
+                bool computerBlack = setup[1] == "b";
+                if (!computerBlack) continue;
+
+
+                string[] solution = parts[2].Split(" ");
+
+                for (int j = 0; j < solution.Length; j+=2) {
+                    string part = solution[j];
+                    if (part.Length == 5) {
+                        Debug.Log(""+selectedLevel);
+                        break;
+                    }
                 }
             }
-            index++;
+            section++;
         }
+        Debug.Log("END");
+        // Found promotion problem show it
+    }
+    internal void FindCastleProblem()
+    {
+        Debug.Log("Finding Castle Problem");
+
+        int section = 11;
+        
+        while(section < 28) {
+
+            int totAmt = database.data[section].values.Count;
+            for (int i = 0; i < totAmt; i++) {
+
+                string selectedLevel = database?.data[section].values[i];
+                
+                string[] parts = selectedLevel.Split(',');
+            
+                i++;
+
+                string[] solution = parts[2].Split(" ");
+
+                for (int j = 1; j < solution.Length; j+=2) {
+                    string part = solution[j];
+                    if (part == "e1c1") {
+                        Debug.Log(""+selectedLevel);
+                        break;
+                    }
+                }
+            }
+            section++;
+        
+        }
+        Debug.Log("END");
         // Found promotion problem show it
     }
 }
