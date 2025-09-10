@@ -429,6 +429,24 @@ public class Chess : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPoi
 
     public void OnPointerUp(PointerEventData eventData)
     {
+
+        // RE-WRITING THIS
+
+        // Determine what move player is trying to do
+        // Create this as a Move
+
+        // Check if it is a valid move - Validation needs current setup and the move to be made. If validating en passent also last move is needed (if we want to return players piece as if it is an illegal move when trying to do en passent)
+
+        // Return the move to be made including any removed or castled piece - Maybe have a remove of a piece also be a type of move
+
+        // CompleteChessMove
+
+        // basic move
+        // other affected piece move - Should work since there can ever only be one other affected piece thats either moved or taken (castle / captured)
+
+
+
+
         if (!GameActive) return;
 
         if (!dragging) return;
