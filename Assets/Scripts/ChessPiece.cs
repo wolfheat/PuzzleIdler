@@ -45,8 +45,28 @@ public class ChessPiece : MonoBehaviour
         image.sprite = chessPieceData.Sprites[Type];
     }
 
-    internal bool EnPassent(ChessMove playersMove)
+    internal bool EnPassent(ChessMove playersMove, ChessPiece enpassentedPiece)
     {
+        Debug.Log("Enpassanted piece = "+enpassentedPiece);
+        // Was even a piece in the en passent piosition?
+        if(enpassentedPiece == null) return false;
+        
+
+        // Check if this was a pawn that moved
+        if(!(Type == 5 || Type == 11)) return false;
+
+        Debug.Log("En passent type = "+Type);
+
+        int sideSteps = Math.Abs(playersMove.from.x - playersMove.to.x);
+
+        Debug.Log("sidesteps = "+sideSteps);
+        Debug.Log("PLayer move from  = "+playersMove.from.y);
+
+        // Possible enPassentMove
+        if((playersMove.from.y == 3 || playersMove.from.y == 4) && sideSteps == 1){ // A piece is in the en passent position - Piece moved is a pawn - It moves from correct row to be an en passent - it steps one step to the side
+            return true;
+        }
+        // This only checks if an en passent was made - if so the oponents pawn needs to be removed
         return false;
     }
 

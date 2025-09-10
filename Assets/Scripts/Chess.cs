@@ -151,7 +151,8 @@ public class Chess : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPoi
         if(specificType == 0)
             data = ChessProblemDatas.Instance.GetRandomProblem(Stats.ChessRating);
         else if(specificType == -1) {
-            ChessProblemDatas.Instance.FindCastleProblem();
+            ChessProblemDatas.Instance.FindEnPassentProblem();
+            //ChessProblemDatas.Instance.FindCastleProblem();
             return;
         }
         else
@@ -462,8 +463,8 @@ public class Chess : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPoi
             // Create The Players Move
             ChessMove playersMove = new ChessMove(new Vector2Int(sourceCol, sourceRow), new Vector2Int(targetCol, targetRow));
 
-            // En passent
-            if (draggedPiece.EnPassent(playersMove)) {
+            // En passent - Can only happen to an empty square
+            if (replacedPiece == null && draggedPiece.EnPassent(playersMove,pieces[targetCol,sourceRow])){
                 Vector3Int oponentsPawnPosition = new Vector3Int(targetCol, targetRow - 1, draggedPiece.Type);
                 ChessPiece opponentsPawn = pieces[targetCol, targetRow - 1];
 

@@ -41,8 +41,8 @@ public class ChessProblemDatas : MonoBehaviour
             5 => playerCastle,
             6 => playerCastleLong,
             7 => computerCastle,
-            8 => computerEnPassent,
-            9 => playerEnPassent,
+            8 => playerEnPassent,
+            9 => computerEnPassent,
             _ => ""
         };
 
@@ -211,7 +211,7 @@ public class ChessProblemDatas : MonoBehaviour
 
         // Using only first step
         // Got a move in first spot that looks like d4e6
-        Debug.Log("Chars = " + moves[0]+" full solution  = "+v);
+        //Debug.Log("Chars = " + moves[0]+" full solution  = "+v);
         List<int> ans = new();
 
         int index = 0;
@@ -229,8 +229,8 @@ public class ChessProblemDatas : MonoBehaviour
 
             if(chars.Length >= 5) {
                 ans.Add(PromotionIndexConverter(chars[4]));
-                Debug.Log("<color=red>Added promotion: </color>"+ ans[ans.Count-1]);
-                Debug.Log("Full solution  = "+v);
+                //Debug.Log("<color=red>Added promotion: </color>"+ ans[ans.Count-1]);
+                //Debug.Log("Full solution  = "+v);
             }
         }
         return ans.ToArray();
@@ -254,6 +254,54 @@ public class ChessProblemDatas : MonoBehaviour
         };
     }
 
+    internal void FindEnPassentProblem()
+    {
+        Debug.Log("Finding En Passent Problem");
+
+        int index = 0;
+
+        int section = 14;
+
+
+        for (int k = 9; k < 20; k++) {
+
+            int totAmt = database.data[section].values.Count;
+            for (int i = 0; i < totAmt; i++) {
+
+                string selectedLevel = database?.data[section].values[i];
+                
+                string[] parts = selectedLevel.Split(',');
+            
+                string[] setup = parts[1].Split(' ');
+
+                //Debug.Log("Checkingif 'b': " + setup[1]);
+                
+                index++;
+
+                bool computerBlack = setup[1] == "b";
+                if (!computerBlack) continue;
+
+
+                //ChessPuzzleData data = GetStringAsPuzzleData(selectedLevel);
+
+
+                string[] solution = parts[2].Split(" ");
+
+                // Find an enemy move that is e7e5 - where player has a pawn on f5
+
+                for (int j = 1; j < solution.Length; j+=2) {
+                    string part = solution[j];
+                    if (solution[j-1] == "e7e5" &&  (solution[j] == "f5e6" || solution[j] == "d5e6")){
+                        Debug.Log(""+selectedLevel);
+                        break;
+                    }
+                }
+            }
+            section++;
+        }
+        Debug.Log("END");
+        // Found promotion problem show it
+    }
     internal void FindPromotionProblem()
     {
         Debug.Log("Finding Promotion Problem");
