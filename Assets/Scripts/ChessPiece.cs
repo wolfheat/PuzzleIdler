@@ -8,6 +8,8 @@ public class ChessPiece : MonoBehaviour
     public int Type { get; private set; }
     private bool dragging = false;
 
+    public int Color => Type / 6;
+
     public Vector2Int Pos { get; private set; }
     public Vector3 HomePosition { get; private set; }
 
