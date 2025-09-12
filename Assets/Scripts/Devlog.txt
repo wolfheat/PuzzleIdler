@@ -48,7 +48,9 @@ Aug 2025
 		* Castling works
 10/9	* Evaluate method written but not texted
 12/9	* Start of implementing same movement for computer
-
+		* Computer moves seems to mostly work now
+		
+		
 		// Fix en passent
 
 

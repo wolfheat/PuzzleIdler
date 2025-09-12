@@ -252,28 +252,54 @@ public class Chess : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPoi
     private IEnumerator AnimateComputerMove()
     {
         yield return null; // Needed to make sure ghost hidden can be changed again even if player just disabled it
-        Debug.Log("  COMPUTER MOVES:  moves left = "+winCondition.Count);
-        if(winCondition.Count == 0) {
+        Debug.Log("  COMPUTER MOVES:  moves left = " + winCondition.Count);
+        if (winCondition.Count == 0) {
             Debug.Log("No Conditions");
             yield break;
         }
         ChessMove oponentMove = winCondition[0];
 
         winCondition.RemoveAt(0);
-        
-        Debug.Log("Wincondition = "+oponentMove.from.x+","+oponentMove.from.y+" => "+oponentMove.to.x+","+oponentMove.to.y);
+
+        Debug.Log("Wincondition = " + oponentMove.from.x + "," + oponentMove.from.y + " => " + oponentMove.to.x + "," + oponentMove.to.y);
 
 
         // Change this to use same as player ?
 
 
+        // RE-WRITING THIS
+
+        //Hinder player from doing moves during computer move
+        GameActive = false;
 
         // Do the enemys Move
         int col = oponentMove.from.x;
         int row = oponentMove.from.y;
 
-        int colTo = oponentMove.to.x;
-        int rowTo = oponentMove.to.y;
+        int targetCol = oponentMove.to.x;
+        int targetRow = oponentMove.to.y;
+
+        // Check the target square
+        ChessPiece replacedPiece = pieces[targetCol, targetRow];
+
+        // Check if the Move is valid - Also get any changes as a FullChessMove
+        // Check if it is a valid move - Validation needs current setup and the move to be made. If validating en passent also last move is needed (if we want to return players piece as if it is an illegal move when trying to do en passent)
+        FullChessMove fullChessMove = ChessMoveEvaluator.Evaluate(oponentMove, lastPerformedMove, pieces, playerColor);
+        // Return the move to be made including any removed or castled piece 
+
+        if (!fullChessMove.valid) {
+            // Return the piece
+            Debug.Log("Enemy Move is not valid - Should never happen.");
+        }
+
+        // Here we got a valid move - Main move and other - Use it depending on player moving = direct, computer = animated
+        // On Mouse Up is always player so direct
+
+        // Store this move as last performed for next check - this only counts for the computer move, after computer move this should be reset to another value
+        lastPerformedMove = fullChessMove.performed;
+
+
+        // Write computer animated code to handle the same input as player code
 
         // Get Moved Piece
         ChessPiece movedPiece = pieces[col, row];
@@ -299,10 +325,12 @@ public class Chess : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPoi
         // Animate Ghost
         while (animationTimer < AnimationTime) {
             float percent = animationTimer / AnimationTime;
-            ghost.transform.localPosition = Vector3.Lerp(localFromLocation,localToLocation,percent);
+            ghost.transform.localPosition = Vector3.Lerp(localFromLocation, localToLocation, percent);
             animationTimer += Time.deltaTime;
             yield return null;
         }
+
+        // Animation is complete here
 
         // Hide Ghost again
         ghost.Hide(true);
@@ -310,88 +338,51 @@ public class Chess : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPoi
         // Show Original Item if not Cathing a Piece
         movedPiece.Hide(false);
 
-        // Promotion Handeling
+        // Handle promotion change of type                                                                                 
+        if ((movedPiece.Type == 5 || movedPiece.Type == 11) && targetRow == 0) // white or black pawn - but since player always on its side only row 7 is a promotion
+            movedPiece.SetPositionAndType(new Vector3Int(oponentMove.to.x, oponentMove.to.y, (playerColor == 0 ? 1 : 0) * 6 + oponentMove.promote - 8), localToLocation);
+        else
+            // Also need to set the moved piece position and type?
+            movedPiece.SetPositionAndType(new Vector3Int(oponentMove.to.x, oponentMove.to.y, movedPiece.Type), localToLocation);
 
-        int targetRow = oponentMove.to.y;
 
-            Debug.Log("Computer move from : [" + col + "," + row +"] => ["+ colTo + "," + rowTo +"]");
-        Debug.Log("[" + col + "," + row +"] = " + movedPiece?.Type);
 
-        //Debug.Log("MovedPiece: " + (pieces[col, row] != null)+ (pieces[row, col] != null)+ (pieces[col,8 - row] != null)+ (pieces[8 - col, row] != null));
-
-        if (movedPiece != null) {
-            Debug.Log("There is a piece here of type "+movedPiece.Type);
-        }
-        else {
-            Debug.Log("There is no piece to move from this position - invalid solution");
-        }
-
-        // Get any replaced Piece
-        ChessPiece replacedPiece = pieces[colTo, rowTo];
-        Debug.Log("[" + colTo + "," +rowTo +"] = " + replacedPiece?.Type);
-
-        if (replacedPiece != null) {
-            Debug.Log("Changing target piece "+replacedPiece.Type+" at ["+ colTo + ","+ rowTo + "]");
-            
-
-            if ((movedPiece.Type == 5 || movedPiece.Type == 11) && targetRow == 0) { // white or black pawn - but since player always on its side only row 7 is a promotion
-                // Fixed this for black pieces ??
-                replacedPiece.SetType((playerColor == 0 ? 1 : 0) * 6 + oponentMove.promote - 8);
-            }else
-                replacedPiece.ChangeType(movedPiece.Type);
-
-            Destroy(movedPiece.gameObject);
-        }
-        else {
-            if(movedPiece == null)
-                Debug.Log("NULL moved piece");
-            if ((movedPiece.Type == 5 || movedPiece.Type == 11) && targetRow == 0) { // white or black pawn - but since player always on its side only row 7 is a promotion
-                // Fixed this for black pieces ??
-                movedPiece.SetPositionAndType(new Vector3Int(oponentMove.to.x, oponentMove.to.y, (playerColor == 0 ? 1 : 0) * 6 + oponentMove.promote - 8), localToLocation);
+        // Other
+        if (fullChessMove.other != null) {
+            Debug.Log("Action for the other piece");
+            // Remove this piece
+            if (fullChessMove.other.to.x == -1) {
+                Debug.Log("Removing the other piece on [" + fullChessMove.other.from.x + "," + fullChessMove.other.from.y + "] null = " + (pieces[fullChessMove.other.from.x, fullChessMove.other.from.y] == null));
+                if (pieces[fullChessMove.other.from.x, fullChessMove.other.from.y] != null) {
+                    Destroy(pieces[fullChessMove.other.from.x, fullChessMove.other.from.y].gameObject);
+                    pieces[fullChessMove.other.from.x, fullChessMove.other.from.y] = null;
+                }
             }
-            else
-                movedPiece.SetPositionAndType(new Vector3Int(oponentMove.to.x, oponentMove.to.y, movedPiece.Type), localToLocation);
-            
-            // Move dragged to new position
-            pieces[oponentMove.to.x, oponentMove.to.y] = movedPiece;
+            else {
+                Debug.Log("Moving the other place");
+                // Do the move
+                ChessPiece otherPiece = pieces[fullChessMove.other.from.x, fullChessMove.other.from.y];
+
+                // Move dragged to new position
+                Vector3Int otherPosition = new Vector3Int(fullChessMove.other.to.x, fullChessMove.other.to.y, otherPiece.Type);
+                otherPiece.SetPositionAndType(otherPosition, new Vector3(SquareSize / 2 + otherPosition.x * SquareSize, SquareSize / 2 + otherPosition.y * SquareSize, 0));
+                Debug.Log("Nullifying position [" + fullChessMove.other.from.x + "," + fullChessMove.other.from.y + "]");
+
+                pieces[fullChessMove.other.to.x, fullChessMove.other.to.y] = otherPiece;
+                pieces[fullChessMove.other.from.x, fullChessMove.other.from.y] = null;
+            }
         }
 
-        // Unset the moved pieces last position
+
+        // Move dragged to new position
+        pieces[oponentMove.to.x, oponentMove.to.y] = movedPiece;
+
+        // Forget last value
         pieces[oponentMove.from.x, oponentMove.from.y] = null;
 
 
+        GameActive = true;
 
-        // If castling - Currently only for W at bottom (fix so it doesnt matter later)
-        if (movedPiece.ComputerCastle(oponentMove)) {
-            bool leftCastle = oponentMove.to.x == 2 || oponentMove.to.x == 1;
-
-            ChessPiece computerRook = pieces[leftCastle ? 0 : 7, 7];
-
-            int rookNewCol = oponentMove.to.x + (leftCastle ? 1 : -1); 
-
-            // Doesnt matter ? COmputer is always correct and these positions are changed above already
-            ChessPiece computerKnight = pieces[leftCastle ? 1 : 6, 7];
-            ChessPiece computerBishop = pieces[leftCastle ? 2 : 5, 7];
-
-            if (computerRook == null) {
-                Debug.Log("WARNING - castling without a rook present");
-            }else {
-                // Move the Rook to castle resulting position
-                Vector3Int oldPosition = new Vector3Int(leftCastle ? 0 : 7, 7, computerRook.Type);
-                Vector3Int newPosition = new Vector3Int(rookNewCol, 7, computerRook.Type);
-
-                Vector3 rooksPlacement = new Vector3(SquareSize / 2 + newPosition.x * SquareSize, SquareSize / 2 + newPosition.y * SquareSize, 0);
-                computerRook.SetPositionAndType(newPosition, rooksPlacement);
-
-                Debug.Log("Moving castling rook to [" + newPosition.x + "," + newPosition.y + "]");
-
-                // Remove the data
-                pieces[oldPosition.x, oldPosition.y] = null;
-
-                // Set new data for rook
-                pieces[newPosition.x, newPosition.y] = computerRook;
-            }
-        }
     }
 
 

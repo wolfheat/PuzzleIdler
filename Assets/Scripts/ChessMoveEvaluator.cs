@@ -191,7 +191,7 @@ public static class ChessMoveEvaluator
 
             if (Math.Abs(rowChange) != 1) {
                 // If step ahead is free
-                if(Math.Abs(rowChange) == 2 && twoStepsAllowed) {
+                if(Math.Abs(rowChange) == 2 && twoStepsAllowed && colChange == 0) {
                     if(chessSetup[performedMove.from.x, performedMove.from.y + allowedMoveDirection] != null)
                         return false; // Doesnt step one step forward - invalid
                     // Valid two step initial pawn move
