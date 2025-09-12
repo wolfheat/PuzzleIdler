@@ -161,7 +161,10 @@ public class Chess : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPoi
         // Remove any Promotion panel
         piecePromotion.HidePanel();
 
-        
+        // Reset the lastPerformed
+        lastPerformedMove = null;
+
+
         ChessPuzzleData data = new ChessPuzzleData();
         
         if(specificType == 0)
@@ -229,9 +232,10 @@ public class Chess : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPoi
 
         GameActive = true;
 
-        //Rating
+        // Problem Rating Text
         UpdateProblemRating(data.rating);
 
+        // Perform the first computer move
         StartCoroutine(AnimateComputerMove());
 
     }
@@ -248,7 +252,7 @@ public class Chess : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPoi
     private IEnumerator AnimateComputerMove()
     {
         yield return null; // Needed to make sure ghost hidden can be changed again even if player just disabled it
-        Debug.Log("Winconditions = "+winCondition.Count);
+        Debug.Log("  COMPUTER MOVES:  moves left = "+winCondition.Count);
         if(winCondition.Count == 0) {
             Debug.Log("No Conditions");
             yield break;
@@ -258,6 +262,9 @@ public class Chess : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPoi
         winCondition.RemoveAt(0);
         
         Debug.Log("Wincondition = "+oponentMove.from.x+","+oponentMove.from.y+" => "+oponentMove.to.x+","+oponentMove.to.y);
+
+
+        // Change this to use same as player ?
 
 
 
@@ -385,10 +392,6 @@ public class Chess : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPoi
                 pieces[newPosition.x, newPosition.y] = computerRook;
             }
         }
-
-
-
-
     }
 
 
@@ -448,23 +451,21 @@ public class Chess : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPoi
         // Computer Moving rook as a king castle will castle with the king at rook position - prob error in animation since it has separate logic - might be fixed when new is implemented
         // Pieces captured are not removed correctly
         
-
-
-        Debug.Log("Dropping piece.");
+        Debug.Log("  PLAYER DROPPING A PIECE.");
 
         // RE-WRITING THIS
         if (!GameActive) return;
 
-        Debug.Log("Game is active.");
+        //Debug.Log("Game is active.");
 
         if (!dragging) return;
 
-        Debug.Log("Not dragging.");
+        //Debug.Log("Not dragging.");
 
         // Set the locol position
         UpdateMouseLocalPosition(eventData);
 
-        Debug.Log("Local position set.");
+        //Debug.Log("Local position set.");
 
         // Capture the piece source and target positions
         int targetCol = (int)localPosition.x / SquareSize;
@@ -485,7 +486,7 @@ public class Chess : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPoi
         // Create this as a Move
         ChessMove playersMove = new ChessMove(new Vector2Int(sourceCol, sourceRow), new Vector2Int(targetCol, targetRow));
         
-        Debug.Log("PLayer move set.");
+        //Debug.Log("PLayer move set.");
         
         // Check the target square
         ChessPiece replacedPiece = pieces[targetCol, targetRow];
@@ -507,7 +508,10 @@ public class Chess : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPoi
         }
 
         // Here we got a valid move - Main move and other - Use it depending on player moving = direct, computer = animated
-        // On MOuse Up is always player so direct
+        // On Mouse Up is always player so direct
+
+        // Store this move as last performed for next check - this only counts for the computer move, after computer move this should be reset to another value
+        lastPerformedMove = fullChessMove.performed;
 
         // Other
         if(fullChessMove.other != null) {
@@ -524,11 +528,14 @@ public class Chess : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPoi
                 Debug.Log("Moving the other place");
                 // Do the move
                 ChessPiece otherPiece = pieces[fullChessMove.other.from.x, fullChessMove.other.from.y];
-                pieces[fullChessMove.other.from.x, fullChessMove.other.from.y] = null;
 
                 // Move dragged to new position
                 Vector3Int otherPosition = new Vector3Int(fullChessMove.other.to.x, fullChessMove.other.to.y,otherPiece.Type);
                 otherPiece.SetPositionAndType(otherPosition, new Vector3(SquareSize / 2 + otherPosition.x * SquareSize, SquareSize / 2 + otherPosition.y * SquareSize, 0));
+                Debug.Log("Nullifying position ["+fullChessMove.other.from.x+","+fullChessMove.other.from.y+"]");
+
+                pieces[fullChessMove.other.to.x, fullChessMove.other.to.y] = otherPiece;
+                pieces[fullChessMove.other.from.x, fullChessMove.other.from.y] = null;
             }
         }
 
@@ -672,6 +679,8 @@ public class Chess : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPoi
             //OnPointerDownGenerator(eventData, col, row);
             return;
         }
+
+        Debug.Log("Trying to get the piece on ["+col+","+row+"] = " + (pieces[col,row]!=null));
 
         // Get the piece
         if (pieces[col, row] == null) return;

@@ -29,7 +29,7 @@ public static class ChessMoveEvaluator
         ChessPiece movedPiece = chessSetup[performedMove.from.x, performedMove.from.y];
         ChessPiece targetPiece = chessSetup[performedMove.to.x, performedMove.to.y];
 
-        Debug.Log("Performed Move from = "+performedMove.from.x+","+performedMove.from.y);
+        Debug.Log("Performed Move from = "+performedMove.from.x+","+performedMove.from.y+" type: "+movedPiece.Type);
 
         // Sets the other piece for deletion by setting it to -1, -1 
         result.other = targetPiece != null ? new ChessMove(new Vector2Int(performedMove.to.x, performedMove.to.y), new Vector2Int(-1, -1)) : null;
@@ -105,7 +105,9 @@ public static class ChessMoveEvaluator
             // Depends on rotation of board ie playerColor
 
             // To begin with just check for two steps from kings or queens square
-            
+
+            Debug.Log("Checking for valid Castle Move");
+
             // Also need to check that rook is available and knight and bishop is not
             int rowChange = performedMove.to.y - performedMove.from.y;
             int colChange = performedMove.to.x - performedMove.from.x;
@@ -117,9 +119,14 @@ public static class ChessMoveEvaluator
             if(colChange != 2)
                 return false;
 
+            
+            Debug.Log("Is moveing 2 steps");
+
             // King and queen spot (depends on rotation of board)
-            if(performedMove.from.x != 3 || performedMove.from.x != 4)
+            if(performedMove.from.x != 3 && performedMove.from.x != 4)
                 return false;
+
+            Debug.Log("Is moveing from king or queen spot");
 
             // Check all versions of castle
             // Can't have knight or bishop but need rook
@@ -157,14 +164,16 @@ public static class ChessMoveEvaluator
         bool IsValidKingMove() // OBS - Does not check for stepping into check
         {
             int rowChange = performedMove.to.y - performedMove.from.y;
-            int colChange = performedMove.to.y - performedMove.from.y;            
+            int colChange = performedMove.to.x - performedMove.from.x;            
             if (Math.Abs(rowChange) > 1 || Math.Abs(colChange) > 1) 
                 return false;
+            Debug.Log("It is a valid normal kings move");
             return true;
         }
         
         bool IsValidPawnMove() // 
         {
+            Debug.Log("Checking valid pawn move");
             int allowedMoveDirection = movedPiece.Color == 0 ? 1 : -1;
             // Inverse if player plays black
             if(playerColor == 1) {
@@ -194,20 +203,24 @@ public static class ChessMoveEvaluator
 
             // Is one step
 
-            if (Math.Abs(colChange) == 1) {
+            if (Math.Abs(colChange) == 1) { // Side Step
                 // Take an oponent
                 if (chessSetup[performedMove.to.x, performedMove.to.y] == null) {
                     // Check for valid en passent - if available add it as valid
-                    if (lastPerformedMove.enPassentable && lastPerformedMove.to.x == performedMove.to.x){
+                    Debug.Log("Check valid en passent,  last move ended at ["+ lastPerformedMove.to.x+","+ lastPerformedMove.to.y+"]");
+                    if (lastPerformedMove.enPassentable && (lastPerformedMove.to.x == performedMove.to.x && lastPerformedMove.to.y == performedMove.from.y)){
+                        Debug.Log("is valid en passent");
                         // Valid en passent
                         result.other = new ChessMove(new Vector2Int(lastPerformedMove.to.x, lastPerformedMove.to.y), new Vector2Int(-1, -1));
                         return true;
-                    }
+                    }                    
+                    Debug.Log("is in-valid en passent");
                     return false; // Can only take another piece, except en passent
                 }
+                // Capture
                 return true;
             }
-            if (Math.Abs(colChange) == 0) {
+            if (Math.Abs(colChange) == 0) { // Forward Step
                 if(chessSetup[performedMove.from.x, performedMove.from.y + allowedMoveDirection] != null) // Can't capture ahead
                     return false;
                 return true; 

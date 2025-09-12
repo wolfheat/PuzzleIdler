@@ -47,6 +47,7 @@ Aug 2025
 		* Computer promotion works
 		* Castling works
 10/9	* Evaluate method written but not texted
+12/9	* Start of implementing same movement for computer
 
 		// Fix en passent
 
