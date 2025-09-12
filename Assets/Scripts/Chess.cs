@@ -1,239 +1,9 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
-
-public static class ChessMoveEvaluator
-{
-
-
-    // Evaluate takes in the chessmove to perform, the previous chessMove nullable and the current chess setup
-    // Returns a bool isValid, FullChessMove containing performed chessmove and any other piece affected (also nullable)
-    public static FullChessMove Evaluate(ChessMove performedMove, ChessMove lastPerformedMove, ChessPiece[,] chessSetup, int playerColor = 0)
-    {
-        ChessMove additionalMove = null;
-        FullChessMove result = new FullChessMove(performedMove,additionalMove,false);
-
-        // Is this move valid on the current chess Setup with the last Performed move included (only for EP) - disregards previous castle check limitation moves
-
-        // Invalid - Dropped on a piece of same color
-        if(IsPieceDroppedOnTopOfOwnPiece(performedMove,chessSetup))
-            return result;
-
-        // Is piece going to an unreachable square
-        GetValidFullMove(performedMove, chessSetup, playerColor, result);
-        
-        return result;         
-
-    }
-
-    private static bool GetValidFullMove(ChessMove performedMove, ChessPiece[,] chessSetup, int playerColor, FullChessMove result)
-    {
-        // Check the distination position in the setup - also check both pieces of same type
-        ChessPiece movedPiece = chessSetup[performedMove.from.x, performedMove.from.y];
-        ChessPiece targetPiece = chessSetup[performedMove.to.x, performedMove.to.y];
-
-        // Sets the other piece for deletion by setting it to -1, -1 
-        result.other = targetPiece != null ? new ChessMove(new Vector2Int(performedMove.to.x, performedMove.to.y), new Vector2Int(-1, -1)) : null;
-        // Need to set this specific for en passent
-
-        int pieceColor = movedPiece.Color;
-        int squareStartColor = (1 + performedMove.from.x + performedMove.from.y) % 2;
-        int squareEndColor = (1 + performedMove.to.x + performedMove.to.y) % 2;
-
-        result.valid = movedPiece.Type switch {
-            0 or 6 => IsValidRookMove(),
-            1 or 7 => IsValidKnightMove(),
-            2 or 8 => IsValidBishopMove(),
-            3 or 9 => IsValidQueenMove(),
-            4 or 10=> IsValidKingMove() || IsValidCastleMove(),
-            _ => IsValidPawnMove()
-        };
-
-        return result.valid;
-
-        // Local Validat Methods - Can use the supplied move color and setup
-        bool IsValidRookMove()
-        {
-            int rowChange = performedMove.to.y - performedMove.from.y;
-            int colChange = performedMove.to.y - performedMove.from.y;
-            Vector2Int moveDirection = new Vector2Int(colChange == 0 ? 0 : (colChange < 0 ? -1 : 1), rowChange == 0 ? 0 : (rowChange < 0 ? -1 : 1));
-            int amtSteps = Math.Max(Math.Abs(rowChange), Math.Abs(colChange));
-
-            // Any Rook move is valid that only changes row or column and doesnt jump over any piece, and caputers only opopnents piece
-            if(rowChange != 0 && colChange != 0) // If both row and column change - invalid move
-                return false; 
-            if(IsJumping(moveDirection, amtSteps)) // If piece needs to jump to get there - Invalid move
-                return false;
-            
-            return true;
-        }
-
-        // Local Validat Methods - Can use the supplied move color and setup
-        bool IsValidKnightMove()
-        {
-            int rowChange = performedMove.to.y - performedMove.from.y;
-            int colChange = performedMove.to.y - performedMove.from.y;
-            return Math.Abs(rowChange) + Math.Abs(colChange) == 3;
-        }
-        // Local Validat Methods - Can use the supplied move color and setup
-        bool IsValidBishopMove()
-        {
-            int rowChange = performedMove.to.y - performedMove.from.y;
-            int colChange = performedMove.to.y - performedMove.from.y;
-            Vector2Int moveDirection = new Vector2Int(Math.Sign(colChange), Math.Sign(rowChange));
-
-            int amtSteps = Math.Abs(rowChange);
-            if (Math.Abs(rowChange) != Math.Abs(colChange)) // If both change in row and column are not the same - invalid move
-                return false;
-
-            if (IsJumping(moveDirection, amtSteps)) // If piece needs to jump to get there - Invalid move
-                return false;
-            return true;
-        }
-        // Local Validat Methods - Can use the supplied move color and setup
-        bool IsValidQueenMove() => IsValidBishopMove() || IsValidRookMove();
-
-        bool IsValidCastleMove()
-        {
-            // Depends on rotation of board ie playerColor
-
-            // To begin with just check for two steps from kings or queens square
-            
-            // Also need to check that rook is available and knight and bishop is not
-            int rowChange = performedMove.to.y - performedMove.from.y;
-            int colChange = performedMove.to.y - performedMove.from.y;
-
-            // Moving up or down the board
-            if(rowChange != 0) return false;
-
-            // Not moving like a castle move
-            if(colChange != 2)
-                return false;
-
-            // King and queen spot (depends on rotation of board)
-            if(performedMove.from.x != 3 || performedMove.from.x != 4)
-                return false;
-
-            // Check all versions of castle
-            // Can't have knight or bishop but need rook
-            if (performedMove.from.x == 3 && performedMove.to.x == 1) { // player black short castle
-                if (chessSetup[2, performedMove.from.y] != null || chessSetup[0, performedMove.from.y] == null)
-                    return false;
-                // Add the rook move as other move
-                result.other = new ChessMove(new Vector2Int(0, performedMove.from.y), new Vector2Int(2, performedMove.from.y));
-                return true;
-            }
-            else if (performedMove.from.x == 3 && performedMove.to.x == 5) { // player black long castle
-                if (chessSetup[4, performedMove.from.y] != null || chessSetup[6, performedMove.from.y] != null || chessSetup[7, performedMove.from.y] == null)
-                    return false;
-                // Add the rook move as other move
-                result.other = new ChessMove(new Vector2Int(7, performedMove.from.y), new Vector2Int(4, performedMove.from.y));
-                return true;
-            }
-            else if (performedMove.from.x == 4 && performedMove.to.x == 2) { // player white long castle
-                if (chessSetup[1, performedMove.from.y] != null || chessSetup[3, performedMove.from.y] != null || chessSetup[0, performedMove.from.y] == null)
-                    return false;
-                // Add the rook move as other move
-                result.other = new ChessMove(new Vector2Int(0, performedMove.from.y), new Vector2Int(3, performedMove.from.y));
-                return true;
-            }
-            else if (performedMove.from.x == 4 && performedMove.to.x == 6) { // player white short castle
-                if (chessSetup[5, performedMove.from.y] != null || chessSetup[7, performedMove.from.y] == null)
-                    return false;
-                // Add the rook move as other move
-                result.other = new ChessMove(new Vector2Int(7, performedMove.from.y), new Vector2Int(5, performedMove.from.y));
-                return true;
-            }
-            return false;
-        }
-        
-        bool IsValidKingMove() // OBS - Does not check for stepping into check
-        {
-            int rowChange = performedMove.to.y - performedMove.from.y;
-            int colChange = performedMove.to.y - performedMove.from.y;            
-            if (Math.Abs(rowChange) > 1 || Math.Abs(colChange) > 1) 
-                return false;
-            return true;
-        }
-        
-        bool IsValidPawnMove() // 
-        {
-            int allowedMoveDirection = movedPiece.Color == 0 ? 1 : -1;
-            // Inverse if player plays black
-            if(playerColor == 1) {
-                allowedMoveDirection *= -1;
-            }
-
-            int rowChange = performedMove.to.y - performedMove.from.y;
-            int colChange = performedMove.to.y - performedMove.from.y;
-
-            if(Math.Sign(rowChange) != Math.Sign(allowedMoveDirection)) // Moving in wrong direction
-                return false;
-
-            bool twoStepsAllowed = performedMove.from.y == 1 || performedMove.from.y == 6;
-
-
-            if (Math.Abs(rowChange) != 1) {
-                // If step ahead is free
-                if(Math.Abs(rowChange) == 2 && twoStepsAllowed) {
-                    if(chessSetup[performedMove.from.x, performedMove.from.y + allowedMoveDirection] != null)
-                        return false; // Doesnt step one step forward - invalid
-                    return true;
-                }
-                return false;
-            }
-
-            // Is one step
-
-            if (Math.Abs(colChange) == 1) {
-                // Take an oponent
-                if (chessSetup[performedMove.to.x, performedMove.to.y] == null) return false; // Can only take another piece, except en passent
-                return true;
-            }
-            if (Math.Abs(colChange) == 0) {
-                if(chessSetup[performedMove.from.x, performedMove.from.y + allowedMoveDirection] != null) // Can't capture ahead
-                    return false;
-                return true; 
-            }
-            return false;
-        }
-
-        // Helper Methods
-        // Jumps if ther is any piece where piece moves
-        bool IsJumping(Vector2Int moveDirection, int steps)
-            {
-                Vector2Int checkedPos = performedMove.from;
-
-                for (int i = 1; i < steps; i++) {
-                    checkedPos = performedMove.from + moveDirection * i;
-                    if (chessSetup[checkedPos.x,checkedPos.y] != null)
-                        return true;
-                }
-                return false;
-            }
-
-
-    }
-
-    private static bool IsPieceDroppedOnTopOfOwnPiece(ChessMove performedMove, ChessPiece[,] chessSetup)
-    {
-        // Check the distination position in the setup - also check both pieces of same type
-        ChessPiece movedPiece = chessSetup[performedMove.from.x, performedMove.from.y];
-        ChessPiece droppedOnPiece = chessSetup[performedMove.to.x, performedMove.to.y];
-        return droppedOnPiece == null ? false : (movedPiece.Color == droppedOnPiece.Color);
-    }
-
-    public static bool Equal(ChessMove moveA,ChessMove moveB) => 
-        moveA.from.x == moveB.from.x && 
-        moveA.from.y == moveB.from.y && 
-        moveA.to.x == moveB.to.x && 
-        moveA.to.y == moveB.to.y && 
-        moveA.promote == moveB.promote;
-}
 
 public struct FullChessMove
 {
@@ -254,6 +24,7 @@ public class ChessMove
     public Vector2Int from;
     public Vector2Int to;
     public int promote;
+    public bool enPassentable = false;
 
     public ChessMove(Vector2Int setFrom, Vector2Int SetTo, int promoteSetTo = 0)
     {
@@ -306,11 +77,14 @@ public class Chess : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPoi
     private float squareSizeScaled = 50;
 
     private ChessPiece[,] pieces = new ChessPiece[8,8];
+    private int[,] setup = new int[8,8];
 
     private bool dragging = false;
     private bool GameActive = false;
 
     private ChessPiece draggedPiece = null;
+    private ChessMove lastPerformedMove = null;
+
     private List<ChessMove> winCondition;
     private int playerColor = 0;
 
@@ -327,7 +101,6 @@ public class Chess : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPoi
         // Derive the square size at current scale
         squareSizeScaled = squareHolder.GetComponent<RectTransform>().sizeDelta.x;
         Debug.Log("**-- SquareSize = "+squareSizeScaled);
-
     }
 
     private void OnEnable()
@@ -652,13 +425,13 @@ public class Chess : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPoi
         // Only if dragging an item do this
         if (!dragging) return;
 
-        GetMouseLocalPosition(eventData);       
+        UpdateMouseLocalPosition(eventData);       
 
         ghost.transform.localPosition = localPosition;
 
     }
 
-    private void GetMouseLocalPosition(PointerEventData eventData)
+    private void UpdateMouseLocalPosition(PointerEventData eventData)
     {
         RectTransformUtility.ScreenPointToLocalPointInRectangle(
             squareHolder.GetComponent<RectTransform>(),  // The RectTransform of your board
@@ -672,172 +445,121 @@ public class Chess : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPoi
 
     public void OnPointerUp(PointerEventData eventData)
     {
+        // Computer Moving rook as a king castle will castle with the king at rook position - prob error in animation since it has separate logic - might be fixed when new is implemented
+        // Pieces captured are not removed correctly
+        
+
+
+        Debug.Log("Dropping piece.");
 
         // RE-WRITING THIS
-
-        // Determine what move player is trying to do
-        // Create this as a Move
-
-        // Check if it is a valid move - Validation needs current setup and the move to be made. If validating en passent also last move is needed (if we want to return players piece as if it is an illegal move when trying to do en passent)
-
-        // Return the move to be made including any removed or castled piece - Maybe have a remove of a piece also be a type of move
-
-        // CompleteChessMove
-
-        // basic move
-        // other affected piece move - Should work since there can ever only be one other affected piece thats either moved or taken (castle / captured)
-
-
-        // Create The Players Move
-        ChessMove playersMove = new ChessMove(new Vector2Int(sourceCol, sourceRow), new Vector2Int(targetCol, targetRow));
-
-
         if (!GameActive) return;
+
+        Debug.Log("Game is active.");
 
         if (!dragging) return;
 
-        GetMouseLocalPosition(eventData);
+        Debug.Log("Not dragging.");
 
-        //Debug.Log("EventPosition UP = [" + eventData.position.x + " , " + eventData.position.y + "] - [" + squareHolder.transform.position.x + " , " + squareHolder.transform.position.y + "]");
+        // Set the locol position
+        UpdateMouseLocalPosition(eventData);
+
+        Debug.Log("Local position set.");
+
+        // Capture the piece source and target positions
         int targetCol = (int)localPosition.x / SquareSize;
         int targetRow = (int)localPosition.y / SquareSize;
 
-        
         if (!InsideBoard(targetCol, targetRow)) {
-            ReturnDraggedPiece();
+            ShowDraggedPiece();
             return;
         }
-
-        // 
         dragging = false;
+
 
         int sourceCol = draggedPiece.Pos.x;
         int sourceRow = draggedPiece.Pos.y;
 
+        // Create The Players Move
+        // Determine what move player is trying to do
+        // Create this as a Move
+        ChessMove playersMove = new ChessMove(new Vector2Int(sourceCol, sourceRow), new Vector2Int(targetCol, targetRow));
+        
+        Debug.Log("PLayer move set.");
+        
         // Check the target square
         ChessPiece replacedPiece = pieces[targetCol, targetRow];
 
-        // Check if player returned the piece
-        if(draggedPiece != replacedPiece) {
+        // Check if the Move is valid - Also get any changes as a FullChessMove
+        // Check if it is a valid move - Validation needs current setup and the move to be made. If validating en passent also last move is needed (if we want to return players piece as if it is an illegal move when trying to do en passent)
+        FullChessMove fullChessMove = ChessMoveEvaluator.Evaluate(playersMove, lastPerformedMove, pieces, playerColor);
+        // Return the move to be made including any removed or castled piece - Maybe have a remove of a piece also be a type of move
 
-            Debug.Log("ReplacedItem = " + replacedPiece);
-            Debug.Log("it index is  = " + pieces[targetCol, targetRow]?.Type);
+        if (!fullChessMove.valid) {
+            // Return the piece
+            Debug.Log("The Move is not valid.");
+            // Show the dragged again
+            draggedPiece.Hide(false);
 
-            // Create The Players Move
-            ChessMove playersMove = new ChessMove(new Vector2Int(sourceCol, sourceRow), new Vector2Int(targetCol, targetRow));
-
-            // En passent - Can only happen to an empty square
-            if (replacedPiece == null && draggedPiece.EnPassent(playersMove,pieces[targetCol,sourceRow])){
-                Vector3Int oponentsPawnPosition = new Vector3Int(targetCol, targetRow - 1, draggedPiece.Type);
-                ChessPiece opponentsPawn = pieces[targetCol, targetRow - 1];
-
-                if (opponentsPawn == null) {
-                    Debug.Log("WARNING - en passenting but no oponents pawn present");
-                }
-                else {
-
-                    Debug.Log("Destroying en passent pawn at [" + targetCol + "," + (targetRow - 1) + "]");
-                    // Destroy the pawn
-                    Destroy(opponentsPawn.gameObject);
-
-                    // Remove the data
-                    pieces[targetCol, targetRow - 1] = null;
-                }
-            }
-
-            // Castle
-            if (draggedPiece.PlayerCastle(playersMove)) {
-                bool leftCastle = playersMove.to.x == 2 || playersMove.to.x == 1;
-
-                ChessPiece playerRook = pieces[leftCastle ? 0 : 7, 0];
-
-                // Doesnt matter ? COmputer is always correct and these positions are changed above already
-                ChessPiece playerKnight = pieces[leftCastle ? 1 : 6, 0];
-                ChessPiece playerBishop = pieces[leftCastle ? 2 : 5, 0];
-
-                int rookNewCol = playersMove.to.x + (leftCastle ? 1 : -1);
-
-                if (playerRook == null) {
-                    Debug.Log("WARNING - castling without a rook present");
-                    ReturnDraggedPiece();
-                    return;
-                }
-
-                // Have to make sure this is run before the pieces are actually moved
-                if (playerKnight != null || playerBishop != null) {
-                    Debug.Log("WARNING - castling with knight or Bishop in the way");
-                    ReturnDraggedPiece();
-                    return;
-                }
-
-
-                else {
-                    // Move the Rook to castle resulting position
-                    Vector3Int oldPosition = new Vector3Int(leftCastle ? 0 : 7, 0, playerRook.Type);
-                    Vector3Int newPosition = new Vector3Int(rookNewCol, 0, playerRook.Type);
-
-                    Vector3 rooksPlacement = new Vector3(SquareSize / 2 + newPosition.x * SquareSize, SquareSize / 2 + newPosition.y * SquareSize, 0);
-                    playerRook.SetPositionAndType(newPosition, rooksPlacement);
-
-                    Debug.Log("Moving castling rook to [" + newPosition.x + "," + newPosition.y + "]");
-
-                    // Remove the data
-                    pieces[oldPosition.x, oldPosition.y] = null;
-
-                    // Set new data for rook
-                    pieces[newPosition.x, newPosition.y] = playerRook;
-                }
-            }
-
-            // Destroy the item if its there
-            if (replacedPiece != null)
-                Destroy(replacedPiece.gameObject);
-
-
-            // Move dragged to new position
-            Vector3Int piecePosition = new Vector3Int(targetCol, targetRow, draggedPiece.Type);
-            draggedPiece.SetPositionAndType(piecePosition, new Vector3(SquareSize / 2 + piecePosition.x * SquareSize, SquareSize / 2 + piecePosition.y * SquareSize, 0));
-
-            pieces[targetCol, targetRow] = draggedPiece;
-            Debug.Log("it index becomes  = " + pieces[targetCol, targetRow]?.Type);
-
-            // Unset the source position data
-            pieces[sourceCol, sourceRow] = null;
-
-            Debug.Log("Dragged the piece from [" + draggedPiece.Pos.x + ", " + draggedPiece.Pos.y + "] => [" + targetCol + "," + targetRow + "] " + (replacedPiece == null ? "" : ("Took " + replacedPiece.Type)));
-
-            
-
-
-
-
-            if ((draggedPiece.Type == 5 || draggedPiece.Type == 11) && targetRow == 7) { // white or black pawn - but since player always on its side only row 7 is a promotion
-
-                // Show the dragged again
-                draggedPiece.Hide(false);
-
-                // Hide ghost
-                ghost.Hide(true);
-
-                // Player promotes a pawn
-                OpenPromotionPanel(playersMove);
-
-                return;
-            }
-
-            CheckMove(playersMove);
+            // Hide ghost
+            ghost.Hide(true);
+            return;
         }
 
-        // Show the dragged again
-        draggedPiece.Hide(false);
+        // Here we got a valid move - Main move and other - Use it depending on player moving = direct, computer = animated
+        // On MOuse Up is always player so direct
 
-        // Hide ghost
-        ghost.Hide(true);
+        // Other
+        if(fullChessMove.other != null) {
+            Debug.Log("Action for the other piece");
+            // Remove this piece
+            if(fullChessMove.other.to.x == -1) {
+                Debug.Log("Removing the other piece on ["+ fullChessMove.other.from.x+","+ fullChessMove.other.from.y+"] null = "+(pieces[fullChessMove.other.from.x, fullChessMove.other.from.y] == null));
+                if (pieces[fullChessMove.other.from.x, fullChessMove.other.from.y] != null) {
+                    Destroy(pieces[fullChessMove.other.from.x, fullChessMove.other.from.y].gameObject);
+                    pieces[fullChessMove.other.from.x, fullChessMove.other.from.y] = null;
+                }
+            }
+            else {
+                Debug.Log("Moving the other place");
+                // Do the move
+                ChessPiece otherPiece = pieces[fullChessMove.other.from.x, fullChessMove.other.from.y];
+                pieces[fullChessMove.other.from.x, fullChessMove.other.from.y] = null;
+
+                // Move dragged to new position
+                Vector3Int otherPosition = new Vector3Int(fullChessMove.other.to.x, fullChessMove.other.to.y,otherPiece.Type);
+                otherPiece.SetPositionAndType(otherPosition, new Vector3(SquareSize / 2 + otherPosition.x * SquareSize, SquareSize / 2 + otherPosition.y * SquareSize, 0));
+            }
+        }
 
 
+        ShowDraggedPiece();
+
+        // Move dragged to new position
+        Vector3Int piecePosition = new Vector3Int(targetCol, targetRow, draggedPiece.Type);
+        draggedPiece.SetPositionAndType(piecePosition, new Vector3(SquareSize / 2 + piecePosition.x * SquareSize, SquareSize / 2 + piecePosition.y * SquareSize, 0));
+
+        // Set the piece to index
+        pieces[targetCol, targetRow] = draggedPiece;
+
+
+        // Unset the source position data
+        pieces[sourceCol, sourceRow] = null;
+
+
+        if ((draggedPiece.Type == 5 || draggedPiece.Type == 11) && targetRow == 7) { // white or black pawn - but since player always on its side only row 7 is a promotion
+            // Player promotes a pawn
+            OpenPromotionPanel(playersMove);
+            return;
+        }
+
+        draggedPiece = null;
+
+        // Check if this was correct or not
+        CheckMove(playersMove);
     }
 
-    private void ReturnDraggedPiece()
+    private void ShowDraggedPiece()
     {
         // Return it to its origin
         dragging = false;
@@ -847,8 +569,6 @@ public class Chess : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPoi
 
         // Hide ghost
         ghost.Hide(true);
-
-        draggedPiece = null;
     }
 
     private void OpenPromotionPanel(ChessMove playersMove)
@@ -968,7 +688,7 @@ public class Chess : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPoi
         ghost.ChangeType(draggedPiece.Type);
 
         // Get the mouse position and activate the ghost there
-        GetMouseLocalPosition(eventData);
+        UpdateMouseLocalPosition(eventData);
         ghost.transform.localPosition = localPosition;
 
         dragging = true;

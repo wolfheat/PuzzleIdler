@@ -46,6 +46,7 @@ Aug 2025
 		* Black promotion works
 		* Computer promotion works
 		* Castling works
+10/9	* Evaluate method written but not texted
 
 		// Fix en passent
 
