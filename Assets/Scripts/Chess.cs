@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
@@ -272,12 +273,8 @@ public class Chess : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPoi
         //Hinder player from doing moves during computer move
         GameActive = false;
 
-        // Do the enemys Move
-        int col = oponentMove.from.x;
-        int row = oponentMove.from.y;
-
-        int targetCol = oponentMove.to.x;
-        int targetRow = oponentMove.to.y;
+        // Separate enemys Move
+        (int col, int row, int targetCol, int targetRow) = MoveIntoParts(oponentMove);
 
         // Check the target square
         ChessPiece replacedPiece = pieces[targetCol, targetRow];
@@ -385,8 +382,7 @@ public class Chess : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPoi
 
     }
 
-
-
+    private static (int col, int row, int targetCol, int targetRow) MoveIntoParts(ChessMove move) => (move.from.x,move.from.y,move.to.x,move.to.y);
 
     public void ClearBoard()
     {
@@ -440,28 +436,19 @@ public class Chess : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPoi
     public void OnPointerUp(PointerEventData eventData)
     {
         // Computer Moving rook as a king castle will castle with the king at rook position - prob error in animation since it has separate logic - might be fixed when new is implemented
-        // Pieces captured are not removed correctly
-        
+        // Pieces captured are not removed correctly        
         Debug.Log("  PLAYER DROPPING A PIECE.");
 
         // RE-WRITING THIS
         if (!GameActive) return;
-
-        //Debug.Log("Game is active.");
-
         if (!dragging) return;
-
-        //Debug.Log("Not dragging.");
 
         // Set the locol position
         UpdateMouseLocalPosition(eventData);
 
-        //Debug.Log("Local position set.");
-
-        // Capture the piece source and target positions
-        int targetCol = (int)localPosition.x / SquareSize;
-        int targetRow = (int)localPosition.y / SquareSize;
-
+        // Translate the loclaposition into the index position in the grid
+        (int targetCol, int targetRow) = ToIndexPosition(localPosition);
+        
         if (!InsideBoard(targetCol, targetRow)) {
             ShowDraggedPiece();
             return;
@@ -556,6 +543,8 @@ public class Chess : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPoi
         // Check if this was correct or not
         CheckMove(playersMove);
     }
+
+    private static (int targetCol, int targetRow) ToIndexPosition(Vector2 localPosition) => ((int)localPosition.x / SquareSize,(int)localPosition.y / SquareSize);
 
     private void ShowDraggedPiece()
     {
