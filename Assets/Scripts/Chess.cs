@@ -51,6 +51,42 @@ public class ChessMove
         from = mem;
     }
 }
+/*
+public class ChessGameEngine
+{
+    private ChessPiece[,] pieces = new ChessPiece[8, 8];
+    private ChessMove lastPerformedMove = null;
+    private int playerColor = 0;
+    public FullChessMove TryMakeMove(ChessMove move)
+    {
+        // Get result from trying to make this move
+        FullChessMove fullChessMove = ChessMoveEvaluator.Evaluate(move,lastPerformedMove,pieces,playerColor);
+
+        if (!fullChessMove.valid) return fullChessMove;
+
+        // Apply move
+        ApplyMoveToBoard(fullChessMove);
+        return fullChessMove;
+    }
+
+    private void ApplyMoveToBoard(FullChessMove fullChessMove)
+    {
+        lastPerformedMove = fullChessMove.performed;
+
+        // update board state only (no Unity GameObjects here)
+        pieces[fullChessMove.performed.to.x, fullChessMove.performed.to.y] = pieces[fullChessMove.performed.from.x, fullChessMove.performed.from.y];
+        pieces[fullChessMove.performed.from.x, fullChessMove.performed.from.y] = null;
+
+        // Other
+        if (fullChessMove.other != null) {
+            // Remove this piece
+            if (fullChessMove.other.to.x != -1) {
+                pieces[fullChessMove.other.to.x, fullChessMove.other.to.y]  = pieces[fullChessMove.other.from.x, fullChessMove.other.from.y];
+            }
+            pieces[fullChessMove.other.from.x, fullChessMove.other.from.y]  = null;
+        }
+    }
+}*/
 
 public class Chess : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPointerMoveHandler
 {
@@ -446,34 +482,29 @@ public class Chess : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPoi
         // Set the locol position
         UpdateMouseLocalPosition(eventData);
 
-        // Translate the loclaposition into the index position in the grid
+        // Translate the localposition into the index position in the grid
         (int targetCol, int targetRow) = ToIndexPosition(localPosition);
         
         if (!InsideBoard(targetCol, targetRow)) {
+            // If releasing outisde the board, return everything
             ShowDraggedPiece();
             return;
         }
         dragging = false;
 
-
         int sourceCol = draggedPiece.Pos.x;
         int sourceRow = draggedPiece.Pos.y;
 
         // Create The Players Move
-        // Determine what move player is trying to do
-        // Create this as a Move
         ChessMove playersMove = new ChessMove(new Vector2Int(sourceCol, sourceRow), new Vector2Int(targetCol, targetRow));
         
-        //Debug.Log("PLayer move set.");
-        
-        // Check the target square
+        // Check the piece on the target square
         ChessPiece replacedPiece = pieces[targetCol, targetRow];
 
-        // Check if the Move is valid - Also get any changes as a FullChessMove
-        // Check if it is a valid move - Validation needs current setup and the move to be made. If validating en passent also last move is needed (if we want to return players piece as if it is an illegal move when trying to do en passent)
-        FullChessMove fullChessMove = ChessMoveEvaluator.Evaluate(playersMove, lastPerformedMove, pieces, playerColor);
-        // Return the move to be made including any removed or castled piece - Maybe have a remove of a piece also be a type of move
-
+        // Check if the Move is valid - Also get any changes as a FullChessMove        
+        FullChessMove fullChessMove = ChessMoveEvaluator.Evaluate(playersMove, lastPerformedMove, pieces, playerColor);// Check if it is a valid move - Validation needs current setup and the move to be made. If validating en passent also last move is needed (if we want to return players piece as if it is an illegal move when trying to do en passent)
+        
+        // Check if the returned move is valid - if not reset
         if (!fullChessMove.valid) {
             // Return the piece
             Debug.Log("The Move is not valid.");
@@ -485,9 +516,8 @@ public class Chess : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPoi
             return;
         }
 
-        // Here we got a valid move - Main move and other - Use it depending on player moving = direct, computer = animated
-        // On Mouse Up is always player so direct
-
+        // Here we got a valid move - Main move and potentially other move
+        
         // Store this move as last performed for next check - this only counts for the computer move, after computer move this should be reset to another value
         lastPerformedMove = fullChessMove.performed;
 
@@ -524,14 +554,13 @@ public class Chess : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPoi
         Vector3Int piecePosition = new Vector3Int(targetCol, targetRow, draggedPiece.Type);
         draggedPiece.SetPositionAndType(piecePosition, new Vector3(SquareSize / 2 + piecePosition.x * SquareSize, SquareSize / 2 + piecePosition.y * SquareSize, 0));
 
-        // Set the piece to index
+        // Set the piece index
         pieces[targetCol, targetRow] = draggedPiece;
 
-
-        // Unset the source position data
+        // Unset the piece's source position
         pieces[sourceCol, sourceRow] = null;
 
-
+        // Checking promotion
         if ((draggedPiece.Type == 5 || draggedPiece.Type == 11) && targetRow == 7) { // white or black pawn - but since player always on its side only row 7 is a promotion
             // Player promotes a pawn
             OpenPromotionPanel(playersMove);
