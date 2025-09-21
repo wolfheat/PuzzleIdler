@@ -17,6 +17,7 @@ public class ChessProblemDatas : MonoBehaviour
 
     [SerializeField] private string computerEnPassent;
     [SerializeField] private string playerEnPassent;
+    [SerializeField] private string multipleEndMoves;
     //[SerializeField] private ChessDatabase chessDatabase;
 
     public static ChessProblemDatas Instance { get; private set; }
@@ -43,6 +44,7 @@ public class ChessProblemDatas : MonoBehaviour
             7 => computerCastle,
             8 => playerEnPassent,
             9 => computerEnPassent,
+            10 => multipleEndMoves,
             _ => ""
         };
 
@@ -101,6 +103,8 @@ public class ChessProblemDatas : MonoBehaviour
 
         string selectedLevel = database?.data[section].values[UnityEngine.Random.Range(0, database.data[section].values.Count)];
         //Debug.Log("Selected random level from section: "+section+" that consists of "+ database.data[section].values.Count+" levels.");
+
+        Debug.Log("LOADING LEVEL: "+selectedLevel);
 
         // Here we have the compact level as one string
         ChessPuzzleData data = GetStringAsPuzzleData(selectedLevel);

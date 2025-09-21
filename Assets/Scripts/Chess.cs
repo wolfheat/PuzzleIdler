@@ -224,7 +224,7 @@ public class Chess : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPoi
             int col = i % 8;
             Vector3Int newPositionData = new Vector3Int(col, row, setup[i]);
             
-            Debug.Log("* Adding a piece " + setup[i]+" on ["+col+","+row+"]");
+            //Debug.Log("* Adding a piece " + setup[i]+" on ["+col+","+row+"]");
             
             positions.Add(newPositionData);
         }
@@ -613,6 +613,7 @@ public class Chess : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPoi
     {
         Debug.Log("Checking Move "+playersMove.to.x+" "+playersMove.to.y+" promotion = "+playersMove.promote);
 
+        
         // Check if Won        
         ChessMove winningMove = winCondition[0];
         winCondition.RemoveAt(0);
@@ -628,8 +629,14 @@ public class Chess : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPoi
         // Win Notice
 
         if (!correct) {
-            Win(false);
-
+            // Check for checkmate move everytime and if one is played it always are winning move
+            if (winCondition.Count == 0 && CheckForMate()) {
+                // Last move played, check for mate
+                Win(true);
+            }
+            else {
+                Win(false);
+            }
         }
         else if (winCondition.Count == 0) {
             Win(true);
@@ -638,6 +645,21 @@ public class Chess : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPoi
             // Correct but not last move, do next computer move
             StartCoroutine(AnimateComputerMove());
         }
+    }
+
+    private bool CheckForMate()
+    {
+        // How do I check for mate?
+        if (ChessMoveEvaluator.CheckCheck(lastPerformedMove, pieces, playerColor)) {
+            Debug.Log("Oponent is at check - also need to check for mate");
+            if(ChessMoveEvaluator.CheckIfMate(lastPerformedMove, pieces, playerColor)) {
+                Debug.Log("Oponent is in mate");
+                return true;
+            }
+            return false;
+        }
+        Debug.Log("Oponent is not in check");
+        return false;
     }
 
     private void Win(bool didWin)

@@ -49,7 +49,11 @@ Aug 2025
 10/9	* Evaluate method written but not texted
 12/9	* Start of implementing same movement for computer
 		* Computer moves seems to mostly work now
-		
+20/9	* Got Alternative moves that mates count as winning
+
+
+		* Need to test more solutions to check if calulations are correct for all type of moves	
+
 
 		// Need to check if its check mate and also count that as a win
 
