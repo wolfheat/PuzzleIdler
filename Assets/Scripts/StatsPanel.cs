@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using BreakInfinity;
@@ -7,11 +8,13 @@ using UnityEngine;
 public class StatsPanel : MonoBehaviour
 {
 
+    [SerializeField] private GameObject gamesTextHolder;
     [SerializeField] private GameObject buildingTextHolder;
     [SerializeField] private GameObject researchTextHolder;
     [SerializeField] private GameObject upgradesTextHolder;
     [SerializeField] private BuildingsListItem listItemPrefab;
 
+    [SerializeField] private TextMeshProUGUI gamesSumTextfield;
     [SerializeField] private TextMeshProUGUI buildingSumTextfield;
     [SerializeField] private TextMeshProUGUI researchSumTextfield;
     [SerializeField] private TextMeshProUGUI upgradesSumTextfield;
@@ -45,11 +48,35 @@ public class StatsPanel : MonoBehaviour
         yield return null;
         yield return null;
         // Update the list
+        UpdateGamesListValues();
         UpdateBuildingListValues();
         UpdateResearchListValues();
         UpdateUpgradesListValues();
     }
 
+    public void UpdateGamesListValues()
+    {
+        // Get list from data
+        float[] miniGames = Stats.MiniGamesMultipliers;
+        string[] names = Enum.GetNames(typeof(MiniGameNames));
+
+
+        foreach (Transform child in gamesTextHolder.transform.GetComponentInChildren<Transform>(false))
+            Destroy(child.gameObject);
+
+        float product = 1;
+
+        for (int i = 0; i < miniGames.Length; i++) {
+            float income = miniGames[i];
+
+            BuildingsListItem item = Instantiate(listItemPrefab, gamesTextHolder.transform);
+
+            item.SetName(names[i]);
+            item.SetValue(Stats.ReturnAsString(income));
+            product *= income;
+        }
+        gamesSumTextfield.text = Stats.ReturnAsString(product);
+    }
     public void UpdateUpgradesListValues()
     {
         // Get list from data

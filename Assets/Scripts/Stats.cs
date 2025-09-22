@@ -4,10 +4,10 @@ using UnityEngine;
 
 
 
+public enum MiniGameNames{ChessProblem,MineSweeper,DuckCantSwim,Bomberman,Tetris,Snake,BubbleTanks};
 
 public static class Stats
 {
-    enum MiniGameNames{ChessProblem,MineSweeper,DuckCantSwim,Bomberman,Tetris,Snake,BubbleTanks};
 
 
     public const int MinimumChessRating = 1000;
@@ -37,7 +37,7 @@ public static class Stats
     public static void SetCPSResearchMultiplier(BigDouble newValue) { CPSResearchMultiplier = newValue; CPSUpdated?.Invoke(); }
     public static void SetCPSUpgradeMultiplier(BigDouble newValue) { CPSUpgradesMultiplier = newValue; CPSUpdated?.Invoke(); }
     public static void SetBuildingBaseIncome(BigDouble newValue) { BuildingsBaseIncome = newValue; CPSUpdated?.Invoke(); }
-    public static BigDouble GetCPSTotalMultiplier() => CPSResearchMultiplier * CPSUpgradesMultiplier;
+    public static BigDouble GetCPSTotalMultiplier() => CPSResearchMultiplier * CPSUpgradesMultiplier * MiniGamesMultipliersTotal;
 
     public static void SetGemMultiplier(BigDouble newValue) => GPSMultiplier = newValue;
 
