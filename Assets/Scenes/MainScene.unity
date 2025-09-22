@@ -3327,7 +3327,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.14117648, g: 0.30980393, b: 0.14901961, a: 1}
+  m_Color: {r: 0.097063296, g: 0.213, b: 0.102455705, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -3435,7 +3435,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 623470482}
   m_Direction: 2
   m_Value: 1
-  m_Size: 0.3440242
+  m_Size: 0.34463903
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -4836,7 +4836,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 655050263}
   m_Direction: 2
   m_Value: 1
-  m_Size: 0.40255284
+  m_Size: 0.40328664
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -10301,10 +10301,10 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 2004331895}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0.000032424927}
-  m_SizeDelta: {x: 428, y: 554}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: -0.000061035156, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &657721534
 MonoBehaviour:
@@ -10880,10 +10880,10 @@ RectTransform:
   - {fileID: 1126717639}
   m_Father: {fileID: 2004331895}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -0.000034332275}
-  m_SizeDelta: {x: 417.514, y: 544.186}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: -10, y: -10}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &708790531
 MonoBehaviour:
@@ -14580,6 +14580,14 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.x
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3872839361863574527, guid: 86e2889c9a81abe47ad14e549f4652b1, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 32.775
+      objectReference: {fileID: 0}
+    - target: {fileID: 3872839361863574527, guid: 86e2889c9a81abe47ad14e549f4652b1, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -7.1
+      objectReference: {fileID: 0}
     - target: {fileID: 4247110613820825935, guid: 86e2889c9a81abe47ad14e549f4652b1, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
@@ -14600,9 +14608,25 @@ PrefabInstance:
       propertyPath: m_text
       value: x 2.67
       objectReference: {fileID: 0}
+    - target: {fileID: 5465303882591381058, guid: 86e2889c9a81abe47ad14e549f4652b1, type: 3}
+      propertyPath: m_fontSize
+      value: 20.45
+      objectReference: {fileID: 0}
+    - target: {fileID: 5465303882591381058, guid: 86e2889c9a81abe47ad14e549f4652b1, type: 3}
+      propertyPath: m_fontSizeMax
+      value: 25
+      objectReference: {fileID: 0}
     - target: {fileID: 6734749873988512670, guid: 86e2889c9a81abe47ad14e549f4652b1, type: 3}
       propertyPath: m_text
-      value: MIni Games
+      value: Games
+      objectReference: {fileID: 0}
+    - target: {fileID: 6734749873988512670, guid: 86e2889c9a81abe47ad14e549f4652b1, type: 3}
+      propertyPath: m_fontSize
+      value: 20.45
+      objectReference: {fileID: 0}
+    - target: {fileID: 6734749873988512670, guid: 86e2889c9a81abe47ad14e549f4652b1, type: 3}
+      propertyPath: m_fontSizeMax
+      value: 25
       objectReference: {fileID: 0}
     - target: {fileID: 8109561686399914659, guid: 86e2889c9a81abe47ad14e549f4652b1, type: 3}
       propertyPath: m_Pivot.x
@@ -17045,7 +17069,6 @@ RectTransform:
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 1018942676}
-  - {fileID: 1355596468}
   - {fileID: 1391540066}
   - {fileID: 206018330}
   - {fileID: 1314729836}
@@ -17744,7 +17767,8 @@ MonoBehaviour:
   computerCastle: 0UKoL,r2q1rk1/ppp1bppp/2b2n2/4N3/4P3/2NP4/PPP3PP/R1BQK2R w KQ -
     1 10,e1g1 d8d4 g1h1 d4e5,1528,75,95,32890,advantage fork opening short,https://lichess.org/FwSCXBKc#19,Rat_Defense
     Rat_Defense_Harmonist
-  computerEnPassent: 
+  computerLongCastle: 0LJZh,5r2/1b1r1pkp/p3p3/6p1/1P4P1/PBPp4/3R1KP1/4R3 b - - 6
+    35,f8e8 b3a4 e8c8 a4d7,1490,75,94,26004,advantage endgame short,https://lichess.org/c88dVseN/black#70,
   playerEnPassent: 0BxnK,4kbr1/R3pppp/1p1p4/3P4/2rB4/4KB2/6PP/8 b - - 0 25,f7f6 f3g4
     e7e5 d5e6,2487,100,86,458,advantage enPassant endgame master quietMove short,https://lichess.org/8B7HWpVZ/black#50,
   multipleEndMoves: 03DMu,2r3k1/1br2p2/pp2pQp1/3qN2p/3P2P1/P6R/1P3P1P/4R1K1 w - -
@@ -17760,6 +17784,13 @@ MonoBehaviour:
     mate mateIn2 short,https://lichess.org/m4qeTnjb/black#58,
   - 0T4EK,2r5/1kR1Q2R/1p6/p2p3P/P4n2/5Pp1/1P3qP1/7K b - - 0 45,c8c7 e7c7 b7a6 c7c8,1060,86,57,90,endgame
     fork mate mateIn2 short,https://lichess.org/xOy3I5TB/black#90,
+  computerLongCastleALL:
+  - 07N7O,rn2kbnr/pp2p1pp/3q4/3N4/8/7P/PPP2PP1/R1BQR1K1 b kq - 0 13,b8c6 c1f4 e7e5
+    f4e5 c6e5 d1h5 g7g6 e1e5 g8e7 h5e2 e8c8 d5e7,2662,115,91,922,crushing opening
+    quietMove sacrifice veryLong,https://lichess.org/YjueYx3w/black#26,Caro-Kann_Defense
+    Caro-Kann_Defense_Other_variations
+  - 0WVyA,r1q1kr2/p5Q1/2pb4/4pb2/1P6/P3B3/2P2PPP/3R1RK1 b q - 2 21,c8d7 g7h6 e8c8
+    e3c5 f8h8 h6d6,2515,86,90,838,crushing long middlegame,https://lichess.org/hftsBGvG/black#42,
 --- !u!1 &1206400910
 GameObject:
   m_ObjectHideFlags: 0
@@ -20123,7 +20154,7 @@ GameObject:
   - component: {fileID: 1355596470}
   - component: {fileID: 1355596469}
   m_Layer: 5
-  m_Name: Computer En Passent
+  m_Name: Computer Long Castle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -20142,7 +20173,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1610837750}
-  m_Father: {fileID: 1126717639}
+  m_Father: {fileID: 2075555103}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -20200,7 +20231,7 @@ MonoBehaviour:
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 9
+          m_IntArgument: 11
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
@@ -22918,7 +22949,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Computer En Passent
+  m_text: Computer Long Castle
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 4faaefc62559bd7469ce2545febfa294, type: 2}
   m_sharedMaterial: {fileID: 2986969267564585774, guid: 4faaefc62559bd7469ce2545febfa294, type: 2}
@@ -27043,10 +27074,10 @@ RectTransform:
   - {fileID: 708790530}
   m_Father: {fileID: 555943511}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -678, y: -63}
-  m_SizeDelta: {x: -1492, y: -526}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -678, y: -84.99999}
+  m_SizeDelta: {x: 428, y: 598}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &2009682686
 GameObject:
@@ -27913,6 +27944,7 @@ RectTransform:
   - {fileID: 1208566742}
   - {fileID: 855428501}
   - {fileID: 1123405899}
+  - {fileID: 1355596468}
   m_Father: {fileID: 708790530}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}

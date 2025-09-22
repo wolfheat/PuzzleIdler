@@ -214,7 +214,10 @@ public class Chess : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPoi
         if(specificType == 0)
             data = ChessProblemDatas.Instance.GetRandomProblem(Stats.ChessRating);
         else if(specificType == -1) {
-            ChessProblemDatas.Instance.FindEnPassentProblem();
+            // Find long castle
+
+            //ChessProblemDatas.Instance.FindEnPassentProblem();
+            ChessProblemDatas.Instance.FindCastleProblem();
             //ChessProblemDatas.Instance.FindCastleProblem();
             return;
         }
@@ -680,7 +683,8 @@ public class Chess : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPoi
         winNotice.SetWin(didWin);
 
         // Award Rating and reward
-        Stats.ChessRating += didWin ? 10 : ((Stats.ChessRating <= Stats.MinimumChessRating) ? 0 : - 20);
+        Stats.ChangeChessRating(didWin);
+        
         UpdateRating();
     }
 
@@ -729,6 +733,11 @@ public class Chess : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPoi
 
         Debug.Log("Starting to Drag a piece");
         draggedPiece = pieces[col, row];
+
+        // Only Let player drag his own pieces
+        if(draggedPiece.Color != playerColor)
+            return;
+
 
         // Deactivate the dragged item ad show the ghost
         draggedPiece.Hide(true);

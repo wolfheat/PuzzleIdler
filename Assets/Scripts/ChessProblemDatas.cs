@@ -15,11 +15,12 @@ public class ChessProblemDatas : MonoBehaviour
     [SerializeField] private string playerCastleLong;
     [SerializeField] private string computerCastle;
 
-    [SerializeField] private string computerEnPassent;
+    [SerializeField] private string computerLongCastle;
     [SerializeField] private string playerEnPassent;
     [SerializeField] private string multipleEndMoves;
     [SerializeField] private string multipleEndMoves2;
     [SerializeField] private List<string> multipleEndMovesALL;
+    [SerializeField] private List<string> computerLongCastleALL;
 
     //[SerializeField] private ChessDatabase chessDatabase;
 
@@ -46,10 +47,13 @@ public class ChessProblemDatas : MonoBehaviour
             6 => playerCastleLong,
             7 => computerCastle,
             8 => playerEnPassent,
-            9 => computerEnPassent,
+            9 => computerLongCastle,
             10 => multipleEndMovesALL[UnityEngine.Random.Range(0,multipleEndMovesALL.Count)],
+            11 => computerLongCastleALL[UnityEngine.Random.Range(0, computerLongCastleALL.Count)],
             _ => ""
         };
+        
+        Debug.Log("LOADING LEVEL: " + problem);
 
         return GetStringAsPuzzleData(problem);
     }
@@ -371,9 +375,10 @@ public class ChessProblemDatas : MonoBehaviour
 
                 string[] solution = parts[2].Split(" ");
 
-                for (int j = 1; j < solution.Length; j+=2) {
+                for (int j = 2; j < solution.Length; j+=2) {
                     string part = solution[j];
-                    if (part == "e1c1") {
+                    //if (part == "e1c1") {
+                    if (part == "e8c8") {
                         Debug.Log(""+selectedLevel);
                         break;
                     }

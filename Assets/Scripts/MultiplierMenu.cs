@@ -18,6 +18,17 @@ public class MultiplierMenu : MonoBehaviour
 
     private void OnEnable() => AnimatePanelInto(active);
 
+    private void Start()
+    {
+        Stats.StatsUpdated += StatsUpdated;
+    }
+
+    private void StatsUpdated()
+    {
+        Debug.Log("Updating Multiplier Menu Stats");
+        UpdateStats();
+    }
+
     public void TogglePanel()
     {
         active = !active;
@@ -30,10 +41,11 @@ public class MultiplierMenu : MonoBehaviour
     {
         Debug.Log("Updating stars");
         float[] multipliers = Stats.MiniGamesMultipliers;
+
         for (int i = 0; i < multipierValues.Length && i < multipliers.Length; i++) {
             multipierValues[i].text = "x " + multipliers[i].ToString("F2");
         }
-        totalValue.text = "x " + multipliers.Sum().ToString("F2");
+        totalValue.text = "x " + Stats.MiniGamesMultipliersTotal.ToString("F2");
     }
 
     private void AnimatePanelInto(bool active)

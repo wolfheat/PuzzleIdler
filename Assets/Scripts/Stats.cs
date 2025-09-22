@@ -2,10 +2,17 @@ using System;
 using BreakInfinity;
 using UnityEngine;
 
+
+
+
 public static class Stats
 {
+    enum MiniGameNames{ChessProblem,MineSweeper,DuckCantSwim,Bomberman,Tetris,Snake,BubbleTanks};
+
 
     public const int MinimumChessRating = 1000;
+    private const int ChessGameLossRatingChange = -50;
+    private const int ChessGameWinRatingChange = 10;
 
     // Coinds and Gems - Held
     public static BigDouble CoinsHeld { get; private set; } = 0;
@@ -24,12 +31,12 @@ public static class Stats
     public static BigDouble GPSMultiplier { get; private set; } = 0.0f;
     public static BigDouble BuildingCostMultiplerA { get; private set; } = 1.1f;
     public static BigDouble BuildingsBaseIncome { get; private set; } = 1f;
-    public static float[] MiniGamesMultipliers { get; private set; } = {1,1,1,1,1,1,1};
+    public static float[] MiniGamesMultipliers { get; private set; } = { 1, 1.1f, 1.3f, 1.6f, 1.01f, 1.02f, 1.05f };
 
     // Multipliers - Set methods
-    public static void SetCPSResearchMultiplier(BigDouble newValue) { CPSResearchMultiplier = newValue; CPSUpdated?.Invoke();}
-    public static void SetCPSUpgradeMultiplier(BigDouble newValue) { CPSUpgradesMultiplier = newValue; CPSUpdated?.Invoke();}
-    public static void SetBuildingBaseIncome(BigDouble newValue) { BuildingsBaseIncome = newValue; CPSUpdated?.Invoke();}
+    public static void SetCPSResearchMultiplier(BigDouble newValue) { CPSResearchMultiplier = newValue; CPSUpdated?.Invoke(); }
+    public static void SetCPSUpgradeMultiplier(BigDouble newValue) { CPSUpgradesMultiplier = newValue; CPSUpdated?.Invoke(); }
+    public static void SetBuildingBaseIncome(BigDouble newValue) { BuildingsBaseIncome = newValue; CPSUpdated?.Invoke(); }
     public static BigDouble GetCPSTotalMultiplier() => CPSResearchMultiplier * CPSUpgradesMultiplier;
 
     public static void SetGemMultiplier(BigDouble newValue) => GPSMultiplier = newValue;
@@ -42,6 +49,17 @@ public static class Stats
 
     // Games Stats
     public static int ChessRating { get; internal set; } = 1000;
+    public static float MiniGamesMultipliersTotal => MiniGamesTotal();
+
+    public static Action StatsUpdated;
+
+    private static float MiniGamesTotal()
+    {
+        float ans = 1;
+        foreach (var multi in MiniGamesMultipliers)
+            ans *= multi;            
+        return ans;
+    }
 
 
     // Action - Events
@@ -146,4 +164,12 @@ public static class Stats
         Debug.Log("Removed coins, now have "+CoinsHeld);
     }
 
+    internal static void ChangeChessRating(bool didWin)
+    {
+        ChessRating = Math.Max(ChessRating + (didWin ? ChessGameWinRatingChange : ChessGameLossRatingChange),1000);
+        MiniGamesMultipliers[(int)MiniGameNames.ChessProblem] = ChessRating/1000f;
+
+        StatsUpdated?.Invoke();
+
+    }
 }
