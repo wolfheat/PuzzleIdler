@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Linq;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class MultiplierMenu : MonoBehaviour
@@ -18,14 +19,29 @@ public class MultiplierMenu : MonoBehaviour
 
     private void OnEnable() => AnimatePanelInto(active);
 
+    
+
     private void Start()
     {
         Stats.StatsUpdated += StatsUpdated;
+        SavingUtility.LoadingComplete += SaveFileLoaded;
     }
+
+    private void SaveFileLoaded()
+    {
+        // Set all values from loaded save file
+        StartCoroutine(UpdateStatsDelayed());
+    }
+
+    private IEnumerator UpdateStatsDelayed()
+    {
+        yield return new WaitForSeconds(0.3f);
+        UpdateStats();
+    }
+
 
     private void StatsUpdated()
     {
-        Debug.Log("Updating Multiplier Menu Stats");
         UpdateStats();
     }
 
@@ -39,11 +55,12 @@ public class MultiplierMenu : MonoBehaviour
 
     public void UpdateStats()
     {
-        Debug.Log("Updating stars");
+        Debug.Log("SAVESYSTEM - Updating Minigame stats");
         float[] multipliers = Stats.MiniGamesMultipliers;
 
         for (int i = 0; i < multipierValues.Length && i < multipliers.Length; i++) {
             multipierValues[i].text = "x " + multipliers[i].ToString("F2");
+            Debug.Log(i+" "+ multipliers[i]);
         }
         totalValue.text = "x " + Stats.MiniGamesMultipliersTotal.ToString("F2");
     }

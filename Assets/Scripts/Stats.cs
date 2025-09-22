@@ -49,6 +49,7 @@ public static class Stats
 
     // Games Stats
     public static int ChessRating { get; internal set; } = 1000;
+    public static int MineSweeperRating { get; internal set; } = 1000;
     public static float MiniGamesMultipliersTotal => MiniGamesTotal();
 
     public static Action StatsUpdated;
@@ -167,9 +168,28 @@ public static class Stats
     internal static void ChangeChessRating(bool didWin)
     {
         ChessRating = Math.Max(ChessRating + (didWin ? ChessGameWinRatingChange : ChessGameLossRatingChange),1000);
+        
         MiniGamesMultipliers[(int)MiniGameNames.ChessProblem] = ChessRating/1000f;
 
+        Debug.Log("SAVESYSTEM - Changed player Rating to "+ChessRating);
+
+        SavingUtility.playerGameData.PlayerChessRating = ChessRating;
+
         StatsUpdated?.Invoke();
+
+    }
+
+    internal static void SetMiniGameStats(int playerChessRating, int playerMinesweeperRating)
+    {
+        ChessRating = Math.Max(playerChessRating,1000);
+        MineSweeperRating = Math.Max(playerMinesweeperRating,1000);
+
+
+        MiniGamesMultipliers[(int)MiniGameNames.ChessProblem] = ChessRating / 1000f;
+        MiniGamesMultipliers[(int)MiniGameNames.MineSweeper] = MineSweeperRating / 1000f;
+
+
+        Debug.Log("Rating loaded into stats as " + ChessRating);
 
     }
 }

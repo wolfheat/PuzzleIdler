@@ -24,6 +24,10 @@ public class SavingUtilityHelper : MonoBehaviour
         // Set the stats values - to the old values
         Stats.SetCoinsAndGems(SavingUtility.playerGameData.coins, SavingUtility.playerGameData.gems);
 
+        // Mini Games
+        Stats.SetMiniGameStats(SavingUtility.playerGameData.PlayerChessRating, SavingUtility.playerGameData.PlayerMinesweeperRating);
+
+
         long seconds = (long)(DateTime.Now - SavingUtility.playerGameData.SaveTime).TotalSeconds;
         Debug.Log("Save Date = " + SavingUtility.playerGameData.SaveTime);
         Debug.Log("Current Date = " + DateTime.Now);

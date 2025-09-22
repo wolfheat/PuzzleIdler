@@ -116,6 +116,11 @@ public class PlayerGameData
         PlayTime = 0;
     }
 
+    // MINI GAMES STATS
+    public int PlayerChessRating { get; set; } = 1000;
+    public int PlayerMinesweeperRating { get; set; } = 1000;
+
+    
     // Held coins
     public BigDouble coins{ get; set; } 
 

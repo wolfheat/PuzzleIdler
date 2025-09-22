@@ -52,7 +52,9 @@ Aug 2025
 20/9	* Got Alternative moves that mates count as winning
 		* Scaling allowed for chessboard
 22/9	* Mini Games now Update to mini game menu and stats
+		* Make Player Chess rating saves to file
 
+		
 
 		* Need to test more solutions to check if calulations are correct for all type of moves	
 

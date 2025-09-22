@@ -150,6 +150,9 @@ public class Chess : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPoi
     private void OnEnable()
     {
         UpdateRating();
+
+
+
     }
 
     void Start()
@@ -686,14 +689,22 @@ public class Chess : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPoi
         Stats.ChangeChessRating(didWin);
         
         UpdateRating();
+
+        // Send save needed event
+        Debug.Log("SAVESYSTEM - Trigger Save");
+        SavingUtility.playerGameData.TriggerSave();
     }
 
 
     // RATING
     private void UpdateRating()
     {
+        Debug.Log("UPDATING PLAYER RATING");
         playerRating.text = "Rating: " + Stats.ChessRating;
+
+        Debug.Log("SAVESYSTEM - Rating set to "+Stats.ChessRating);
         //problemRating.text = "Problem: " + Stats.ChessRating;
+        
     }
 
     private void UpdateProblemRating(int rating) => problemRating.text = rating.ToString();
