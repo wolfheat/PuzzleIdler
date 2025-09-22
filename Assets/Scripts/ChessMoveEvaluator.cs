@@ -34,7 +34,7 @@ public static class ChessMoveEvaluator
         ChessPiece movedPiece = chessSetup[performedMove.from.x, performedMove.from.y];
         ChessPiece targetPiece = chessSetup[performedMove.to.x, performedMove.to.y];
 
-        Debug.Log("Performed Move from = "+performedMove.from.x+","+performedMove.from.y+" type: "+movedPiece.Type);
+        //Debug.Log("Performed Move from = "+performedMove.from.x+","+performedMove.from.y+" type: "+movedPiece.Type);
 
         // Sets the other piece for deletion by setting it to -1, -1 
         result.other = targetPiece != null ? new ChessMove(new Vector2Int(performedMove.to.x, performedMove.to.y), new Vector2Int(-1, -1)) : null;
@@ -74,7 +74,7 @@ public static class ChessMoveEvaluator
             if(IsJumping(moveDirection, amtSteps)) // If piece needs to jump to get there - Invalid move
                 return false;
 
-            Debug.Log("RookMove is valid rowchange = "+rowChange+" colChange = "+colChange);
+            //Debug.Log("RookMove is valid rowchange = "+rowChange+" colChange = "+colChange);
 
             return true;
         }
@@ -92,7 +92,7 @@ public static class ChessMoveEvaluator
             int rowChange = performedMove.to.y - performedMove.from.y;
             int colChange = performedMove.to.x - performedMove.from.x;
             Vector2Int moveDirection = new Vector2Int(Math.Sign(colChange), Math.Sign(rowChange));
-            Debug.Log("Movedirection: "+moveDirection.x+","+moveDirection.y);
+            //Debug.Log("Movedirection: "+moveDirection.x+","+moveDirection.y);
 
             int amtSteps = Math.Abs(rowChange);
             if (Math.Abs(rowChange) != Math.Abs(colChange)) // If both change in row and column are not the same - invalid move
@@ -111,7 +111,7 @@ public static class ChessMoveEvaluator
 
             // To begin with just check for two steps from kings or queens square
 
-            Debug.Log("Checking for valid Castle Move");
+            //Debug.Log("Checking for valid Castle Move");
 
             // Also need to check that rook is available and knight and bishop is not
             int rowChange = performedMove.to.y - performedMove.from.y;
@@ -125,13 +125,13 @@ public static class ChessMoveEvaluator
                 return false;
 
             
-            Debug.Log("Is moveing 2 steps");
+            //Debug.Log("Is moveing 2 steps");
 
             // King and queen spot (depends on rotation of board)
             if(performedMove.from.x != 3 && performedMove.from.x != 4)
                 return false;
 
-            Debug.Log("Is moveing from king or queen spot");
+            //Debug.Log("Is moveing from king or queen spot");
 
             // Check all versions of castle
             // Can't have knight or bishop but need rook
@@ -172,13 +172,13 @@ public static class ChessMoveEvaluator
             int colChange = performedMove.to.x - performedMove.from.x;            
             if (Math.Abs(rowChange) > 1 || Math.Abs(colChange) > 1) 
                 return false;
-            Debug.Log("It is a valid normal kings move");
+            //Debug.Log("It is a valid normal kings move");
             return true;
         }
         
         bool IsValidPawnMove() // 
         {
-            Debug.Log("Checking valid pawn move");
+            //Debug.Log("Checking valid pawn move");
             int allowedMoveDirection = movedPiece.Color == 0 ? 1 : -1;
             // Inverse if player plays black
             if(bottomPlayerColor == 1) {
@@ -212,14 +212,14 @@ public static class ChessMoveEvaluator
                 // Take an oponent
                 if (chessSetup[performedMove.to.x, performedMove.to.y] == null) {
                     // Check for valid en passent - if available add it as valid
-                    Debug.Log("Check valid en passent,  last move ended at ["+ lastPerformedMove.to.x+","+ lastPerformedMove.to.y+"]");
+                    //Debug.Log("Check valid en passent,  last move ended at ["+ lastPerformedMove.to.x+","+ lastPerformedMove.to.y+"]");
                     if (lastPerformedMove.enPassentable && (lastPerformedMove.to.x == performedMove.to.x && lastPerformedMove.to.y == performedMove.from.y)){
-                        Debug.Log("is valid en passent");
+                        //Debug.Log("is valid en passent");
                         // Valid en passent
                         result.other = new ChessMove(new Vector2Int(lastPerformedMove.to.x, lastPerformedMove.to.y), new Vector2Int(-1, -1));
                         return true;
                     }                    
-                    Debug.Log("is in-valid en passent");
+                    //Debug.Log("is in-valid en passent");
                     return false; // Can only take another piece, except en passent
                 }
                 // Capture
@@ -240,7 +240,7 @@ public static class ChessMoveEvaluator
                 Vector2Int checkedPos = performedMove.from;
                 for (int i = 1; i < steps; i++) {
                     checkedPos = performedMove.from + moveDirection * i;
-                    Debug.Log("IsJumping from "+checkedPos.x+","+checkedPos.y);
+                    //Debug.Log("IsJumping from "+checkedPos.x+","+checkedPos.y);
                     if (chessSetup[checkedPos.x,checkedPos.y] != null)
                         return true;
                 }
@@ -292,11 +292,11 @@ public static class ChessMoveEvaluator
                     // this is a oponent piece
 
                     // Try all possible moves
-                    Debug.Log("TRYING ALL POSSIBLE MOVES");
+                    //Debug.Log("TRYING ALL POSSIBLE MOVES");
 
                     // Evaluate if still check in all new positions
 
-                    bool inCheckInAllSetups = DoAllValidMovesKeepOpponentInCheck(lastPerformedMove,setup, playerColor);
+                    bool inCheckInAllSetups = DoesAllValidMovesKeepOpponentInCheck(lastPerformedMove,setup, playerColor);
 
                     //if (PlayerCanTakeComputerKingFromThisPosition(lastPerformedMove,setup, playerColor))
                     //    return true;
@@ -310,9 +310,9 @@ public static class ChessMoveEvaluator
 
     }
 
-    private static bool DoAllValidMovesKeepOpponentInCheck(ChessMove lastPerformedMove ,ChessPiece[,] setup, int playerColor)
+    private static bool DoesAllValidMovesKeepOpponentInCheck(ChessMove lastPerformedMove ,ChessPiece[,] setup, int playerColor)
     {
-        Debug.Log("Player is "+playerColor);
+        //Debug.Log("Player is "+playerColor);
 
         // Generate all available moves for each piece and add that position and check for still checked
 

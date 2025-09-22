@@ -84,4 +84,9 @@ public class ChessPiece : MonoBehaviour
         return (computerMove.from.x == 4 && computerMove.from.y == 7 && computerMove.to.y == 7 && (computerMove.to.x == 2 || computerMove.to.x == 6)) ||
                (computerMove.from.x == 3 && computerMove.from.y == 7 && computerMove.to.y == 7 && (computerMove.to.x == 1 || computerMove.to.x == 5));
     }
+
+    internal void SetScale(float squareWidth)
+    {
+        transform.localScale = new Vector3(squareWidth / 40, squareWidth / 40, squareWidth / 40);
+    }
 }

@@ -101,6 +101,7 @@ public class Chess : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPoi
 
     [SerializeField] private GameObject fromSelector;
     [SerializeField] private GameObject toSelector;
+    [SerializeField] private RectTransform chessBoardRect;
 
     [SerializeField] private PiecePromotion piecePromotion;
 
@@ -110,7 +111,7 @@ public class Chess : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPoi
     [SerializeField] private TextMeshProUGUI playerRating;
     [SerializeField] private TextMeshProUGUI problemRating;
 
-    private const int SquareSize = 50;
+    private static int SquareSize = 50;
     private float squareSizeScaled = 50;
 
     private ChessPiece[,] pieces = new ChessPiece[8,8];
@@ -134,6 +135,12 @@ public class Chess : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPoi
             return;
         }
         Instance = this;
+
+        SquareSize = (int)chessBoardRect.rect.width/8;
+
+
+        // Also scale by squareSize
+        ghost?.SetScale(SquareSize);
 
         // Derive the square size at current scale
         squareSizeScaled = squareHolder.GetComponent<RectTransform>().sizeDelta.x;
@@ -235,8 +242,8 @@ public class Chess : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPoi
         // Set new list of winMoves
         winCondition = new List<ChessMove>();
 
-        Debug.Log("");
-        Debug.Log("Solution = "+ ArrayString(data.solution));
+        //Debug.Log("");
+        //Debug.Log("Solution = "+ ArrayString(data.solution));
 
         for (int i = 0; i < data.solution.Length; i += 4) {
             // Set the solution
@@ -255,7 +262,7 @@ public class Chess : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPoi
                     // This is a promotion
                     // 8 = R, 9 = N, 10 = B, 11 = Q  - Is the color not needed? We know who is moving
                     promotion = nextValue;
-                    Debug.Log("Adding a promotion with value "+nextValue);
+                    //Debug.Log("Adding a promotion with value "+nextValue);
                     i++;
                 }
             }
@@ -289,7 +296,7 @@ public class Chess : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPoi
     private IEnumerator AnimateComputerMove()
     {
         yield return null; // Needed to make sure ghost hidden can be changed again even if player just disabled it
-        Debug.Log("  COMPUTER MOVES:  moves left = " + winCondition.Count);
+        //Debug.Log("  COMPUTER MOVES:  moves left = " + winCondition.Count);
         if (winCondition.Count == 0) {
             Debug.Log("No Conditions");
             yield break;
@@ -298,7 +305,7 @@ public class Chess : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPoi
 
         winCondition.RemoveAt(0);
 
-        Debug.Log("Wincondition = " + oponentMove.from.x + "," + oponentMove.from.y + " => " + oponentMove.to.x + "," + oponentMove.to.y);
+        //Debug.Log("Wincondition = " + oponentMove.from.x + "," + oponentMove.from.y + " => " + oponentMove.to.x + "," + oponentMove.to.y);
 
 
         // Change this to use same as player ?
@@ -436,11 +443,13 @@ public class Chess : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPoi
 
     private void CreatePieces(List<Vector3Int> positions)
     {
-        Debug.Log("**-- CHESS - Generating Pieces.");
+        //Debug.Log("**-- CHESS - Generating Pieces.");
         foreach (Vector3Int piecePosition in positions) {
             ChessPiece piece = Instantiate(piecePrefab, pieceHolder);
             piece.SetPositionAndType(piecePosition, new Vector3(SquareSize / 2 + piecePosition.x * SquareSize, SquareSize / 2 + piecePosition.y * SquareSize, 0));
             pieces[piecePosition.x, piecePosition.y] = piece;
+            // Also scale by squareSize
+            piece.SetScale(SquareSize);
         }
     }
 
@@ -629,6 +638,7 @@ public class Chess : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPoi
         // Win Notice
 
         if (!correct) {
+            Debug.Log("MOVE PLAYED THAT WAS NOT THE SUPPLIED WINNING ONE - CHECK FOR MATE");
             // Check for checkmate move everytime and if one is played it always are winning move
             if (winCondition.Count == 0 && CheckForMate()) {
                 // Last move played, check for mate
