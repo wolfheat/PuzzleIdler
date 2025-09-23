@@ -55,19 +55,19 @@ public class MultiplierMenu : MonoBehaviour
 
     public void UpdateStats()
     {
-        Debug.Log("SAVESYSTEM - Updating Minigame stats");
+        //Debug.Log("SAVESYSTEM - Updating Minigame stats");
         float[] multipliers = Stats.MiniGamesMultipliers;
 
         for (int i = 0; i < multipierValues.Length && i < multipliers.Length; i++) {
             multipierValues[i].text = "x " + multipliers[i].ToString("F2");
-            Debug.Log(i+" "+ multipliers[i]);
+            //Debug.Log(i+" "+ multipliers[i]);
         }
         totalValue.text = "x " + Stats.MiniGamesMultipliersTotal.ToString("F2");
     }
 
     private void AnimatePanelInto(bool active)
     {
-        Debug.Log("Animating panel to become active: "+active);
+        //Debug.Log("Animating panel to become active: "+active);
         //panel.transform.localPosition = active ? activePosition : inActivePosition;
         StopAllCoroutines();
         StartCoroutine(AnimatePanel());

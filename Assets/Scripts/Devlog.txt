@@ -55,15 +55,14 @@ Aug 2025
 		* Made Player Chess rating saves to file
 23/9	* Stats page updated
 		* Ratings tick down each minute
+		* Credits page added
 
 
 
+		// Still Chessmove to test
+		* Opponent played en-passentable move, player can play en passent but it is not the win, or it is an alernative win
 
 
-
-		
-
-		* Need to test more solutions to check if calulations are correct for all type of moves	
 
 
 		// Need to check if its check mate and also count that as a win
