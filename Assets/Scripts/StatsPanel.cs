@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using BreakInfinity;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class StatsPanel : MonoBehaviour
@@ -18,6 +19,10 @@ public class StatsPanel : MonoBehaviour
     [SerializeField] private TextMeshProUGUI buildingSumTextfield;
     [SerializeField] private TextMeshProUGUI researchSumTextfield;
     [SerializeField] private TextMeshProUGUI upgradesSumTextfield;
+
+    [Header("Final")]
+    [SerializeField] private TextMeshProUGUI finalTotMultiplierTextField;
+    [SerializeField] private TextMeshProUGUI finalTotIncomeTextField;
 
 
     public static StatsPanel Instance { get; private set; }
@@ -47,14 +52,21 @@ public class StatsPanel : MonoBehaviour
         yield return null;
         yield return null;
         yield return null;
+        
         // Update the list
-        UpdateGamesListValues();
-        UpdateBuildingListValues();
-        UpdateResearchListValues();
-        UpdateUpgradesListValues();
+        BigDouble baseIncome = UpdateBuildingListValues();
+
+        // Update the Multipliers
+        float multiplierTot = UpdateGamesListValues();
+        multiplierTot *= UpdateResearchListValues();
+        multiplierTot *= UpdateUpgradesListValues();
+
+        // total
+        finalTotMultiplierTextField.text = Stats.ReturnAsString(multiplierTot);
+        finalTotIncomeTextField.text = Stats.ReturnAsString(baseIncome*multiplierTot);
     }
 
-    public void UpdateGamesListValues()
+    public float UpdateGamesListValues()
     {
         // Get list from data
         float[] miniGames = Stats.MiniGamesMultipliers;
@@ -73,53 +85,60 @@ public class StatsPanel : MonoBehaviour
 
             item.SetName(names[i]);
             item.SetValue(Stats.ReturnAsString(income));
+            item.SetImage((int)IconType.Multiply);
             product *= income;
         }
         gamesSumTextfield.text = Stats.ReturnAsString(product);
+        return product;
     }
-    public void UpdateUpgradesListValues()
+    public float UpdateUpgradesListValues()
     {
         // Get list from data
-        (List<BigDouble> incomeList, List<string> researchNames) = UpgradeDatas.Instance.GetAllResearchCPSList();
+        (List<float> incomeList, List<string> researchNames) = UpgradeDatas.Instance.GetAllResearchCPSList();
 
         Debug.Log("** STATSPANEL - Upgrades - Updating Upgrade List "+incomeList.Count+" items");
 
         foreach (Transform child in upgradesTextHolder.transform.GetComponentInChildren<Transform>(false))
             Destroy(child.gameObject);
 
-        BigDouble product = 1;
+        float product = 1;
 
         for (int i = 0; i < incomeList.Count; i++) {
-            BigDouble income = incomeList[i];
+            float income = incomeList[i];
             BuildingsListItem item = Instantiate(listItemPrefab, upgradesTextHolder.transform);
             item.SetName(researchNames[i]);
             item.SetValue(Stats.ReturnAsString(income));
+            item.SetImage((int)IconType.Multiply);
             product *= income;
         }
         upgradesSumTextfield.text = Stats.ReturnAsString(product);
+        return product;
     }
-    public void UpdateResearchListValues()
+    public float UpdateResearchListValues()
     {
         // Get list from data
-        (List<BigDouble> incomeList, List<string> researchNames) = ResearchDatas.Instance.GetAllResearchCPSList();
+        (List<float> incomeList, List<string> researchNames) = ResearchDatas.Instance.GetAllResearchCPSList();
 
         Debug.Log("** STATSPANEL - Research - ** Updating List " + incomeList.Count+" items");
 
         foreach (Transform child in researchTextHolder.transform.GetComponentInChildren<Transform>(false))
             Destroy(child.gameObject);
 
-        BigDouble product = 1;
+        float product = 1;
 
         for (int i = 0; i < incomeList.Count; i++) {
-            BigDouble income = incomeList[i];
+            float income = incomeList[i];
             BuildingsListItem item = Instantiate(listItemPrefab, researchTextHolder.transform);
             item.SetName(researchNames[i]);
             item.SetValue(Stats.ReturnAsString(income));
+            item.SetImage((int)IconType.Multiply);
             product *= income;
         }
         researchSumTextfield.text = Stats.ReturnAsString(product);
+
+        return product;
     }
-    public void UpdateBuildingListValues()
+    public BigDouble UpdateBuildingListValues()
     {
         // Get list from data
         List<BigDouble> incomeList = BuildingDatas.Instance.GetAllBuildingsBaseIncomeList();
@@ -137,8 +156,10 @@ public class StatsPanel : MonoBehaviour
             BuildingsListItem item = Instantiate(listItemPrefab, buildingTextHolder.transform);
             item.SetName(buildingNames[i]);
             item.SetValue(Stats.ReturnAsString(income));
+            item.SetImage((int)IconType.CPS);
             sum += income;
         }
         buildingSumTextfield.text = Stats.ReturnAsString(sum);
+        return sum;
     }
 }

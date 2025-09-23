@@ -53,7 +53,14 @@ Aug 2025
 		* Scaling allowed for chessboard
 22/9	* Mini Games now Update to mini game menu and stats
 		* Made Player Chess rating saves to file
-		
+23/9	* Stats page updated
+		* Ratings tick down each minute
+
+
+
+
+
+
 		
 
 		* Need to test more solutions to check if calulations are correct for all type of moves	

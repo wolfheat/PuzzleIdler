@@ -161,6 +161,8 @@ public class Chess : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPoi
             return;
 
         PiecePromotion.Instance.OnPlayerSelect += Promote;
+
+        Stats.StatsUpdated += OnStatsUpdated;
         /*
         List<Vector3Int> positions = new List<Vector3Int>();
 
@@ -181,6 +183,11 @@ public class Chess : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPoi
         // Create all Pieces on the game board
         CreatePieces(positions);
         */
+    }
+
+    private void OnStatsUpdated()
+    {
+        UpdateRating();
     }
 
     private void CreateSquares()

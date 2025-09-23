@@ -19,6 +19,8 @@ public class ChessProblemDatas : MonoBehaviour
     [SerializeField] private string playerEnPassent;
     [SerializeField] private string multipleEndMoves;
     [SerializeField] private string multipleEndMoves2;
+    [SerializeField] private string computerblockswithpawn;
+
     [SerializeField] private List<string> multipleEndMovesALL;
     [SerializeField] private List<string> computerLongCastleALL;
 
@@ -50,6 +52,7 @@ public class ChessProblemDatas : MonoBehaviour
             9 => computerLongCastle,
             10 => multipleEndMovesALL[UnityEngine.Random.Range(0,multipleEndMovesALL.Count)],
             11 => computerLongCastleALL[UnityEngine.Random.Range(0, computerLongCastleALL.Count)],
+            12 => computerblockswithpawn,
             _ => ""
         };
         

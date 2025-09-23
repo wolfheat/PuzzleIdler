@@ -195,9 +195,9 @@ public class ResearchDatas : MonoBehaviour
         return allResearchMultipliers;
     }
 
-    internal (List<BigDouble>, List<string>) GetAllResearchCPSList()
+    internal (List<float>, List<string>) GetAllResearchCPSList()
     {
-        List<BigDouble> list = new();
+        List<float> list = new();
         List<string> names = new();
         foreach (var dictionaryKey in dictionaryAmount.Keys) {
             if (!dictionaryData.ContainsKey(dictionaryKey) && dictionaryAmount[dictionaryKey] != 0) continue; // Shouldnt have to check for 0 owned? Maybe have to since they are all in the dictionary

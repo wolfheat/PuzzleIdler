@@ -182,9 +182,9 @@ public class UpgradeDatas : MonoBehaviour
         SavingUtility.playerGameData.TriggerSave();
     }
 
-    internal (List<BigDouble> incomeList, List<string> researchNames) GetAllResearchCPSList()
+    internal (List<float> incomeList, List<string> researchNames) GetAllResearchCPSList()
     {
-        List<BigDouble> list = new();
+        List<float> list = new();
         List<string> names = dictionary.Keys.ToList();
 
         foreach (var data in upgradeDatas) {

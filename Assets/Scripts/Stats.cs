@@ -8,8 +8,6 @@ public enum MiniGameNames{ChessProblem,MineSweeper,DuckCantSwim,Bomberman,Tetris
 
 public static class Stats
 {
-
-
     public const int MinimumChessRating = 1000;
     private const int ChessGameLossRatingChange = -50;
     private const int ChessGameWinRatingChange = 10;
@@ -77,6 +75,7 @@ public static class Stats
 
 
     public static string ReturnAsString(BigDouble item) => NumberFormatter.Format(item, ActiveNumberNotation); // Use the new numberformatter class to decide how to show the number
+    public static string ReturnAsString(float item) => NumberFormatter.Format(item, ActiveNumberNotation); // Use the new numberformatter class to decide how to show the number
 
     public static void Tick() => AddCoinByTicks(); // Tick the timer once
 
@@ -178,9 +177,34 @@ public static class Stats
         StatsUpdated?.Invoke();
 
     }
+    
+    internal static void RatingDropEachMinute(int amt = 1)
+    {
+        Debug.Log("RatingDrop Happening - each minute");
+
+        ChessRating = Math.Max(ChessRating - amt,1000);
+        MiniGamesMultipliers[(int)MiniGameNames.ChessProblem] = ChessRating/1000f;
+
+        MineSweeperRating = Math.Max(MineSweeperRating - amt, 1000);
+        MiniGamesMultipliers[(int)MiniGameNames.MineSweeper] = MineSweeperRating/1000f;
+
+        UpdateSaveRatings();
+        StatsUpdated?.Invoke();
+
+        // Also Re-save this new info
+        SavingUtility.playerGameData.TriggerSave();
+
+    }
+
+    private static void UpdateSaveRatings()
+    {
+        SavingUtility.playerGameData.PlayerChessRating = ChessRating;
+        SavingUtility.playerGameData.PlayerMinesweeperRating = MineSweeperRating;
+    }
 
     internal static void SetMiniGameStats(int playerChessRating, int playerMinesweeperRating)
     {
+        // Sets data from save ? Do not save it?
         ChessRating = Math.Max(playerChessRating,1000);
         MineSweeperRating = Math.Max(playerMinesweeperRating,1000);
 

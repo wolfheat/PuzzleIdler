@@ -14,9 +14,16 @@ public class TimeController : MonoBehaviour
 
     private IEnumerator Tick()
     {
+        int minute = 0;
         while (true) {
-            //Debug.Log("Tick");
-            
+
+            // Take care of minuteTick
+            minute++;
+            if (minute == 60) {
+                Stats.RatingDropEachMinute();
+                minute = 0;
+            }
+
             // Update the text
             Stats.Tick();
 
