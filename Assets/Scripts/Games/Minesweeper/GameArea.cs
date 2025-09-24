@@ -4,31 +4,41 @@ using System.Linq;
 using System.Text;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using WolfheatProductions;
 
-public class GameArea : MonoBehaviour  
+public class GameArea : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 {
     [SerializeField] private bool isOnlyView = false;
     [SerializeField] private GameBox unclearedBoxPrefab;
-    [SerializeField] private GameBox underlayBoxPrefab;
+    [SerializeField] private UnderGameBox underlayBoxPrefab;
     [SerializeField] private GameObject boxHolder;
     [SerializeField] private GameObject underLaying;
+    [SerializeField] private RectTransform rectTransform;
 
-    Vector3 align = new Vector3(0.5f, -0.5f, 0);
+
+    Vector2 localPosition;
+
+    //Vector3 align = new Vector3(0.5f, -0.5f, 0);
+    Vector3 align = new Vector3(0f, -0f, 0);
+
     Vector2 borderAddon = new Vector3(0.3f, 0.81f);
 
-    Vector3 boxScale = new Vector3(0.48f, 0.48f, 1f);
+    Vector3 boxScale = new Vector3(1f, 1f, 1f);
+    
+    const int BoxSize = 40;
 
     private int gameWidth = 6;
     private int gameHeight = 6;
     private int mineCountAmount = 0;
     private int totalmines = 0;
+    private int opened;
+
 
     int[,] mines;
-    GameBox[,] underlayBoxes = new GameBox[0, 0];
+    UnderGameBox[,] underlayBoxes = new UnderGameBox[0, 0];
     GameBox[,] overlayBoxes = new GameBox[0, 0];
 
-    private int opened;
     private int totalToOpen;
     private Vector2Int swapBox;
     public bool LevelBusted { get; private set; }
@@ -38,7 +48,7 @@ public class GameArea : MonoBehaviour
 
     public static GameArea Instance { get; private set; }
     public float GameWidth { get; set; }
-    /*
+    
     private void Awake()
     {
         if (Instance != null)
@@ -48,7 +58,10 @@ public class GameArea : MonoBehaviour
         }
         Instance = this;
 
-    }*/
+        rectTransform = GetComponent<RectTransform>();
+    }
+
+
     private void Start()
     {
         RestartGame();
@@ -63,28 +76,28 @@ public class GameArea : MonoBehaviour
     [SerializeField] DigiDisplay timeDisplay;
     public void RestartGame(bool resetPosition = false)
     {
-        if (isOnlyView)
-            return;
+        Debug.Log("Restarting game!");
+
 
         /*
 
-        switch (USerInfo.Instance.LastUsedNormalBordSize) {
+        switch (USerInfo.LastUsedNormalBordSize) {
             case 0:
-                USerInfo.Instance.BoardType = BoardTypes.Beginner;
+                USerInfo.BoardType = BoardTypes.Beginner;
                 Debug.Log("Restart to Beginner");
                 break;
             case 1:
-                USerInfo.Instance.BoardType = BoardTypes.Intermediate;
+                USerInfo.BoardType = BoardTypes.Intermediate;
                 Debug.Log("Restart to Intermediate");
                 break;
             case 2:
-                USerInfo.Instance.BoardType = BoardTypes.Expert;
+                USerInfo.BoardType = BoardTypes.Expert;
                 Debug.Log("Restart to Expert");
                 break;
             default:
-                USerInfo.Instance.BoardType = BoardTypes.Slider;
-                USerInfo.Instance.ActiveBordSize = USerInfo.Instance.LastUsedNormalBordSize;
-                Debug.Log("Restart to Slider "+ USerInfo.Instance.ActiveBordSize);
+                USerInfo.BoardType = BoardTypes.Slider;
+                USerInfo.ActiveBordSize = USerInfo.LastUsedNormalBordSize;
+                Debug.Log("Restart to Slider "+ USerInfo.ActiveBordSize);
                 break;
         }
 
@@ -92,29 +105,34 @@ public class GameArea : MonoBehaviour
         SavingUtility.Instance?.SaveAllDataToFile();
         */
 
-        //Debug.Log("Setting Board size to: "+ USerInfo.Instance.ActiveBordSize);
+        //Debug.Log("Setting Board size to: "+ USerInfo.ActiveBordSize);
 
 
         SizeGameArea();
 
+
         RandomizeMines();
 
         DrawLevel();
+
+        opened = 0;
+
+        return;
         //ResetLevel(resetPosition);
         AlignBoxesAnchor(resetPosition);
         SmileyButton.Instance.ShowNormal();
         Timer.Instance.ResetCounterAndPause();
-        USerInfo.Instance.WaitForFirstMove = true;
-        USerInfo.Instance.levelID = gameWidth + "x" + gameHeight;
+        USerInfo.WaitForFirstMove = true;
+        USerInfo.levelID = gameWidth + "x" + gameHeight;
 
         // Exchange this
-        levelText.text = USerInfo.Instance.levelID;
+        levelText.text = USerInfo.levelID;
         //amtText.text = "" + FirestoreManager.Instance.LoadedAmount;
 
         Clicks = 0;
         TotalClicks = 0;
         LevelBusted = false;
-        USerInfo.Instance.currentType = GameType.Normal;
+        USerInfo.currentType = GameType.Normal;
 
     }
 
@@ -143,7 +161,7 @@ public class GameArea : MonoBehaviour
     {
         SizeGameArea(false);
         //mines = gameLoaded;
-        DefineUnderAndOverBoxes(); // Restes the Boxes
+        ResetBoxes(); // Restes the Boxes
         DetermineNumbersFromNeighbors(); // Sets all numbers
         DrawLevel();
         if (isOnlyView)
@@ -207,21 +225,33 @@ public class GameArea : MonoBehaviour
         //Debug.Log("OverlayBoxes size = ["+overlayBoxes.GetLength(0)+","+overlayBoxes.GetLength(1)+"] ");
         //Debug.Log("Underlayboxes size = ["+underlayBoxes.GetLength(0)+","+underlayBoxes.GetLength(1)+"] ");
         //BottomInfoController.Instance.ShowDebugText("DrawLevel "+overlayBoxes.GetLength(0)+"x"+overlayBoxes.GetLength(1));
+
+        // New system for painting level
+
+
+        ClearAllBoxes();
+
+        // Negative Y positive X
+
+        Debug.Log("MS:  Drawing Level");
+        Debug.Log("MS: Level size: "+gameHeight+","+gameWidth);
+
         for (int j = 0; j < gameHeight; j++)
         {
             for (int i = 0; i < gameWidth; i++)
             {
                 // Make uncleared
                 GameBox box = Instantiate(unclearedBoxPrefab, boxHolder.transform);
-                box.transform.localPosition = new Vector3(i, -j, 0) + align;
+                box.transform.localPosition = new Vector3(i*BoxSize, -j * BoxSize, 0) + align;
+                Debug.Log("OverBox placed at local "+ box.transform.localPosition);
                 box.transform.localScale = boxScale;
                 box.Pos = new Vector2Int(i, j);
                 overlayBoxes[i, j] = box;
 
                 // Make underlaying
-                GameBox underlayBox = Instantiate(unclearedBoxPrefab, underLaying.transform);
-                underlayBox.SetOrderingLeyer(0);
-                underlayBox.transform.localPosition = new Vector3(i, -j, 0) + align;
+                UnderGameBox underlayBox = Instantiate(underlayBoxPrefab, underLaying.transform);
+                //underlayBox.SetOrderingLeyer(0);
+                underlayBox.transform.localPosition = new Vector3(i * BoxSize, -j * BoxSize, 0) + align;
                 underlayBox.transform.localScale = boxScale;
                 underlayBox.Pos = new Vector2Int(i, j);
                 underlayBoxes[i, j] = underlayBox;
@@ -229,7 +259,18 @@ public class GameArea : MonoBehaviour
                 
             }
         }
-        Timer.Instance.Pause();
+        //Timer.Instance.Pause();
+    }
+
+    private void ClearAllBoxes()
+    {
+        foreach(Transform box in boxHolder.transform) {
+            Destroy(box.gameObject);
+        }
+        
+        foreach(Transform box in underLaying.transform) {
+            Destroy(box.gameObject);
+        }
     }
 
     private void RandomizeMines()
@@ -312,75 +353,56 @@ public class GameArea : MonoBehaviour
         return amt;
     }
 
-    private void BoxClickInEditB(Vector2Int pos)
+    public void TryOpenBox(Vector2Int pos)
     {
-        // Clicking mine in Edit Mode 1 - Toggle
-        if (mines[pos.x, pos.y] == -1)
-        {
-            Debug.Log("* EDIT MODE B - MINE TOGGLE");
-            // Handle mined position
-            overlayBoxes[pos.x, pos.y].RightClick(true);
-        }
-        else
-        {
-            if (overlayBoxes[pos.x, pos.y].gameObject.activeSelf)
-            {
-                Debug.Log("* EDIT MODE B - NORMAL CLICK OPEN");
-                BasicOpeningBox(pos);
-            }
-            else
-            {
-                Debug.Log("* EDIT MODE B - CHORD");
-                Chord(pos);
-            }
-        }
-    }
-    
-    private void BoxClickInEditA(Vector2Int pos)
-    {
-        Debug.Log("Toggle Edit Mode Mine at " + pos);   
-        // Clicking mine in Edit Mode 1 - Toggle
-        if (mines[pos.x, pos.y] != -1)
-        {
-            mines[pos.x, pos.y] = -1;
-            overlayBoxes[pos.x, pos.y].SetAsHiddenMine();
-        }
-        else if (overlayBoxes[pos.x, pos.y].Marked)
-        {
-            mines[pos.x, pos.y] = 0;
-            overlayBoxes[pos.x, pos.y].SetAsUnFlagged();
-            overlayBoxes[pos.x, pos.y].Marked = false;
-        }
-        else
-        {
-            overlayBoxes[pos.x, pos.y].RightClick();
-        }
-        UpdateMineCount();
+        Debug.Log("BOX: Trying to open pos "+pos);
+        // this methods ties to open the box and uses that info to check for complete game
+        bool didOpen = OpenBox(pos);
 
-    }
+        if (didOpen) {
+            opened++;
+            Debug.Log("BOX: Opened a Box: "+opened);
+            
 
-    public void OpenBoxCreate(Vector2Int pos)
-    {
-        // Separate Create Clicks for ease
-        //Debug.Log("Open Box "+pos);
-        if (USerInfo.Instance.currentType == GameType.Create)
-        {
-            if (USerInfo.EditMode == 0)
-                BoxClickInEditA(pos);
-            else
-                BoxClickInEditB(pos);
-            return;
+            if(opened == totalToOpen) {
+                Debug.Log("BOX: All Opened = WIN");
+                WinBustLevel(GameResult.Win);
+            }
         }
     }
 
     public bool OpenBox(Vector2Int pos)
     {
+
+        // Check if this is opened or not?
+        if (overlayBoxes[pos.x, pos.y].IsClickable()) {
+            Debug.Log("Box was openened at  [" + pos.x + "," + pos.y + "]");
+            if (mines[pos.x, pos.y] == -1) {
+                Debug.Log("BUST");
+
+                WinBustLevel(GameResult.Bust);
+                // this ends the game with a loss
+                return false; // No need to count opened ones since player lose?
+            }
+            Debug.Log("If this is a clear box open all neighbors");
+            if (mines[pos.x, pos.y] == 0) {
+                Debug.Log("Open neighbors");
+                OpenAllNeighbors(new Vector2Int(pos.x, pos.y));
+                return true;
+            }
+            return true;
+        }
+        else {
+            Debug.Log("Box is already opened at  [" + pos.x + "," + pos.y + "] - Chord?");
+            return false;
+        }
+        /*
         // Only wait for first click in Normal mode to start timer
-        if (USerInfo.Instance.WaitForFirstMove && USerInfo.Instance.currentType == GameType.Normal)
+        if (USerInfo.WaitForFirstMove && USerInfo.currentType == GameType.Normal)
         {
             //Start the timer
-            Timer.Instance.StartTimer();
-            USerInfo.Instance.WaitForFirstMove = false;
+            //Timer.Instance.StartTimer();
+            USerInfo.WaitForFirstMove = false;
 
             // If this is a mine swap it and recalculate the level
             if (mines[pos.x, pos.y] == -1)
@@ -389,7 +411,7 @@ public class GameArea : MonoBehaviour
             }
 
         }
-        if (Timer.Instance.Paused && USerInfo.Instance.currentType != GameType.Create)
+        if (Timer.Instance.Paused && USerInfo.currentType != GameType.Create)
         {
             Debug.Log("Timer Paused skip");
             //PanelController.Instance.ShowFadableInfo("Start Challenge on Smiley!");
@@ -404,7 +426,7 @@ public class GameArea : MonoBehaviour
         {
             WinBustLevel(GameResult.Win);
         }
-        return true;
+        return true;*/
     }
 
     private bool BasicOpeningBox(Vector2Int pos)
@@ -443,10 +465,10 @@ public class GameArea : MonoBehaviour
     private void WinBustLevel(GameResult result)
     {
         // Pause the timer
-        Timer.Instance.Pause();
+        //Timer.Instance.Pause();
 
-        Debug.Log("Level Ended at time: " + Timer.TimeElapsed);
-
+        //Debug.Log("Level Ended at time: " + Timer.TimeElapsed);
+        Debug.Log("Game ended with "+result);
         // Go through all mines and flagg all un-flagged 
         for (int j = 0; j < gameHeight; j++)
         {
@@ -479,9 +501,9 @@ public class GameArea : MonoBehaviour
                 
                 /*
                 // Add Stats
-                if(USerInfo.Instance.currentType == GameType.Normal)
+                if(USerInfo.currentType == GameType.Normal)
                     SavingUtility.gameSettingsData.NormalWon++;
-                else if(USerInfo.Instance.currentType == GameType.Challenge)
+                else if(USerInfo.currentType == GameType.Challenge)
                     SavingUtility.gameSettingsData.ChallengeWon++;        
                 */
                 break;
@@ -489,9 +511,9 @@ public class GameArea : MonoBehaviour
                 SmileyButton.Instance.ShowBust();
                 // Add Stats
                 /*
-                if (USerInfo.Instance.currentType == GameType.Normal)
+                if (USerInfo.currentType == GameType.Normal)
                     SavingUtility.gameSettingsData.NormalLost++;
-                else if (USerInfo.Instance.currentType == GameType.Challenge)
+                else if (USerInfo.currentType == GameType.Challenge)
                     SavingUtility.gameSettingsData.ChallengeLost++;
                 */
                 break;
@@ -563,6 +585,7 @@ public class GameArea : MonoBehaviour
 
     private bool OpenAllNeighbors(Vector2Int pos)
     {
+        Debug.Log("Opening all neighbors for "+pos);
         int iCenter = pos.x;
         int jCenter = pos.y;
         bool wasted = true; 
@@ -575,10 +598,11 @@ public class GameArea : MonoBehaviour
                     continue;
                 if (i < 0 || j < 0 || i >= gameWidth || j >= gameHeight)
                     continue;
+
                 if (overlayBoxes[i, j].gameObject.activeSelf && !overlayBoxes[i, j].Marked)
                 {
-                    //Debug.Log("Opening overlayBox ["+i+","+j+"] since it is active");
-                    OpenBox(new Vector2Int(i, j));
+                    TryOpenBox(new Vector2Int(i, j));
+
                     wasted = false;
                 }
             }
@@ -641,7 +665,7 @@ public class GameArea : MonoBehaviour
     {
         if (isOnlyView)
             return;
-        if (USerInfo.Instance.currentType == GameType.Create)
+        if (USerInfo.currentType == GameType.Create)
         {
             //Show Mines Total
             if(USerInfo.EditMode == 0)
@@ -731,14 +755,15 @@ public class GameArea : MonoBehaviour
 
     public void SizeGameArea(bool sizeFromSettings = true, bool resetMines = true)
     {
+        Debug.Log("MS: Sizing Game Area ");
         // Not sure if it should be here
         LevelBusted = false;
         
         if (sizeFromSettings)
         {
-            int boardSize = USerInfo.Instance.ActiveBordSize;
-            Debug.Log("**** Loading game of type "+ USerInfo.Instance.BoardType);
-            switch (USerInfo.Instance.BoardType)
+            int boardSize = USerInfo.ActiveBordSize;
+            Debug.Log("**** Loading game of type "+ USerInfo.BoardType);
+            switch (USerInfo.BoardType)
             {
                 case BoardTypes.Slider:
                     // Load info of current size
@@ -761,8 +786,8 @@ public class GameArea : MonoBehaviour
                     break;
                 case BoardTypes.Expert:
                     Debug.Log("**** Loading expert");
-                    gameWidth = USerInfo.Instance.UseRotatedExpert?16:30;
-                    gameHeight = USerInfo.Instance.UseRotatedExpert?30:16;
+                    gameWidth = USerInfo.UseRotatedExpert?16:30;
+                    gameHeight = USerInfo.UseRotatedExpert?30:16;
                     totalmines = 99;
                     break;
             }
@@ -794,11 +819,22 @@ public class GameArea : MonoBehaviour
                 mines = newMines;
             }
         }
-        DefineUnderAndOverBoxes();
+        ResetBoxes();
+
+        SetBorderSize();
+
 
     }
 
-    private void DefineUnderAndOverBoxes()
+    private void SetBorderSize()
+    {
+
+        Debug.Log("MS: Set border Size");
+
+        LevelCreator.Instance.SetBorderSize(new Vector2(BoxSize * gameWidth, BoxSize * gameHeight));
+    }
+
+    private void ResetBoxes()
     {
         for (int i = 0; i < underlayBoxes.GetLength(0); i++)
         {
@@ -812,7 +848,7 @@ public class GameArea : MonoBehaviour
         }
 
         // Set new boxes arrays size
-        underlayBoxes = new GameBox[gameWidth, gameHeight];
+        underlayBoxes = new UnderGameBox[gameWidth, gameHeight];
         overlayBoxes = new GameBox[gameWidth, gameHeight];
 
     }
@@ -957,5 +993,44 @@ public class GameArea : MonoBehaviour
                 
             }
         }
+    }
+
+    public void OnPointerUp(PointerEventData eventData)
+    {
+        UpdateMouseLocalPosition(eventData);
+
+        Debug.Log("Pointer up on this spot "+localPosition);
+
+        int xPos = (int)localPosition.x / BoxSize;
+        int yPos = (int)-localPosition.y / BoxSize;
+        if (xPos < 0 || xPos >= gameWidth || yPos < 0 || yPos >= gameHeight) {
+            Debug.Log("Invalid minesweeper game area click - return");
+            return;
+        }
+
+        Debug.Log("Clicking index ["+xPos+","+yPos+"]");
+
+        // Opening 
+        // Have to know if this is an open spot or not
+        // If cleard do 
+        // if not open or bust
+            Debug.Log("No Mine: "+ mines[xPos, yPos]);
+        
+        TryOpenBox(new Vector2Int(xPos,yPos));
+    }
+
+    private void UpdateMouseLocalPosition(PointerEventData eventData)
+    {
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(
+            rectTransform,
+            eventData.position,
+            eventData.pressEventCamera,
+            out localPosition
+        );
+    }
+
+    public void OnPointerDown(PointerEventData eventData)
+    {
+        Debug.Log("Mouse down at point - matters? ");
     }
 }

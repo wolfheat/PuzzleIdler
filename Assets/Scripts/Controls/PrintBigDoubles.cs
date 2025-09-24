@@ -8,8 +8,8 @@ public class PrintBigDoubles : MonoBehaviour
 
     void Start()
     {
-        NumberFormatter.ReceivedValue += PrintValue;    
-        NumberFormatter.ReceivedDouble += PrintDouble;    
+        IncrementalNumberFormatter.ReceivedValue += PrintValue;    
+        IncrementalNumberFormatter.ReceivedDouble += PrintDouble;    
     }
 
     private void PrintValue(BigDouble number)

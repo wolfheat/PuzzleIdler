@@ -1,6 +1,7 @@
 ﻿using System;
 using BreakInfinity;
-using NUnit.Framework; // make sure BreakInfinity.cs is in your project
+//using NUnit.Framework; 
+// make sure BreakInfinity.cs is in your project
 
 public enum NumberNotation
 {
@@ -11,7 +12,7 @@ public enum NumberNotation
     // "Mathematical", "Scientifical", "Engineering", "Alphabetical" };
 }
 
-public static class NumberFormatter 
+public static class IncrementalNumberFormatter 
 {
     // Full short scale names
     private static readonly string[] shortScaleNames = {

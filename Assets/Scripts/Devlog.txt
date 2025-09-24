@@ -57,8 +57,10 @@ Aug 2025
 		* Ratings tick down each minute
 		* Credits page added
 		* Added page for minesweeper
+24/9	* Minesweeper partly working
 
 
+		* Added minesweeper base code, now make it work with this project
 
 
 		// Chessmove that still needs a test

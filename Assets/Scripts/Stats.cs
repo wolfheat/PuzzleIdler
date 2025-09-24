@@ -74,8 +74,8 @@ public static class Stats
     private static BigDouble CPSPerTick() => BuildingsBaseIncome * GetCPSTotalMultiplier();
 
 
-    public static string ReturnAsString(BigDouble item) => NumberFormatter.Format(item, ActiveNumberNotation); // Use the new numberformatter class to decide how to show the number
-    public static string ReturnAsString(float item) => NumberFormatter.Format(item, ActiveNumberNotation); // Use the new numberformatter class to decide how to show the number
+    public static string ReturnAsString(BigDouble item) => IncrementalNumberFormatter.Format(item, ActiveNumberNotation); // Use the new numberformatter class to decide how to show the number
+    public static string ReturnAsString(float item) => IncrementalNumberFormatter.Format(item, ActiveNumberNotation); // Use the new numberformatter class to decide how to show the number
 
     public static void Tick() => AddCoinByTicks(); // Tick the timer once
 

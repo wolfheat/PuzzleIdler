@@ -1,19 +1,22 @@
 ﻿using System;
+using System.Security.Cryptography.X509Certificates;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 public class GameBox : MonoBehaviour
 {
     // Make this clickable
     public Vector2Int Pos { get; set; }
     public int value { get; set; }
-    [SerializeField] SpriteRenderer spriteRenderer;
-    [SerializeField] Collider2D boxCollider;
+    [SerializeField] Image image;
+    //[SerializeField] Collider2D boxCollider;
 
+    //public bool Active => boxCollider.enabled;
 
-    public bool Active => boxCollider.enabled;
     public bool Marked { get; set; } = false;
     public bool Busted { get; set; } = false;
+    public bool IsOpen { get; private set; } = false;
 
     private MineBoxType boxType = MineBoxType.Unflagged;
 
@@ -22,28 +25,20 @@ public class GameBox : MonoBehaviour
 //Inputs.Instance.Controls.Main.Mouse.started += MouseDown;
     }
 
-    public void SetType(int type,bool keepColliderEnable = false)
+    public void SetType(int type, bool overLayer = true)
     {
-        value = type;
-        if(value == -1)
-        {
-            boxType = MineBoxType.Busted;
-            UpdateSprite();
+        boxType = (MineBoxType)type;
+        Debug.Log("Updating sprite to type "+boxType+" = "+(int)boxType);
+        if(type == -1) {
+            image.sprite = ThemePicker.Instance.current.flags[(int)MineBoxType.Busted];
+            return;
         }
-        else
-        {
-           // spriteRenderer.sprite = ThemePicker.Instance.current.numbers[type];
-            //return;
-        }
-            //spriteRenderer.sprite = cleared[type];
-
-        if(!keepColliderEnable)
-            boxCollider.enabled = false;
+        UpdateSprite();
     }
 
     public void MakeInteractable(bool doSet = true)
     {
-        boxCollider.enabled = doSet;
+        //boxCollider.enabled = doSet;
     }
 
     private void MouseDown(InputAction.CallbackContext context)
@@ -51,51 +46,31 @@ public class GameBox : MonoBehaviour
         //Debug.Log("Mouse triggered");
     }
 
-    public void Click()
+    public bool IsClickable()
     {
-        if (GameAreaMaster.Instance.MainGameArea.LevelBusted)
-            return;
-
-
-
-        Debug.Log("Clicking Box value = "+value+" when Gametype 0 "+USerInfo.Instance.currentType);
-
-        if (USerInfo.Instance.currentType == GameType.Create)
-        {
-            GameAreaMaster.Instance.MainGameArea.OpenBoxCreate(Pos);
-            return;
+        if (Opened()) {
+            return false;
         }
-        // If Busted Level disallow any click on Area
+        // Else open it = remove it
+        Open();
+        return true;
+    }
 
+    private bool Opened() => IsOpen;
 
+    private void Open()
+    {
+        IsOpen = true;
 
-        // This workds for normal gameplay keep it
-        if (value > 0)
-        {
-            bool wasted = Chord();
-            if(wasted)
-                GameAreaMaster.Instance.MainGameArea.AddClicks();
-            return;
-        }
-        if (Marked) {
-            return;
-        }
+        // Hide it
+        image.enabled = false;
+        Debug.Log("Disabling Image for Gamebox at "+Pos+" enable = "+image+" "+image?.enabled);
 
-        if (GameAreaMaster.Instance.MainGameArea.OpenBox(Pos))
-        {
-            //RemoveAndSetUnderActive();
-        }
-        else
-        {
-            Debug.Log("Show a busted mine here");
-            boxType = MineBoxType.Busted;
-            UpdateSprite();            
-        }
     }
 
     public void RemoveAndSetUnderActive()
     {
-        if (!boxCollider.enabled) return;
+        //if (!boxCollider.enabled) return;
         MakeInteractable(false);
         transform.gameObject.SetActive(false);
     }
@@ -111,18 +86,11 @@ public class GameBox : MonoBehaviour
         Marked = true;
         boxType = MineBoxType.Flagged;
         UpdateSprite(); 
-        GameAreaMaster.Instance.MainGameArea.DecreaseMineCount();
+        GameArea.Instance.DecreaseMineCount();
     }
 
     public void RightClick(bool hidden = false)
     {
-
-        // Dont flag non mines in Create B
-        if (hidden && USerInfo.EditMode == 1 && !GameAreaMaster.Instance.MainGameArea.IsMine(Pos)) // Edit mode 1 == EDIT mode B
-        {
-            Click();
-            return;
-        }
 
         Debug.Log("Clicking this box at " + Pos + " mark or demark as mine value =" + value+" ");
         if (value > 0) return;
@@ -132,21 +100,9 @@ public class GameBox : MonoBehaviour
             SetAsFlaggedMine();
         else
         {
-            if(hidden)
-                SetAsHiddenMine();
-            else
-                SetAsUnFlagged();
+            SetAsUnFlagged();
         }
         Debug.Log("Right Clicking Box, hidden = " + hidden);
-
-        if (LevelCreator.Instance.EditMode)
-        {
-            GameAreaMaster.Instance.MainGameArea.UpdateMineCount();
-            return; // Breaks if in edit mode and placing Mines
-        }
-
-        // Rightclicking is never a wasted click?
-        //GameAreaMaster.Instance.MainGameArea.AddClicks();
 
         if (!Marked)
             GameAreaMaster.Instance.MainGameArea.IncreaseMineCount();
@@ -193,7 +149,8 @@ public class GameBox : MonoBehaviour
 
     public bool UnSolved()
     {
-        return boxCollider.enabled;
+        return true;
+        //return boxCollider.enabled;
     }
 
     public void Reset()
@@ -202,10 +159,10 @@ public class GameBox : MonoBehaviour
         Busted = false;
         Marked = false;
         //spriteRenderer.sprite = ThemePicker.Instance.current.flags[(int)MineBoxType.Unflagged];
-        boxCollider.enabled = true;
+        //boxCollider.enabled = true;
     }
 
-    internal void SetOrderingLeyer(int v) => spriteRenderer.sortingOrder = v;
+    //internal void SetOrderingLeyer(int v) => spriteRenderer.sortingOrder = v;
 
-    internal void UpdateSprite() => spriteRenderer.sprite = ThemePicker.Instance.current.flags[(int)boxType];
+    internal void UpdateSprite() => image.sprite = ThemePicker.Instance.current.flags[(int)boxType];
 }

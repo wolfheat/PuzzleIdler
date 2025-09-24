@@ -1,13 +1,13 @@
-using System;
-using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
-using UnityEngine.InputSystem;
-using Random = UnityEngine.Random;
+using UnityEngine.UI;   
 
 public class LevelCreator : MonoBehaviour
 {
     [SerializeField] private GameArea gameArea;
+    [SerializeField] private Image image;
+    Vector2 borderSizeExtra = new();
+
 
     [SerializeField] private int gameWidth;
     [SerializeField] private int gameHeight;
@@ -75,9 +75,9 @@ public class LevelCreator : MonoBehaviour
     private int totalToOpen;
     private Vector2Int swapBox;
 
-    void Start()
+    void Awake()
     {
-
+        Debug.Log("MS: Level Creator Start");
         if (Instance != null)
         {
             Destroy(gameObject);
@@ -85,15 +85,17 @@ public class LevelCreator : MonoBehaviour
         }
         Instance = this;
 
-        //gameArea = new GameArea();
+        // Calulate the additional parts for the sprite border
 
-        //gameArea.RestartGame();
+        Sprite sprite = image.sprite;
 
-        // Add size change listener
-        Debug.Log(" -- Registrating OnPlayerSignedInSuccess -- In Level Creator -- " + gameObject.GetInstanceID(), this);
-        //FirestoreManager.LoadComplete += OnLoadLevelComplete;
-        USerInfo.BoardSizeChange += OnPlaySizeChange;
+        float Xextra = sprite.border.x + sprite.border.z;
+        float Yextra = sprite.border.w + sprite.border.y;
+
+        borderSizeExtra = new Vector2(Xextra,Yextra);
     }
+
+
     private void OnDisable()
     {
         Debug.Log(" -- OnDisable Level Creator -- ");
@@ -115,7 +117,7 @@ public class LevelCreator : MonoBehaviour
         // Place smiley at half width of game area
         mineCount.transform.localPosition = new Vector3(0.5f, smileyHolder.transform.localPosition.y, 0);
         smileyHolder.transform.localPosition = new Vector3(borderAreaRenderer.size.x / 2, smileyHolder.transform.localPosition.y, 0);
-        smiley.SetColliderWidth(gameArea.SmileyColliderWidth());
+        //smiley.SetColliderWidth(gameArea.SmileyColliderWidth());
         timeCount.transform.localPosition = new Vector3(borderAreaRenderer.size.x - 0.5f, smileyHolder.transform.localPosition.y, 0);
     }
 
@@ -125,7 +127,7 @@ public class LevelCreator : MonoBehaviour
 
         if (sizeFromSettings)
         {
-            int boardSize = USerInfo.Instance.BoardSize;
+            int boardSize = USerInfo.BoardSize;
             // Change to Use Userinfo?
             Debug.Log("Load Game Size " + boardSize);
             // Load info of current size
@@ -151,11 +153,11 @@ public class LevelCreator : MonoBehaviour
     public void AlignGameArea(bool keepZoom = false)
     {
         Debug.Log("LevelCreator - Align Game Area");
-        ScaleGameAreaBorder();
-        AlignSmileyAndCounterIcons();
-        if(!keepZoom)
-            SetCameraOrthographicSize();
-        CenterGameArea();
+        //ScaleGameAreaBorder();
+//        AlignSmileyAndCounterIcons();
+        //if(!keepZoom)
+        //    SetCameraOrthographicSize();
+        //CenterGameArea();
     }
 
     private void ScaleGameAreaBorder() => borderAreaRenderer.size = GameAreaMaster.Instance.MainGameArea.BorderAreaRendererWidth();
@@ -215,7 +217,7 @@ public class LevelCreator : MonoBehaviour
     public void OnPlaySizeChange()
     {
         Debug.Log("LevelCreator - Play size changed, restarting Game");
-        //BottomInfoController.Instance.ShowDebugText("Play Size Changing to "+USerInfo.Instance.ActiveBordSize);
+        //BottomInfoController.Instance.ShowDebugText("Play Size Changing to "+USerInfo.ActiveBordSize);
         RestartGame(false,true);
     }
 
@@ -231,8 +233,8 @@ public class LevelCreator : MonoBehaviour
 
         AlignGameArea(keepZoom);
 
-        Debug.Log("--- RestartGame USerInfo.Instance.UseRotatedExpert = " + USerInfo.Instance.UseRotatedExpert);
-        if (USerInfo.Instance.BoardType == BoardTypes.Expert && USerInfo.Instance.UseRotatedExpert) {
+        Debug.Log("--- RestartGame USerInfo.UseRotatedExpert = " + USerInfo.UseRotatedExpert);
+        if (USerInfo.BoardType == BoardTypes.Expert && USerInfo.UseRotatedExpert) {
             Debug.Log("Align TOP!");
             //CameraController.Instance.AlignTop();
         }
@@ -271,6 +273,21 @@ public class LevelCreator : MonoBehaviour
     public void ApplyFlagged(int[,] flagged)
     {
         Debug.Log("ApplyFlagged");
+    }
+
+    internal void SetBorderSize(Vector2 vector2)
+    {
+        Debug.Log("Setting Border Size");
+
+
+
+
+
+        RectTransform rectTransform = GetComponent<RectTransform>();
+
+        Vector2 finalDimentions = vector2 + borderSizeExtra;
+
+        rectTransform.sizeDelta = finalDimentions;
     }
 
 
@@ -360,10 +377,10 @@ public class LevelCreator : MonoBehaviour
         SmileyButton.Instance.ShowNormal();
         Timer.Instance.ResetCounterAndPause();
         WaitForFirstMove = true;
-        USerInfo.Instance.levelID = "RANDOM " + gameWidth + "x" + gameHeight;
-        levelText.text = USerInfo.Instance.levelID;
+        USerInfo.levelID = "RANDOM " + gameWidth + "x" + gameHeight;
+        levelText.text = USerInfo.levelID;
         amtText.text = ""+FirestoreManager.Instance.LoadedAmount;
-        USerInfo.Instance.currentType = GameType.Normal;
+        USerInfo.currentType = GameType.Normal;
         BackgroundController.Instance.SetColorNormal();
 
     }

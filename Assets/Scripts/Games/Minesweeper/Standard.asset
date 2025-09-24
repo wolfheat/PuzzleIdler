@@ -9,6 +9,25 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7c5d1cc24b93e6441850de4381d02f69, type: 3}
+  m_Script: {fileID: 11500000, guid: 25378d0e600c2e74fac872edd575fefa, type: 3}
   m_Name: Standard
   m_EditorClassIdentifier: 
+  flags:
+  - {fileID: -995513341, guid: 28cefbbfe2e684a4a8b930eddc10e680, type: 3}
+  - {fileID: 1316677113, guid: 28cefbbfe2e684a4a8b930eddc10e680, type: 3}
+  - {fileID: 940541168, guid: 28cefbbfe2e684a4a8b930eddc10e680, type: 3}
+  - {fileID: -1155102820, guid: 28cefbbfe2e684a4a8b930eddc10e680, type: 3}
+  - {fileID: 276845186, guid: 28cefbbfe2e684a4a8b930eddc10e680, type: 3}
+  - {fileID: -1104482390, guid: 28cefbbfe2e684a4a8b930eddc10e680, type: 3}
+  - {fileID: -1349959695, guid: 28cefbbfe2e684a4a8b930eddc10e680, type: 3}
+  - {fileID: 1681798684, guid: 28cefbbfe2e684a4a8b930eddc10e680, type: 3}
+  numbers:
+  - {fileID: 1316677113, guid: 28cefbbfe2e684a4a8b930eddc10e680, type: 3}
+  - {fileID: -926054817, guid: 28cefbbfe2e684a4a8b930eddc10e680, type: 3}
+  - {fileID: -1260349826, guid: 28cefbbfe2e684a4a8b930eddc10e680, type: 3}
+  - {fileID: 1151343260, guid: 28cefbbfe2e684a4a8b930eddc10e680, type: 3}
+  - {fileID: -776070950, guid: 28cefbbfe2e684a4a8b930eddc10e680, type: 3}
+  - {fileID: 1619387847, guid: 28cefbbfe2e684a4a8b930eddc10e680, type: 3}
+  - {fileID: -1303617690, guid: 28cefbbfe2e684a4a8b930eddc10e680, type: 3}
+  - {fileID: 15180588, guid: 28cefbbfe2e684a4a8b930eddc10e680, type: 3}
+  - {fileID: -1594227894, guid: 28cefbbfe2e684a4a8b930eddc10e680, type: 3}
