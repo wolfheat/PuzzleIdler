@@ -90,7 +90,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 3
+    m_Mode: 0
     m_WrapAround: 0
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}
@@ -136,4 +136,3 @@ MonoBehaviour:
   data: {fileID: 0}
   image: {fileID: 2233226381593701466}
   greyscaleMaterial: {fileID: 2100000, guid: c0ab1d6e846566a4abbdba281627e3f4, type: 2}
-  normalMaterial: {fileID: 0}

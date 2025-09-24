@@ -56,11 +56,13 @@ Aug 2025
 23/9	* Stats page updated
 		* Ratings tick down each minute
 		* Credits page added
+		* Added page for minesweeper
 
 
 
-		// Still Chessmove to test
-		* Opponent played en-passentable move, player can play en passent but it is not the win, or it is an alernative win
+
+		// Chessmove that still needs a test
+		* Opponent played en-passentable move, player can play en passent but it is not the win, or it is an alternative win
 
 
 

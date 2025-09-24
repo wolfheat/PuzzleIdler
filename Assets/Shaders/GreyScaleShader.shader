@@ -1,4 +1,4 @@
-Shader "Unlit/GreyScaleShader"
+﻿Shader "Unlit/GreyScaleShader"
 {
     Properties {
         _MainTex ("Sprite Texture", 2D) = "white" {}
@@ -19,6 +19,13 @@ Shader "Unlit/GreyScaleShader"
         Blend SrcAlpha OneMinusSrcAlpha
 
         Pass {
+            // 🔹 This block is what allows UI Masks / Sprite Masks to work
+            Stencil {
+                Ref 1
+                Comp Equal
+                Pass Keep
+            }
+
             CGPROGRAM
             #pragma vertex vert
             #pragma fragment frag

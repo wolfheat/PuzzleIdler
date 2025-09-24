@@ -82,7 +82,7 @@ public static class Stats
     private static BigDouble AddCoinByTicks(long ticks = 1)
     {
         BigDouble added = CPSPerTick() * ticks;
-        //Debug.Log("Addcoins");
+        //Debug.Log("Addcoins "+added);
         CoinsHeld += added;
         //Debug.Log("Invoke added coins");
         CoinUpdated?.Invoke();

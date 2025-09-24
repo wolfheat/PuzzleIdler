@@ -57,7 +57,7 @@ public class StatsPanel : MonoBehaviour
         BigDouble baseIncome = UpdateBuildingListValues();
 
         // Update the Multipliers
-        float multiplierTot = UpdateGamesListValues();
+        BigDouble multiplierTot = UpdateGamesListValues();
         multiplierTot *= UpdateResearchListValues();
         multiplierTot *= UpdateUpgradesListValues();
 
@@ -91,7 +91,7 @@ public class StatsPanel : MonoBehaviour
         gamesSumTextfield.text = Stats.ReturnAsString(product);
         return product;
     }
-    public float UpdateUpgradesListValues()
+    public BigDouble UpdateUpgradesListValues()
     {
         // Get list from data
         (List<float> incomeList, List<string> researchNames) = UpgradeDatas.Instance.GetAllResearchCPSList();
@@ -101,7 +101,7 @@ public class StatsPanel : MonoBehaviour
         foreach (Transform child in upgradesTextHolder.transform.GetComponentInChildren<Transform>(false))
             Destroy(child.gameObject);
 
-        float product = 1;
+        BigDouble product = 1;
 
         for (int i = 0; i < incomeList.Count; i++) {
             float income = incomeList[i];
@@ -114,7 +114,7 @@ public class StatsPanel : MonoBehaviour
         upgradesSumTextfield.text = Stats.ReturnAsString(product);
         return product;
     }
-    public float UpdateResearchListValues()
+    public BigDouble UpdateResearchListValues()
     {
         // Get list from data
         (List<float> incomeList, List<string> researchNames) = ResearchDatas.Instance.GetAllResearchCPSList();
@@ -124,7 +124,7 @@ public class StatsPanel : MonoBehaviour
         foreach (Transform child in researchTextHolder.transform.GetComponentInChildren<Transform>(false))
             Destroy(child.gameObject);
 
-        float product = 1;
+        BigDouble product = 1;
 
         for (int i = 0; i < incomeList.Count; i++) {
             float income = incomeList[i];

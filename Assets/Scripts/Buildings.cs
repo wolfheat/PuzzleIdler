@@ -147,8 +147,10 @@ public class Buildings : MonoBehaviour
     {
         // Send this to be handeled by the BuildingDatas
         bool levelsChanged = BuildingDatas.Instance.BuyBuilding(index,amt);
+
+        // Need to update all if coins are changed - not just this one
         if (levelsChanged) {
-            buildings[index].UpdateLevelText();
+            doUpdateLevel = true;
         }
     }
 }
