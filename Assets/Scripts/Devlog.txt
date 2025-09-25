@@ -63,9 +63,10 @@ Aug 2025
 		* Implemented chording correctly
 25/9	* Showing timer and mines count
 		* Storing minesweeper rating in stats
+		* Fixed rightclick and move off still marking 
+		* Made Stats panel update on decrease game multiplier ticks
 
 
-		* Fix fast moving off a mark mine onto chord, make it still count as marking
 
 		* Decide what to do with games multipliers when offline, 
 			* keep them unaffecting the total and not counting down

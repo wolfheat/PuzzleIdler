@@ -190,6 +190,7 @@ public static class Stats
 
         UpdateSaveRatings();
         StatsUpdated?.Invoke();
+        CPSUpdated?.Invoke();
 
         // Also Re-save this new info
         SavingUtility.playerGameData.TriggerSave();
@@ -242,7 +243,12 @@ public static class Stats
 
         SavingUtility.playerGameData.PlayerMinesweeperRating = MineSweeperRating;
 
+        UpdateSaveRatings();
         StatsUpdated?.Invoke();
+
+        // Make sure the CPS is recaluclated
+        Stats.CPSUpdated?.Invoke();
+
 
         return ratingGain;
     }

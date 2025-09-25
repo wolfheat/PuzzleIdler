@@ -37,12 +37,15 @@ public class StatsPanel : MonoBehaviour
 
         SavingUtility.LoadingComplete += OnStatsLoaded;
 
-    }
+
+
+        Stats.CPSUpdated += UpdateInfo;
+}
 
     private void OnStatsLoaded()
     {
         Debug.Log("** LOADING COMPLETE - StatsPanel");
-        DelayedUpdate();
+        StartCoroutine(DelayedUpdate());
     }
 
     void OnEnable() => StartCoroutine(DelayedUpdate());
@@ -52,7 +55,12 @@ public class StatsPanel : MonoBehaviour
         yield return null;
         yield return null;
         yield return null;
-        
+
+        UpdateInfo();
+    }
+
+    private void UpdateInfo()
+    {
         // Update the list
         BigDouble baseIncome = UpdateBuildingListValues();
 
@@ -63,7 +71,7 @@ public class StatsPanel : MonoBehaviour
 
         // total
         finalTotMultiplierTextField.text = Stats.ReturnAsString(multiplierTot);
-        finalTotIncomeTextField.text = Stats.ReturnAsString(baseIncome*multiplierTot);
+        finalTotIncomeTextField.text = Stats.ReturnAsString(baseIncome * multiplierTot);
     }
 
     public float UpdateGamesListValues()
