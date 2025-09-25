@@ -217,7 +217,7 @@ public static class Stats
 
     }
 
-    internal static void IncreaseMinesweeperRating(int boardDifficulty)
+    internal static int IncreaseMinesweeperRating(int boardDifficulty)
     {
         // Have stats increase less when higher=
         // 1000-1399 - Normal
@@ -233,10 +233,8 @@ public static class Stats
 
         Debug.Log("MS: Rating gain "+ratingGain);
 
-        MineSweeperRating += ratingGain;
-
         // If there will be a loss possible this needs to exist to limit it to 1000
-        MineSweeperRating = Math.Max(MineSweeperRating + boardDifficulty, 1000);
+        MineSweeperRating = Math.Max(MineSweeperRating + ratingGain, 1000);
 
         MiniGamesMultipliers[(int)MiniGameNames.MineSweeper] = MineSweeperRating/ 1000f;
 
@@ -245,6 +243,8 @@ public static class Stats
         SavingUtility.playerGameData.PlayerMinesweeperRating = MineSweeperRating;
 
         StatsUpdated?.Invoke();
+
+        return ratingGain;
     }
 
     private static float MinesweeperDifficultyRatingAwardedMultiplier(int boardDifficulty)

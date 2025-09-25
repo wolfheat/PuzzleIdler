@@ -5,9 +5,10 @@ using System.Text;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 using WolfheatProductions;
 
-public class GameArea : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
+public class GameArea : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPointerMoveHandler
 {
     [SerializeField] private bool isOnlyView = false;
     [SerializeField] private GameBox unclearedBoxPrefab;
@@ -237,7 +238,7 @@ public class GameArea : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         // Negative Y positive X
 
         Debug.Log("MS:  Drawing Level");
-        Debug.Log("MS: Level size: "+gameHeight+","+gameWidth);
+        //Debug.Log("MS: Level size: "+gameHeight+","+gameWidth);
 
         for (int j = 0; j < gameHeight; j++)
         {
@@ -246,7 +247,7 @@ public class GameArea : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
                 // Make uncleared
                 GameBox box = Instantiate(unclearedBoxPrefab, boxHolder.transform);
                 box.transform.localPosition = new Vector3(i*BoxSize, -j * BoxSize, 0) + align;
-                Debug.Log("OverBox placed at local "+ box.transform.localPosition);
+                //Debug.Log("OverBox placed at local "+ box.transform.localPosition);
                 box.transform.localScale = boxScale;
                 box.Pos = new Vector2Int(i, j);
                 overlayBoxes[i, j] = box;
@@ -805,8 +806,8 @@ public class GameArea : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
                     break;
                 case BoardTypes.Expert:
                     Debug.Log("**** Loading expert");
-                    gameWidth = USerInfo.UseRotatedExpert?16:30;
-                    gameHeight = USerInfo.UseRotatedExpert?30:16;
+                    gameWidth = 30;
+                    gameHeight = 16;
                     totalmines = 99;
                     break;
             }
@@ -1014,6 +1015,33 @@ public class GameArea : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         }
     }
 
+    public void OnPointerDown(PointerEventData eventData)
+    {
+        currentMousePos = new Vector2Int(-1,-1);
+
+        if (eventData.button != PointerEventData.InputButton.Right)
+            return;
+
+        // Get the pointer position
+        Vector2Int mousePos = GetMouseLocalPosition(eventData);
+
+        // Right Clicking already opened box
+        if (overlayBoxes[mousePos.x,mousePos.y].IsOpen)
+            return;
+
+        // Store this last position
+        currentMousePos = mousePos;
+    }
+
+
+    Vector2Int lastMousePos = new Vector2Int();
+    Vector2Int currentMousePos = new Vector2Int();
+    float lastChangedPosTime = 0;
+
+    public void OnPointerMove(PointerEventData eventData)
+    {
+    }
+
     public void OnPointerUp(PointerEventData eventData)
     {
         // Disregard inputs when paused
@@ -1043,19 +1071,52 @@ public class GameArea : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         Vector2Int pos = new Vector2Int(xPos, yPos);
 
         if (eventData.button == PointerEventData.InputButton.Right) {
+            
+            // If it was released after moving off a correct spot
+            //float timePassedSincePosChange = Time.time - lastChangedPosTime;
+            if(ValidCurrentPos() && overlayBoxes[pos.x, pos.y].IsOpen) {
+                // Instead right clik the last position instead
+                Debug.Log("RIGHT CLICKING LAST POS INSTEAD OF RELEASING RIGHT BUTTON OVER NOTHING");
+                Debug.Log("Last position = "+lastMousePos.x+","+lastMousePos.y+" <- mark this");
+                Debug.Log("This position = "+pos.x+","+pos.y);
+
+                MarkBox(currentMousePos);
+                return;
+            }
+
             MarkBox(pos);
             return;
         }
         TryOpenBox(pos,true);
     }
 
+    private bool ValidCurrentPos() => currentMousePos.x >= 0 && currentMousePos.x < gameWidth && currentMousePos.y >= 0 && currentMousePos.y < gameHeight;
+
     private void MarkBox(Vector2Int pos)
     {
+        Debug.Log("Marking "+pos+" boxes size = "+overlayBoxes.GetLength(0)+""+overlayBoxes.GetLength(1));
+        // 11,9 is outside range why?
         if (overlayBoxes[pos.x, pos.y].IsOpen)
             return;
         overlayBoxes[pos.x, pos.y].RightClick();
     }
 
+    private Vector2Int GetMouseLocalPosition(PointerEventData eventData)
+    {
+        Vector2 pos = new();
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(
+            rectTransform,
+            eventData.position,
+            eventData.pressEventCamera,
+            out pos
+        );
+
+        int xPos = (int)pos.x / BoxSize;
+        int yPos = (int)-pos.y / BoxSize;
+
+        return new Vector2Int(xPos,yPos);
+    }
+    
     private void UpdateMouseLocalPosition(PointerEventData eventData)
     {
         RectTransformUtility.ScreenPointToLocalPointInRectangle(
@@ -1066,13 +1127,12 @@ public class GameArea : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         );
     }
 
-    public void OnPointerDown(PointerEventData eventData)
-    {
-        Debug.Log("Mouse down at point - matters? ");
-    }
+
 
     internal void ChangeGameSize(int type)
     {
-        Debug.Log("Change Game Area size to type "+type);
+        USerInfo.BoardType = (BoardTypes)(type+1);
+        Debug.Log("MS: Changing board type to " + type + " " + USerInfo.BoardType);
+        RestartGame();
     }
 }

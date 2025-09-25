@@ -65,6 +65,8 @@ Aug 2025
 		* Storing minesweeper rating in stats
 
 
+		* Fix fast moving off a mark mine onto chord, make it still count as marking
+
 		* Decide what to do with games multipliers when offline, 
 			* keep them unaffecting the total and not counting down
 			* count down and give the corresponding value

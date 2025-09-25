@@ -29,7 +29,7 @@ public class UnderGameBox : MonoBehaviour
 
         value = type;
 
-        Debug.Log("Updating Under sprite to type "+boxType+" = "+(int)boxType);
+        //Debug.Log("Updating Under sprite to type "+boxType+" = "+(int)boxType);
 
         if(type == -1) {
             image.sprite = ThemePicker.Instance.current.flags[(int)MineBoxType.Busted];

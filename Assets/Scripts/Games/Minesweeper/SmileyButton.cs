@@ -1,8 +1,9 @@
 using System;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class SmileyButton : MonoBehaviour
+public class SmileyButton : MonoBehaviour, IPointerDownHandler
 {
     [SerializeField] Sprite[] sprites;
     [SerializeField] Image image;
@@ -22,11 +23,27 @@ public class SmileyButton : MonoBehaviour
         //FirestoreManager.OnLevelCollectionListChange += SetSmileyTypeFromLevelAmountLoaded;
     }
     
-    public void Click()
+    public void MouseDown()
     {
         Debug.Log("Clicking Smiley!");
         LevelCreator.Instance.RestartGame(true);
         image.sprite = sprites[1];
+        pressedTimer = PressTime;
+
+    }
+
+    float pressedTimer = 0;
+    private const float PressTime = 0.25f;
+
+    private void Update()
+    {
+        if(pressedTimer > 0) {
+            pressedTimer -= Time.deltaTime;
+            if(pressedTimer <= 0) {
+                pressedTimer = 0;
+                ShowNormal();
+            }
+        }
     }
 
     public void ShowWin()
@@ -45,6 +62,8 @@ public class SmileyButton : MonoBehaviour
         image.sprite = sprites[0];
     }
 
-
-
+    public void OnPointerDown(PointerEventData eventData)
+    {
+        MouseDown();
+    }
 }

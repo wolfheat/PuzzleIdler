@@ -1,5 +1,7 @@
 using System;
+using System.Collections;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;   
 
@@ -10,6 +12,8 @@ public class LevelCreator : MonoBehaviour
     Vector2 borderSizeExtra = new();
 
     [SerializeField] private TextMeshProUGUI playerRating;
+    [SerializeField] private TextMeshProUGUI playerRatingIncreaseText;
+    [SerializeField] private GameObject playerRatingIncrease;
 
     [Header("EXTRAS")]
 
@@ -100,8 +104,13 @@ public class LevelCreator : MonoBehaviour
 
 
         Stats.StatsUpdated += OnStatsUpdated;
-        UpdateRatingText();
 
+    }
+
+    private void OnEnable()
+    {
+        UpdateRatingText();
+        
     }
 
     private void OnStatsUpdated()
@@ -307,8 +316,35 @@ public class LevelCreator : MonoBehaviour
     {
 
         // Award Rating and reward
-        Stats.IncreaseMinesweeperRating(boardDifficulty);
+        int increase = Stats.IncreaseMinesweeperRating(boardDifficulty);
         UpdateRatingText();
+        ShowRatingIncreaseText(increase);
+
+    }
+
+    private void ShowRatingIncreaseText(int increase)
+    {
+        StartCoroutine(ShowRatingIncreaseCO(increase));
+        
+    }
+
+    private IEnumerator ShowRatingIncreaseCO(int increase)
+    {
+        playerRatingIncrease.SetActive(true);
+        playerRatingIncreaseText.text = "+" + increase;
+
+        //Time the visability
+        
+        float timer = 2f;
+
+        // Handle fade
+
+        while (timer > 0) {
+            timer -= Time.deltaTime;
+            yield return null;
+        }
+
+        playerRatingIncrease.SetActive(false);
 
     }
 
