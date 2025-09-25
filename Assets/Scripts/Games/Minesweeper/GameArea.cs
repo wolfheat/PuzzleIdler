@@ -609,6 +609,9 @@ public class GameArea : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, I
     {
         UnsetAllPressedBoxes();
 
+        if(!ValidCurrentPos())
+            return;
+
         if (overlayBoxes[pos.x, pos.y].Marked || !(Mouse.current.leftButton.IsPressed() || Mouse.current.leftButton.IsPressed())) {
             // highlight neigbors
             return;
@@ -1067,9 +1070,10 @@ public class GameArea : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, I
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        UpdatePressedNeighbors(eventData);
-        
+        if (GamePaused) 
+            return;
 
+        UpdatePressedNeighbors(eventData);
     }
 
     private void UpdatePressedNeighbors(PointerEventData eventData)
@@ -1087,6 +1091,9 @@ public class GameArea : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, I
 
     public void OnPointerMove(PointerEventData eventData)
     {
+        if (GamePaused) 
+            return;
+        
         UpdatePressedNeighbors(eventData);
 
         /*
