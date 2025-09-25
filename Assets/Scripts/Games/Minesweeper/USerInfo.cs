@@ -11,7 +11,26 @@ public static class USerInfo
     public static string levelID;
 
 	public static GameType currentType = GameType.Normal;
-	public static int EditMode { get; set; } = 0;
+
+	public static int BoardDifficulty => CalculateDifficulty();
+
+    private static int CalculateDifficulty()
+    {
+        if(BoardType == BoardTypes.Slider) {
+			// this is defined by game size
+
+			// Do a caluclation here?
+			return ActiveBordSize;
+		}
+
+		int[] normalDifficultys = { 10, 30, 100 };
+
+        // BoardType 1,2,3 is Beginner,Inermediate,Expert
+        return normalDifficultys[(int)BoardType-1];
+
+    }
+
+    public static int EditMode { get; set; } = 0;
 
     //public static USerInfo Instance { get; private set; }
 	public static BoardTypes BoardType { get; set; } = BoardTypes.Slider;

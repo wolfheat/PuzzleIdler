@@ -119,13 +119,14 @@ public class GameArea : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         opened = 0;
 
         GamePaused = false;
+        USerInfo.WaitForFirstMove = true;
+        Timer.Instance.ResetCounterAndPause();
 
         return;
+
         //ResetLevel(resetPosition);
         AlignBoxesAnchor(resetPosition);
         SmileyButton.Instance.ShowNormal();
-        Timer.Instance.ResetCounterAndPause();
-        USerInfo.WaitForFirstMove = true;
         USerInfo.levelID = gameWidth + "x" + gameHeight;
 
         // Exchange this
@@ -385,8 +386,26 @@ public class GameArea : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 
     public bool OpenBox(Vector2Int pos, bool playerInitiated)
     {
+        // Wait for first click to start timer
+        if (USerInfo.WaitForFirstMove) {
+            //Start the timer
+            //Timer.Instance.StartTimer();
+            USerInfo.WaitForFirstMove = false;
+            Debug.Log("TIMER: Starting Minesweeper Timer");
+            Timer.Instance.StartTimer();
+
+
+            // If this is a mine swap it and recalculate the level
+            if (mines[pos.x, pos.y] == -1) {
+                Debug.Log("TIMER: Swapping this Mine");
+                SwapAndRecalculateLevel(pos);
+            }
+        }
+
+
+
         // marked or allready open
-         if(overlayBoxes[pos.x, pos.y].Marked)
+        if (overlayBoxes[pos.x, pos.y].Marked)
             return false;
 
         // not marked or closed
@@ -423,38 +442,7 @@ public class GameArea : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
             return false;
         }
         Debug.Log("Shold never happen?");
-        return false;
-        /*
-        // Only wait for first click in Normal mode to start timer
-        if (USerInfo.WaitForFirstMove && USerInfo.currentType == GameType.Normal)
-        {
-            //Start the timer
-            //Timer.Instance.StartTimer();
-            USerInfo.WaitForFirstMove = false;
-
-            // If this is a mine swap it and recalculate the level
-            if (mines[pos.x, pos.y] == -1)
-            {
-                SwapAndRecalculateLevel(pos);
-            }
-
-        }
-        if (Timer.Instance.Paused && USerInfo.currentType != GameType.Create)
-        {
-            Debug.Log("Timer Paused skip");
-            //PanelController.Instance.ShowFadableInfo("Start Challenge on Smiley!");
-            return true;
-        }
-
-        if(!BasicOpeningBox(pos))
-            return false;
-
-        // If last opened is a number check if game is cleared?
-        if (opened == totalToOpen && !Timer.Instance.Paused)
-        {
-            WinBustLevel(GameResult.Win);
-        }
-        return true;*/
+        return false;        
     }
 
     private bool BasicOpeningBox(Vector2Int pos)
@@ -493,7 +481,7 @@ public class GameArea : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     private void WinBustLevel(GameResult result)
     {
         // Pause the timer
-        //Timer.Instance.Pause();
+        Timer.Instance.Pause();
 
         //Debug.Log("Level Ended at time: " + Timer.TimeElapsed);
         Debug.Log("Game ended with "+result);
@@ -527,7 +515,9 @@ public class GameArea : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         switch (result) {
             case GameResult.Win:
                 SmileyButton.Instance.ShowWin();
-                
+
+                LevelCreator.Instance.UpdateRating(USerInfo.BoardDifficulty);                
+
                 /*
                 // Add Stats
                 if(USerInfo.currentType == GameType.Normal)
@@ -1079,5 +1069,10 @@ public class GameArea : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     public void OnPointerDown(PointerEventData eventData)
     {
         Debug.Log("Mouse down at point - matters? ");
+    }
+
+    internal void ChangeGameSize(int type)
+    {
+        Debug.Log("Change Game Area size to type "+type);
     }
 }

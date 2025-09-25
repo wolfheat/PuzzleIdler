@@ -1,3 +1,4 @@
+using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;   
@@ -8,6 +9,9 @@ public class LevelCreator : MonoBehaviour
     [SerializeField] private Image image;
     Vector2 borderSizeExtra = new();
 
+    [SerializeField] private TextMeshProUGUI playerRating;
+
+    [Header("EXTRAS")]
 
     [SerializeField] private int gameWidth;
     [SerializeField] private int gameHeight;
@@ -93,8 +97,17 @@ public class LevelCreator : MonoBehaviour
         float Yextra = sprite.border.w + sprite.border.y;
 
         borderSizeExtra = new Vector2(Xextra,Yextra);
+
+
+        Stats.StatsUpdated += OnStatsUpdated;
+        UpdateRatingText();
+
     }
 
+    private void OnStatsUpdated()
+    {
+        UpdateRatingText();
+    }
 
     private void OnDisable()
     {
@@ -290,6 +303,22 @@ public class LevelCreator : MonoBehaviour
         rectTransform.sizeDelta = finalDimentions;
     }
 
+    internal void UpdateRating(int boardDifficulty)
+    {
+
+        // Award Rating and reward
+        Stats.IncreaseMinesweeperRating(boardDifficulty);
+        UpdateRatingText();
+
+    }
+
+
+    // RATING
+    private void UpdateRatingText()
+    {
+        playerRating.text = "Rating: " + Stats.MineSweeperRating;     
+        Debug.Log("UPDATING PLAYER RATING");
+    }
 
     /*
     private void PreOpenAndFlag(int[,] gameLoaded)

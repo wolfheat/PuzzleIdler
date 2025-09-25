@@ -216,4 +216,47 @@ public static class Stats
         Debug.Log("Rating loaded into stats as " + ChessRating);
 
     }
+
+    internal static void IncreaseMinesweeperRating(int boardDifficulty)
+    {
+        // Have stats increase less when higher=
+        // 1000-1399 - Normal
+        // 1400-1599 - 0.8
+        // 1600-1799 - 0.5
+        // 1800-1999 - 0.3
+        // 2000+     - 0.1
+
+
+        float multiplier = MinesweeperDifficultyRatingAwardedMultiplier(boardDifficulty);
+
+        int ratingGain = (int)(boardDifficulty * multiplier);
+
+        Debug.Log("MS: Rating gain "+ratingGain);
+
+        MineSweeperRating += ratingGain;
+
+        // If there will be a loss possible this needs to exist to limit it to 1000
+        MineSweeperRating = Math.Max(MineSweeperRating + boardDifficulty, 1000);
+
+        MiniGamesMultipliers[(int)MiniGameNames.MineSweeper] = MineSweeperRating/ 1000f;
+
+        Debug.Log("SAVESYSTEM - Changed player Rating to " + ChessRating);
+
+        SavingUtility.playerGameData.PlayerMinesweeperRating = MineSweeperRating;
+
+        StatsUpdated?.Invoke();
+    }
+
+    private static float MinesweeperDifficultyRatingAwardedMultiplier(int boardDifficulty)
+    {        
+        float multiplier = MineSweeperRating switch
+        {
+            < 1400 => 1,
+            < 1600 => 0.8f,
+            < 1800 => 0.5f,
+            < 2000 => 0.3f,
+            _ => 0.1f
+        };
+        return multiplier;
+    }
 }

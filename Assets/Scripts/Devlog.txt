@@ -61,9 +61,13 @@ Aug 2025
 		* Limited player from doing moves after bust
 		* Make player able to mark mines
 		* Implemented chording correctly
+25/9	* Showing timer and mines count
+		* Storing minesweeper rating in stats
 
-		* Show timer and mines count
 
+		* Decide what to do with games multipliers when offline, 
+			* keep them unaffecting the total and not counting down
+			* count down and give the corresponding value
 
 		* Added minesweeper base code, now make it work with this project
 

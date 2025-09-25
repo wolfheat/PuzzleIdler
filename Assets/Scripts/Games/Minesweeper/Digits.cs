@@ -1,11 +1,12 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 
 public class Digits : MonoBehaviour
 {
-    [SerializeField] SpriteRenderer rend;
+    [SerializeField] Image image;
     [SerializeField] Sprite[] digitsNumbers;
     internal void SetValue(int val)
     {
-        rend.sprite = digitsNumbers[val];
+        image.sprite = digitsNumbers[val];
     }
 }
