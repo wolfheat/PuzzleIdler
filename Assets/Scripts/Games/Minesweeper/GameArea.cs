@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Sockets;
 using System.Text;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
@@ -603,6 +605,54 @@ public class GameArea : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, I
     }
     private Vector2Int[] steps = new Vector2Int[] { new Vector2Int(-1, -1), new Vector2Int(-1, 0), new Vector2Int(-1, 1), new Vector2Int(0, -1), new Vector2Int(0, 1), new Vector2Int(1, -1), new Vector2Int(1, 0), new Vector2Int(1, 1) };
 
+    private void HighLightAllNeighbors(Vector2Int pos)
+    {
+        UnsetAllPressedBoxes();
+
+        if (overlayBoxes[pos.x, pos.y].Marked || !(Mouse.current.leftButton.IsPressed() || Mouse.current.leftButton.IsPressed())) {
+            // highlight neigbors
+            return;
+        }
+
+        Debug.Log("HighLight all neighbors for "+pos);
+
+        int iCenter = pos.x;
+        int jCenter = pos.y;
+
+        if (overlayBoxes[iCenter,jCenter].IsClickable()) {
+            overlayBoxes[iCenter,jCenter].SetAsPressed();
+            return;
+        }
+
+        for (int i = iCenter - 1; i <= iCenter + 1; i++)
+        {
+            for (int j = jCenter - 1; j <= jCenter + 1; j++)
+            {
+                if (i == iCenter && j == jCenter)
+                    continue;
+                if (i < 0 || j < 0 || i >= gameWidth || j >= gameHeight)
+                    continue;
+
+                if (overlayBoxes[i, j].IsClickable())
+                {
+                    overlayBoxes[i,j].SetAsPressed();
+                }
+            }
+        }
+    }
+
+    private void UnsetAllPressedBoxes()
+    {
+        for (int j = 0; j < gameHeight; j++) {
+            for (int i = 0; i < gameWidth; i++) {
+                if (!overlayBoxes[i,j].IsClickable())
+                    continue;
+
+                overlayBoxes[i, j].UnPress();
+            }
+        }
+    }
+
     private bool OpenAllNeighbors(Vector2Int pos)
     {
         Debug.Log("Opening all neighbors for "+pos);
@@ -643,7 +693,7 @@ public class GameArea : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, I
 
     }
 
-    private int Neighbors(int iCenter, int jCenter)
+    private int NeighborsCount(int iCenter, int jCenter)
     {
         int amt = 0;
         // Determine neighbors
@@ -675,7 +725,7 @@ public class GameArea : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, I
                 if (i < 0 || j < 0 || i >= gameWidth || j >= gameHeight)
                     continue;
                 if (mines[i, j] != -1)
-                    mines[i, j] = Neighbors(i, j);
+                    mines[i, j] = NeighborsCount(i, j);
                 underlayBoxes[i, j].SetType(mines[i, j]);
             }
         }
@@ -766,7 +816,7 @@ public class GameArea : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, I
             {
                 if (mines[i, j] != -1)
                 {
-                    mines[i, j] = Neighbors(i, j);
+                    mines[i, j] = NeighborsCount(i, j);
                     //Debug.Log("Neighbor for "+i+","+j+" = " + mines[i,j]);
                 }
             }
@@ -1017,22 +1067,19 @@ public class GameArea : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, I
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        currentMousePos = new Vector2Int(-1,-1);
+        UpdatePressedNeighbors(eventData);
+        
 
-        if (eventData.button != PointerEventData.InputButton.Right)
-            return;
-
-        // Get the pointer position
-        Vector2Int mousePos = GetMouseLocalPosition(eventData);
-
-        // Right Clicking already opened box
-        if (overlayBoxes[mousePos.x,mousePos.y].IsOpen)
-            return;
-
-        // Store this last position
-        currentMousePos = mousePos;
     }
 
+    private void UpdatePressedNeighbors(PointerEventData eventData)
+    {
+        // Store this new position
+        currentMousePos = GetMouseLocalPosition(eventData);
+
+        // Checking for pressed highlighting
+        HighLightAllNeighbors(currentMousePos);
+    }
 
     Vector2Int lastMousePos = new Vector2Int();
     Vector2Int currentMousePos = new Vector2Int();
@@ -1040,6 +1087,20 @@ public class GameArea : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, I
 
     public void OnPointerMove(PointerEventData eventData)
     {
+        UpdatePressedNeighbors(eventData);
+
+        /*
+        // Get the pointer position
+        Vector2Int mousePos = GetMouseLocalPosition(eventData);
+
+
+        // Right Clicking already opened box
+        if ((Mouse.current.leftButton.IsPressed() || Mouse.current.leftButton.IsPressed()) && !overlayBoxes[mousePos.x, mousePos.y].Marked) {
+            // highlight neigbors
+            HighLightAllNeighbors(mousePos);
+            return;
+        }
+        */
     }
 
     public void OnPointerUp(PointerEventData eventData)
@@ -1048,6 +1109,7 @@ public class GameArea : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, I
         if(GamePaused)
             return; 
 
+        UnsetAllPressedBoxes();
 
         UpdateMouseLocalPosition(eventData);
 
@@ -1101,6 +1163,21 @@ public class GameArea : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, I
         overlayBoxes[pos.x, pos.y].RightClick();
     }
 
+    private Vector2Int GetMouseLocalPosition(Vector2 pos)
+    {
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(
+            rectTransform,
+            pos,
+            Camera.main,
+            out pos
+        );
+
+        int xPos = (int)pos.x / BoxSize;
+        int yPos = (int)-pos.y / BoxSize;
+
+        return new Vector2Int(xPos, yPos);
+    }
+    
     private Vector2Int GetMouseLocalPosition(PointerEventData eventData)
     {
         Vector2 pos = new();

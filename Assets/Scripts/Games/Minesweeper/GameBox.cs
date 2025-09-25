@@ -154,4 +154,18 @@ public class GameBox : MonoBehaviour
     //internal void SetOrderingLeyer(int v) => spriteRenderer.sortingOrder = v;
 
     internal void UpdateSprite() => image.sprite = ThemePicker.Instance.current.flags[(int)boxType];
+
+    internal void SetAsPressed()
+    {
+        boxType = MineBoxType.Open;
+        UpdateSprite();
+    }
+
+    internal void UnPress()
+    {
+        if(boxType != MineBoxType.Unflagged) {
+            boxType = MineBoxType.Unflagged;
+            UpdateSprite();
+        }
+    }
 }
