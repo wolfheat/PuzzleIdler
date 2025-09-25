@@ -34,6 +34,7 @@ public class GameArea : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     private int totalmines = 0;
     private int opened;
 
+    public bool GamePaused { get; private set; }
 
     int[,] mines;
     UnderGameBox[,] underlayBoxes = new UnderGameBox[0, 0];
@@ -117,6 +118,8 @@ public class GameArea : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 
         opened = 0;
 
+        GamePaused = false;
+
         return;
         //ResetLevel(resetPosition);
         AlignBoxesAnchor(resetPosition);
@@ -131,7 +134,6 @@ public class GameArea : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 
         Clicks = 0;
         TotalClicks = 0;
-        LevelBusted = false;
         USerInfo.currentType = GameType.Normal;
 
     }
@@ -318,10 +320,10 @@ public class GameArea : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     public bool Chord(Vector2Int pos)
     {
         bool wasted = true;
-        //Debug.Log("Charding levelcreator at "+pos);
+        Debug.Log("Chording levelcreator at "+pos);
         if (Chordable(pos))
         {
-            //Debug.Log("Chardable");
+            Debug.Log("Chardable");
             wasted = OpenAllNeighbors(pos);
         }
         return wasted;
@@ -331,6 +333,8 @@ public class GameArea : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     {
         // Is chardable if X amount of mines are marked around it
         int number = underlayBoxes[pos.x, pos.y].value;
+        Debug.Log("underlayBoxes[pos.x, pos.y].value = " + underlayBoxes[pos.x, pos.y].value);
+        //Debug.Log("Checking amt of marked neighbors = "+ MarkedNeighbors(pos.x, pos.y));
         return number == MarkedNeighbors(pos.x, pos.y);
     }
 
@@ -353,15 +357,20 @@ public class GameArea : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         return amt;
     }
 
-    public void TryOpenBox(Vector2Int pos)
+    public void TryOpenBox(Vector2Int pos,bool playerInitiated)
     {
         Debug.Log("BOX: Trying to open pos "+pos);
         // this methods ties to open the box and uses that info to check for complete game
-        bool didOpen = OpenBox(pos);
+
+
+
+        bool didOpen =  OpenBox(pos,playerInitiated);
+
+
 
         if (didOpen) {
             opened++;
-            Debug.Log("BOX: Opened a Box: "+opened);
+            Debug.Log("BOX: Trying to open pos "+pos+" success: " + opened+" ["+pos+" , "+totalToOpen+"]");
             
 
             if(opened == totalToOpen) {
@@ -369,33 +378,52 @@ public class GameArea : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
                 WinBustLevel(GameResult.Win);
             }
         }
+        else {
+            Debug.Log("BOX: Trying to open pos "+pos+" FAILED: " + opened+" ["+pos+" , "+totalToOpen+"]");
+        }
     }
 
-    public bool OpenBox(Vector2Int pos)
+    public bool OpenBox(Vector2Int pos, bool playerInitiated)
     {
+        // marked or allready open
+         if(overlayBoxes[pos.x, pos.y].Marked)
+            return false;
 
-        // Check if this is opened or not?
+        // not marked or closed
+
+        // unmarked and closed 
         if (overlayBoxes[pos.x, pos.y].IsClickable()) {
-            Debug.Log("Box was openened at  [" + pos.x + "," + pos.y + "]");
+            overlayBoxes[pos.x, pos.y].Click();
+
+
             if (mines[pos.x, pos.y] == -1) {
                 Debug.Log("BUST");
 
                 WinBustLevel(GameResult.Bust);
                 // this ends the game with a loss
-                return false; // No need to count opened ones since player lose?
+                return true; // No need to count opened ones since player lose?
             }
-            Debug.Log("If this is a clear box open all neighbors");
+
             if (mines[pos.x, pos.y] == 0) {
-                Debug.Log("Open neighbors");
+                Debug.Log("Chord");
+
                 OpenAllNeighbors(new Vector2Int(pos.x, pos.y));
-                return true;
+                // this ends the game with a loss
+                return true; // No need to count opened ones since player lose?
             }
             return true;
+
         }
-        else {
-            Debug.Log("Box is already opened at  [" + pos.x + "," + pos.y + "] - Chord?");
+        // If clicking an already opened box = chord it
+
+        if (overlayBoxes[pos.x, pos.y].IsOpen) {
+
+            Debug.Log("Box is not marked - so chord it");
+            Chord(pos);
             return false;
         }
+        Debug.Log("Shold never happen?");
+        return false;
         /*
         // Only wait for first click in Normal mode to start timer
         if (USerInfo.WaitForFirstMove && USerInfo.currentType == GameType.Normal)
@@ -490,8 +518,9 @@ public class GameArea : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
             }
         }
 
+        GamePaused = true;
 
-        LevelBusted = result == GameResult.Bust;
+        //LevelBusted = result == GameResult.Bust;
         B3V = Calculate3BV();
 
 
@@ -520,7 +549,7 @@ public class GameArea : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
             default:
                 break;
         }
-        SavingUtility.Instance.SaveAllDataToFile(); 
+        //SavingUtility.Instance.SaveAllDataToFile(); 
         //PanelController.Instance.ShowLevelComplete(result == GameResult.Win);
     }
 
@@ -599,9 +628,9 @@ public class GameArea : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
                 if (i < 0 || j < 0 || i >= gameWidth || j >= gameHeight)
                     continue;
 
-                if (overlayBoxes[i, j].gameObject.activeSelf && !overlayBoxes[i, j].Marked)
+                if (overlayBoxes[i, j].IsClickable())
                 {
-                    TryOpenBox(new Vector2Int(i, j));
+                    TryOpenBox(new Vector2Int(i, j),false);
 
                     wasted = false;
                 }
@@ -997,6 +1026,11 @@ public class GameArea : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 
     public void OnPointerUp(PointerEventData eventData)
     {
+        // Disregard inputs when paused
+        if(GamePaused)
+            return; 
+
+
         UpdateMouseLocalPosition(eventData);
 
         Debug.Log("Pointer up on this spot "+localPosition);
@@ -1015,8 +1049,21 @@ public class GameArea : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         // If cleard do 
         // if not open or bust
             Debug.Log("No Mine: "+ mines[xPos, yPos]);
-        
-        TryOpenBox(new Vector2Int(xPos,yPos));
+
+        Vector2Int pos = new Vector2Int(xPos, yPos);
+
+        if (eventData.button == PointerEventData.InputButton.Right) {
+            MarkBox(pos);
+            return;
+        }
+        TryOpenBox(pos,true);
+    }
+
+    private void MarkBox(Vector2Int pos)
+    {
+        if (overlayBoxes[pos.x, pos.y].IsOpen)
+            return;
+        overlayBoxes[pos.x, pos.y].RightClick();
     }
 
     private void UpdateMouseLocalPosition(PointerEventData eventData)

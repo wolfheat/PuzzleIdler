@@ -46,15 +46,11 @@ public class GameBox : MonoBehaviour
         //Debug.Log("Mouse triggered");
     }
 
-    public bool IsClickable()
-    {
-        if (Opened()) {
-            return false;
-        }
-        // Else open it = remove it
-        Open();
-        return true;
-    }
+
+
+    public void Click() => Open();
+
+    public bool IsClickable() => (!IsOpen && !Marked);
 
     private bool Opened() => IsOpen;
 
@@ -64,7 +60,7 @@ public class GameBox : MonoBehaviour
 
         // Hide it
         image.enabled = false;
-        Debug.Log("Disabling Image for Gamebox at "+Pos+" enable = "+image+" "+image?.enabled);
+        //Debug.Log("Disabling Image for Gamebox at "+Pos+" enable = "+image+" "+image?.enabled);
 
     }
 
@@ -73,11 +69,6 @@ public class GameBox : MonoBehaviour
         //if (!boxCollider.enabled) return;
         MakeInteractable(false);
         transform.gameObject.SetActive(false);
-    }
-
-    private bool Chord()
-    {
-        return GameAreaMaster.Instance.MainGameArea.Chord(Pos);
     }
 
     public void Mark()
@@ -89,10 +80,9 @@ public class GameBox : MonoBehaviour
         GameArea.Instance.DecreaseMineCount();
     }
 
-    public void RightClick(bool hidden = false)
+    public void RightClick()
     {
 
-        Debug.Log("Clicking this box at " + Pos + " mark or demark as mine value =" + value+" ");
         if (value > 0) return;
         Marked = !Marked;
 
@@ -102,12 +92,11 @@ public class GameBox : MonoBehaviour
         {
             SetAsUnFlagged();
         }
-        Debug.Log("Right Clicking Box, hidden = " + hidden);
-
+        
         if (!Marked)
-            GameAreaMaster.Instance.MainGameArea.IncreaseMineCount();
+            GameArea.Instance.IncreaseMineCount();
         else
-            GameAreaMaster.Instance.MainGameArea.DecreaseMineCount();
+            GameArea.Instance.DecreaseMineCount();
     }
 
     public void SetAsHiddenMine()

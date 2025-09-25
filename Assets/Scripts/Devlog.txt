@@ -58,6 +58,11 @@ Aug 2025
 		* Credits page added
 		* Added page for minesweeper
 24/9	* Minesweeper partly working
+		* Limited player from doing moves after bust
+		* Make player able to mark mines
+		* Implemented chording correctly
+
+		* Show timer and mines count
 
 
 		* Added minesweeper base code, now make it work with this project

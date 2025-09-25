@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
+using static UnityEngine.Rendering.DebugUI;
 
 public class UnderGameBox : MonoBehaviour
 {
@@ -25,6 +26,8 @@ public class UnderGameBox : MonoBehaviour
     public void SetType(int type, bool overLayer = true)
     {
         boxType = type;
+
+        value = type;
 
         Debug.Log("Updating Under sprite to type "+boxType+" = "+(int)boxType);
 
@@ -58,11 +61,6 @@ public class UnderGameBox : MonoBehaviour
         //if (!boxCollider.enabled) return;
         MakeInteractable(false);
         transform.gameObject.SetActive(false);
-    }
-
-    private bool Chord()
-    {
-        return GameAreaMaster.Instance.MainGameArea.Chord(Pos);
     }
 
     public void RightClick(bool hidden = false)
