@@ -1,5 +1,6 @@
 using System.Text;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace WolfheatProductions
 {
@@ -30,6 +31,26 @@ namespace WolfheatProductions
             }
             return allPos;
         }
+
+
+        // get the position inside a rect - supply the rect and eventdata and boxSize
+        public static Vector2Int GetMouseLocalPositionIndex(PointerEventData eventData,RectTransform rectTransform, int BoxSize)
+        {
+            Vector2 pos = new();
+            RectTransformUtility.ScreenPointToLocalPointInRectangle(
+                rectTransform,
+                eventData.position,
+                eventData.pressEventCamera,
+                out pos
+            );
+
+            int xPos = (int)pos.x / BoxSize;
+            int yPos = (int)-pos.y / BoxSize;
+
+            return new Vector2Int(xPos, yPos);
+        }
+
+
 
     }
 }

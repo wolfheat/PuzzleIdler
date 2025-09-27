@@ -1074,6 +1074,9 @@ public class GameArea : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, I
             return;
 
         UpdatePressedNeighbors(eventData);
+
+        // Store the downpress onlu to use for fast move
+        lastMouseDownPos = GetMouseLocalPosition(eventData);
     }
 
     private void UpdatePressedNeighbors(PointerEventData eventData)
@@ -1085,8 +1088,9 @@ public class GameArea : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, I
         HighLightAllNeighbors(currentMousePos);
     }
 
-    Vector2Int lastMousePos = new Vector2Int();
+    Vector2Int lastMouseDownPos = new Vector2Int();
     Vector2Int currentMousePos = new Vector2Int();
+
     float lastChangedPosTime = 0;
 
     public void OnPointerMove(PointerEventData eventData)
@@ -1095,6 +1099,7 @@ public class GameArea : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, I
             return;
         
         UpdatePressedNeighbors(eventData);
+
 
         /*
         // Get the pointer position
@@ -1146,10 +1151,10 @@ public class GameArea : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, I
             if(ValidCurrentPos() && overlayBoxes[pos.x, pos.y].IsOpen) {
                 // Instead right clik the last position instead
                 Debug.Log("RIGHT CLICKING LAST POS INSTEAD OF RELEASING RIGHT BUTTON OVER NOTHING");
-                Debug.Log("Last position = "+lastMousePos.x+","+lastMousePos.y+" <- mark this");
+                Debug.Log("Last position = "+lastMouseDownPos.x+","+lastMouseDownPos.y+" <- mark this");
                 Debug.Log("This position = "+pos.x+","+pos.y);
 
-                MarkBox(currentMousePos);
+                MarkBox(lastMouseDownPos);
                 return;
             }
 

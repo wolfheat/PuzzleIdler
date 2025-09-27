@@ -253,6 +253,7 @@ public static class Stats
         return ratingGain;
     }
 
+
     private static float MinesweeperDifficultyRatingAwardedMultiplier(int boardDifficulty)
     {        
         float multiplier = MineSweeperRating switch

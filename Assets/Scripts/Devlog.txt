@@ -67,6 +67,9 @@ Aug 2025
 		* Made Stats panel update on decrease game multiplier ticks
 		* Highlighting works for minesweeper
 		* Fixed issue with game keep registering highlights after bust
+27/9	* Basic soduko implemented
+
+
 		
 		* Decide what to do with games multipliers when offline, 
 			* keep them unaffecting the total and not counting down

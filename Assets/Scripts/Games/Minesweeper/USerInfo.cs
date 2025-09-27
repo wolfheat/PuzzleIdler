@@ -14,6 +14,11 @@ public static class USerInfo
 
 	public static int BoardDifficulty => CalculateDifficulty();
 
+    // Minesweeper
+    public static int[] NormalDifficultys = { 10, 30, 100 };
+    public static float[] MinesweeperRatingDrops = { 1f, 0.8f, 0.5f, 0.3f, 0.1f };
+    public static float[] MinesweeperRatingDropLevels = { 1400, 1600, 1800, 2000, 3000 };
+
     private static int CalculateDifficulty()
     {
         if(BoardType == BoardTypes.Slider) {
@@ -22,11 +27,8 @@ public static class USerInfo
 			// Do a caluclation here?
 			return ActiveBordSize;
 		}
-
-		int[] normalDifficultys = { 10, 30, 100 };
-
-        // BoardType 1,2,3 is Beginner,Inermediate,Expert
-        return normalDifficultys[(int)BoardType-1];
+		// BoardType 1,2,3 is Beginner,Inermediate,Expert
+        return NormalDifficultys[(int)BoardType-1];
 
     }
 

@@ -1,7 +1,5 @@
-using System;
 using System.Collections;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;   
 
@@ -14,6 +12,7 @@ public class LevelCreator : MonoBehaviour
     [SerializeField] private TextMeshProUGUI playerRating;
     [SerializeField] private TextMeshProUGUI playerRatingIncreaseText;
     [SerializeField] private GameObject playerRatingIncrease;
+    [SerializeField] private GameObject helpInfo;
 
     [Header("EXTRAS")]
 
@@ -346,6 +345,11 @@ public class LevelCreator : MonoBehaviour
 
         playerRatingIncrease.SetActive(false);
 
+    }
+
+    public void ToggleHelpInfoPanel()
+    {
+        helpInfo.SetActive(!helpInfo.activeSelf);
     }
 
 

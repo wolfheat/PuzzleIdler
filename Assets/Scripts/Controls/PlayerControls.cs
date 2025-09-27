@@ -118,6 +118,15 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
+                    ""name"": ""Zero"",
+                    ""type"": ""Button"",
+                    ""id"": ""0b3a278b-7219-4dc5-8a98-56354a74568a"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
                     ""name"": ""One"",
                     ""type"": ""Button"",
                     ""id"": ""13355d06-49f8-45a0-93d7-7335ab4e91bf"",
@@ -166,6 +175,33 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""name"": ""Six"",
                     ""type"": ""Button"",
                     ""id"": ""2d34d61d-3ee7-47f1-9396-05b01b7774fb"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Seven"",
+                    ""type"": ""Button"",
+                    ""id"": ""822e2a46-fa26-49bb-afc3-e7779e485f8f"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Eight"",
+                    ""type"": ""Button"",
+                    ""id"": ""3d1d5d84-5780-4893-a1d9-5b540be4ff97"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Nine"",
+                    ""type"": ""Button"",
+                    ""id"": ""02a590bd-1f63-4588-be7d-e134dd438cdd"",
                     ""expectedControlType"": """",
                     ""processors"": """",
                     ""interactions"": """",
@@ -609,8 +645,52 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
+                    ""id"": ""37d7f9c0-b079-49b4-977f-f34a19d05986"",
+                    ""path"": ""<Keyboard>/numpad1"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""One"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""5027ae22-2cbf-4eb5-8143-d139d7ff1189"",
+                    ""path"": ""<Keyboard>/0"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Zero"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""acb5753c-6cf9-4e44-b939-ad2dde98e430"",
+                    ""path"": ""<Keyboard>/numpad0"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Zero"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
                     ""id"": ""20d02065-0338-4773-ac43-f4ab81e6b46f"",
                     ""path"": ""<Keyboard>/2"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Two"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b0ea04f8-58c7-443b-a41c-f2b4f662a24b"",
+                    ""path"": ""<Keyboard>/numpad2"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -631,8 +711,30 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
+                    ""id"": ""dc665af4-887b-4b26-a0cc-f19065525439"",
+                    ""path"": ""<Keyboard>/numpad3"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Three"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
                     ""id"": ""f21a5cde-2a6a-4671-a149-ca49af3f2b32"",
                     ""path"": ""<Keyboard>/4"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Four"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""49c4d5b6-8396-46b3-9540-57fa7525df1a"",
+                    ""path"": ""<Keyboard>/numpad4"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -653,12 +755,100 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                 },
                 {
                     ""name"": """",
+                    ""id"": ""10d0c694-61b1-49a9-ba08-fe1502ad0d48"",
+                    ""path"": ""<Keyboard>/numpad5"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Five"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
                     ""id"": ""989861e5-3220-45de-bc89-1df9eb3d328c"",
                     ""path"": ""<Keyboard>/6"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Six"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""de8081c0-aea8-4112-91a2-9368e134eb1b"",
+                    ""path"": ""<Keyboard>/numpad6"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Six"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""1f202ea3-c180-4eee-9bef-cda6673c111f"",
+                    ""path"": ""<Keyboard>/7"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Seven"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""7a25bd24-b8e6-4ba5-9283-ff64659c6f8a"",
+                    ""path"": ""<Keyboard>/numpad7"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Seven"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""8b604387-1d66-491c-ba5c-74a760ea4b01"",
+                    ""path"": ""<Keyboard>/8"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Eight"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""08879b47-edd8-45d6-9be8-f83045ae3779"",
+                    ""path"": ""<Keyboard>/numpad8"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Eight"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""8510974c-2c90-4e43-bd02-0c5c0a3b355e"",
+                    ""path"": ""<Keyboard>/9"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Nine"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""2e3832df-ab34-46c8-ba63-f7bb53d5ca0e"",
+                    ""path"": ""<Keyboard>/numpad9"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Nine"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 },
@@ -1289,12 +1479,16 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         m_Player_Next = m_Player.FindAction("Next", throwIfNotFound: true);
         m_Player_Sprint = m_Player.FindAction("Sprint", throwIfNotFound: true);
         m_Player_A = m_Player.FindAction("A", throwIfNotFound: true);
+        m_Player_Zero = m_Player.FindAction("Zero", throwIfNotFound: true);
         m_Player_One = m_Player.FindAction("One", throwIfNotFound: true);
         m_Player_Two = m_Player.FindAction("Two", throwIfNotFound: true);
         m_Player_Three = m_Player.FindAction("Three", throwIfNotFound: true);
         m_Player_Four = m_Player.FindAction("Four", throwIfNotFound: true);
         m_Player_Five = m_Player.FindAction("Five", throwIfNotFound: true);
         m_Player_Six = m_Player.FindAction("Six", throwIfNotFound: true);
+        m_Player_Seven = m_Player.FindAction("Seven", throwIfNotFound: true);
+        m_Player_Eight = m_Player.FindAction("Eight", throwIfNotFound: true);
+        m_Player_Nine = m_Player.FindAction("Nine", throwIfNotFound: true);
         m_Player_Shift = m_Player.FindAction("Shift", throwIfNotFound: true);
         m_Player_Ctrl = m_Player.FindAction("Ctrl", throwIfNotFound: true);
         m_Player_Alt = m_Player.FindAction("Alt", throwIfNotFound: true);
@@ -1387,12 +1581,16 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Next;
     private readonly InputAction m_Player_Sprint;
     private readonly InputAction m_Player_A;
+    private readonly InputAction m_Player_Zero;
     private readonly InputAction m_Player_One;
     private readonly InputAction m_Player_Two;
     private readonly InputAction m_Player_Three;
     private readonly InputAction m_Player_Four;
     private readonly InputAction m_Player_Five;
     private readonly InputAction m_Player_Six;
+    private readonly InputAction m_Player_Seven;
+    private readonly InputAction m_Player_Eight;
+    private readonly InputAction m_Player_Nine;
     private readonly InputAction m_Player_Shift;
     private readonly InputAction m_Player_Ctrl;
     private readonly InputAction m_Player_Alt;
@@ -1410,12 +1608,16 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         public InputAction @Next => m_Wrapper.m_Player_Next;
         public InputAction @Sprint => m_Wrapper.m_Player_Sprint;
         public InputAction @A => m_Wrapper.m_Player_A;
+        public InputAction @Zero => m_Wrapper.m_Player_Zero;
         public InputAction @One => m_Wrapper.m_Player_One;
         public InputAction @Two => m_Wrapper.m_Player_Two;
         public InputAction @Three => m_Wrapper.m_Player_Three;
         public InputAction @Four => m_Wrapper.m_Player_Four;
         public InputAction @Five => m_Wrapper.m_Player_Five;
         public InputAction @Six => m_Wrapper.m_Player_Six;
+        public InputAction @Seven => m_Wrapper.m_Player_Seven;
+        public InputAction @Eight => m_Wrapper.m_Player_Eight;
+        public InputAction @Nine => m_Wrapper.m_Player_Nine;
         public InputAction @Shift => m_Wrapper.m_Player_Shift;
         public InputAction @Ctrl => m_Wrapper.m_Player_Ctrl;
         public InputAction @Alt => m_Wrapper.m_Player_Alt;
@@ -1458,6 +1660,9 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @A.started += instance.OnA;
             @A.performed += instance.OnA;
             @A.canceled += instance.OnA;
+            @Zero.started += instance.OnZero;
+            @Zero.performed += instance.OnZero;
+            @Zero.canceled += instance.OnZero;
             @One.started += instance.OnOne;
             @One.performed += instance.OnOne;
             @One.canceled += instance.OnOne;
@@ -1476,6 +1681,15 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @Six.started += instance.OnSix;
             @Six.performed += instance.OnSix;
             @Six.canceled += instance.OnSix;
+            @Seven.started += instance.OnSeven;
+            @Seven.performed += instance.OnSeven;
+            @Seven.canceled += instance.OnSeven;
+            @Eight.started += instance.OnEight;
+            @Eight.performed += instance.OnEight;
+            @Eight.canceled += instance.OnEight;
+            @Nine.started += instance.OnNine;
+            @Nine.performed += instance.OnNine;
+            @Nine.canceled += instance.OnNine;
             @Shift.started += instance.OnShift;
             @Shift.performed += instance.OnShift;
             @Shift.canceled += instance.OnShift;
@@ -1519,6 +1733,9 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @A.started -= instance.OnA;
             @A.performed -= instance.OnA;
             @A.canceled -= instance.OnA;
+            @Zero.started -= instance.OnZero;
+            @Zero.performed -= instance.OnZero;
+            @Zero.canceled -= instance.OnZero;
             @One.started -= instance.OnOne;
             @One.performed -= instance.OnOne;
             @One.canceled -= instance.OnOne;
@@ -1537,6 +1754,15 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @Six.started -= instance.OnSix;
             @Six.performed -= instance.OnSix;
             @Six.canceled -= instance.OnSix;
+            @Seven.started -= instance.OnSeven;
+            @Seven.performed -= instance.OnSeven;
+            @Seven.canceled -= instance.OnSeven;
+            @Eight.started -= instance.OnEight;
+            @Eight.performed -= instance.OnEight;
+            @Eight.canceled -= instance.OnEight;
+            @Nine.started -= instance.OnNine;
+            @Nine.performed -= instance.OnNine;
+            @Nine.canceled -= instance.OnNine;
             @Shift.started -= instance.OnShift;
             @Shift.performed -= instance.OnShift;
             @Shift.canceled -= instance.OnShift;
@@ -1738,12 +1964,16 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         void OnNext(InputAction.CallbackContext context);
         void OnSprint(InputAction.CallbackContext context);
         void OnA(InputAction.CallbackContext context);
+        void OnZero(InputAction.CallbackContext context);
         void OnOne(InputAction.CallbackContext context);
         void OnTwo(InputAction.CallbackContext context);
         void OnThree(InputAction.CallbackContext context);
         void OnFour(InputAction.CallbackContext context);
         void OnFive(InputAction.CallbackContext context);
         void OnSix(InputAction.CallbackContext context);
+        void OnSeven(InputAction.CallbackContext context);
+        void OnEight(InputAction.CallbackContext context);
+        void OnNine(InputAction.CallbackContext context);
         void OnShift(InputAction.CallbackContext context);
         void OnCtrl(InputAction.CallbackContext context);
         void OnAlt(InputAction.CallbackContext context);
