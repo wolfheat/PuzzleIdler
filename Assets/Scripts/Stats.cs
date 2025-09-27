@@ -46,6 +46,7 @@ public static class Stats
     public static string CPSAsString => ReturnAsString(CPSPerTick());
 
     // Games Stats
+    public static int SudokuRating { get; internal set; } = 1000;
     public static int ChessRating { get; internal set; } = 1000;
     public static int MineSweeperRating { get; internal set; } = 1000;
     public static float MiniGamesMultipliersTotal => MiniGamesTotal();

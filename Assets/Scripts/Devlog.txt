@@ -68,7 +68,9 @@ Aug 2025
 		* Highlighting works for minesweeper
 		* Fixed issue with game keep registering highlights after bust
 27/9	* Basic soduko implemented
-
+		* Imported 3m sudoku problems, size = 86Mb
+		* Limit to 5000 problems per level (10 levels) => 4.3Mb
+		* Sudoku loadable from database
 
 		
 		* Decide what to do with games multipliers when offline, 

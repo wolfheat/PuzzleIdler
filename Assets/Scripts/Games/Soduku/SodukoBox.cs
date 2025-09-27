@@ -14,12 +14,14 @@ public class SodukoBox : MonoBehaviour
 
     private void Start()
     {
+        Debug.Log("Wanting to set type at start to "+currentType);
         image = GetComponent<Image>();
         UpdateSprite();
     }
 
     public void SetAsFixed(int number, bool fix=true)
     {
+        Debug.Log("Setting as fixed = "+fix+" value = "+number);
         currentType = number;
         isFixed = fix;
     }
