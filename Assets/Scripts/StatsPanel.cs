@@ -77,8 +77,8 @@ public class StatsPanel : MonoBehaviour
     public float UpdateGamesListValues()
     {
         // Get list from data
-        float[] miniGames = Stats.MiniGamesMultipliers;
-        string[] names = Enum.GetNames(typeof(MiniGameNames));
+        float[] miniGames = Stats.AllMiniGamesMultipliers();
+        string[] names = Enum.GetNames(typeof(MiniGame));
 
 
         foreach (Transform child in gamesTextHolder.transform.GetComponentInChildren<Transform>(false))

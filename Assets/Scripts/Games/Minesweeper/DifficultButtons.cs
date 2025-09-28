@@ -2,10 +2,5 @@ using UnityEngine;
 
 public class DifficultButtons : MonoBehaviour
 {
-
-
-    public void LoadNewGameDifficulty(int type = 0)
-    {
-        GameArea.Instance.ChangeGameSize(type);
-    }
+    public void LoadNewGameDifficulty(int type = 0) => MineSweeper.Instance.ChangeGameSize(type);
 }

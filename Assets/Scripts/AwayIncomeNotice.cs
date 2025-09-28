@@ -2,8 +2,9 @@
 using BreakInfinity;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
-public class AwayIncomeNotice : BaseNotice
+public class AwayIncomeNotice : BaseNotice, IPointerDownHandler
 {
     [SerializeField] private TextMeshProUGUI coinText; 
     [SerializeField] private TextMeshProUGUI gemText; 
@@ -40,5 +41,12 @@ public class AwayIncomeNotice : BaseNotice
             return days + (days==1?" Day ":" Days ")+ hours+" Hour.";
         }
         return hours + (hours == 1?" Hour ":" Hours ") + minutes+" Min.";
+    }
+
+    public void OnPointerDown(PointerEventData eventData)
+    {
+        Debug.Log("Removeing Away Notice");
+        Destroy(gameObject);
+
     }
 }

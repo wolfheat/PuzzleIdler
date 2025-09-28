@@ -78,38 +78,10 @@ public class GameArea : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, I
 
     [SerializeField] DigiDisplay mineDisplay;
     [SerializeField] DigiDisplay timeDisplay;
+
     public void RestartGame(bool resetPosition = false)
     {
         Debug.Log("Restarting game!");
-
-
-        /*
-
-        switch (USerInfo.LastUsedNormalBordSize) {
-            case 0:
-                USerInfo.BoardType = BoardTypes.Beginner;
-                Debug.Log("Restart to Beginner");
-                break;
-            case 1:
-                USerInfo.BoardType = BoardTypes.Intermediate;
-                Debug.Log("Restart to Intermediate");
-                break;
-            case 2:
-                USerInfo.BoardType = BoardTypes.Expert;
-                Debug.Log("Restart to Expert");
-                break;
-            default:
-                USerInfo.BoardType = BoardTypes.Slider;
-                USerInfo.ActiveBordSize = USerInfo.LastUsedNormalBordSize;
-                Debug.Log("Restart to Slider "+ USerInfo.ActiveBordSize);
-                break;
-        }
-
-        // Need this save somewhere to save down the LastUsedNormalBoardType
-        SavingUtility.Instance?.SaveAllDataToFile();
-        */
-
-        //Debug.Log("Setting Board size to: "+ USerInfo.ActiveBordSize);
 
 
         SizeGameArea();
@@ -519,7 +491,7 @@ public class GameArea : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, I
             case GameResult.Win:
                 SmileyButton.Instance.ShowWin();
 
-                LevelCreator.Instance.UpdateRating(USerInfo.BoardDifficulty);                
+                MineSweeper.Instance.UpdateRating(USerInfo.BoardDifficulty);                
 
                 /*
                 // Add Stats
@@ -904,7 +876,7 @@ public class GameArea : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, I
 
         Debug.Log("MS: Set border Size");
 
-        LevelCreator.Instance.SetBorderSize(new Vector2(BoxSize * gameWidth, BoxSize * gameHeight));
+        MineSweeper.Instance.SetBorderSize(new Vector2(BoxSize * gameWidth, BoxSize * gameHeight));
     }
 
     private void ResetBoxes()
@@ -1214,14 +1186,5 @@ public class GameArea : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, I
             eventData.pressEventCamera,
             out localPosition
         );
-    }
-
-
-
-    internal void ChangeGameSize(int type)
-    {
-        USerInfo.BoardType = (BoardTypes)(type+1);
-        Debug.Log("MS: Changing board type to " + type + " " + USerInfo.BoardType);
-        RestartGame();
     }
 }

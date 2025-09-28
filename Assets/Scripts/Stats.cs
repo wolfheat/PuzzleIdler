@@ -1,16 +1,24 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using BreakInfinity;
 using UnityEngine;
 
-
-
-public enum MiniGameNames{ChessProblem,MineSweeper,SudokuProblem,Bomberman,Tetris,Snake,BubbleTanks};
+public enum MiniGame{Chess,MineSweeper,Sudoku,Bomberman,Tetris,Snake,BubbleTanks};
 
 public static class Stats
 {
     public const int MinimumChessRating = 1000;
-    private const int ChessGameLossRatingChange = -50;
-    private const int ChessGameWinRatingChange = 10;
+    public const int ChessGameLossRatingChange = -50;
+    public const int ChessGameWinRatingChange = 10;
+    
+    public const int SudokuGameLossRatingChange = 0;
+    public const int SudokuGameWinRatingChange = 150;
+
+
+
+    private const int MiniGameMin = 1000;
+    private const int MiniGameMax = 2999;
 
     // SODUKO
     private const int SodukoGameWinRatingChange = 100;
@@ -30,9 +38,15 @@ public static class Stats
     public static BigDouble CPSUpgradesMultiplier { get; private set; } = 1f;
 
     public static BigDouble GPSMultiplier { get; private set; } = 0.0f;
-    public static BigDouble BuildingCostMultiplerA { get; private set; } = 1.1f;
+    //public static BigDouble BuildingCostMultiplerA { get; private set; } = 1.1f;
     public static BigDouble BuildingsBaseIncome { get; private set; } = 1f;
-    public static float[] MiniGamesMultipliers { get; private set; } = { 1, 1.1f, 1.3f, 1.6f, 1.01f, 1.02f, 1.05f };
+
+    // Mini Games
+    public static int[] MiniGameRatings = new int[] { 1000, 1000, 1000, 1000, 1000, 1000, 1000};
+
+    public static float MiniGamesMultipliersTotal { get; set; } = 1;
+
+    public static float[] AllMiniGamesMultipliers() => MiniGameRatings.Select(x => x*0.001f).ToArray();
 
     // Multipliers - Set methods
     public static void SetCPSResearchMultiplier(BigDouble newValue) { CPSResearchMultiplier = newValue; CPSUpdated?.Invoke(); }
@@ -49,19 +63,18 @@ public static class Stats
     public static string CPSAsString => ReturnAsString(CPSPerTick());
 
     // Games Stats
-    public static int SudokuRating { get; internal set; } = 1000;
-    public static int ChessRating { get; internal set; } = 1000;
-    public static int MineSweeperRating { get; internal set; } = 1000;
-    public static float MiniGamesMultipliersTotal => MiniGamesTotal();
+    //public static int SudokuRating { get; internal set; } = 1000;
+    //public static int ChessRating { get; internal set; } = 1000;
+    //public static int MineSweeperRating { get; internal set; } = 1000;
 
     public static Action StatsUpdated;
 
-    private static float MiniGamesTotal()
+    public static void UpdateMiniGameTotalMultiplier()
     {
-        float ans = 1;
-        foreach (var multi in MiniGamesMultipliers)
-            ans *= multi;            
-        return ans;
+        MiniGamesMultipliersTotal = 1;
+        float[] multipliers = MiniGameRatings.Select(x => x * 0.001f).ToArray();
+        foreach (var multi in multipliers)
+            MiniGamesMultipliersTotal *= multi;
     }
 
 
@@ -168,93 +181,43 @@ public static class Stats
         Debug.Log("Removed coins, now have "+CoinsHeld);
     }
 
+    //MINI GAMES - HANDLING
+    private static void UpdateMinigameSaveStats()
+    {
+        SavingUtility.playerGameData.MiniGameRatings = MiniGameRatings;
+
+        StatsUpdated?.Invoke();
+
+        // Also Re-save this new info - Moved here from each game panel better to have it here
+        SavingUtility.playerGameData.TriggerSave();
+    }
+
+    // Changes
+    public static void ChangeMiniGameRating(MiniGame game, int value)
+    {
+        MiniGameRatings[(int)game] = Mathf.Clamp(MiniGameRatings[(int)game] + value, MiniGameMin, MiniGameMax);
+        Debug.Log("MiniGame "+game+" get new rating: " + MiniGameRatings[(int)game]);
+        UpdateMinigameSaveStats();
+    }
+
+    public static void SetMiniGameValue(MiniGame game, int value)
+    {
+        MiniGameRatings[(int)game] = Mathf.Clamp(value, MiniGameMin, MiniGameMax);
+        UpdateMinigameSaveStats();
+    }
+
+    // Specific games
+
+    // Chess
+    /*
     internal static void ChangeChessRating(bool didWin)
     {
-        ChessRating = Math.Max(ChessRating + (didWin ? ChessGameWinRatingChange : ChessGameLossRatingChange),1000);
-        
-        MiniGamesMultipliers[(int)MiniGameNames.ChessProblem] = ChessRating/1000f;
-
-        Debug.Log("SAVESYSTEM - Changed player Rating to "+ChessRating);
-
-        SavingUtility.playerGameData.PlayerChessRating = ChessRating;
-
-        StatsUpdated?.Invoke();
-
+        ChangeMiniGameRating(MiniGame.ChessProblem, (didWin ? ChessGameWinRatingChange : ChessGameLossRatingChange));
     }
-    
-    internal static void DecreaseSudokuRating(int amt)
-    {
-        SudokuRating = SudokuRating - amt-SodukoGameWinRatingChange; // Limit to 2999
-        ChangeSudokuRating(true);
-    }
+    */
 
-    internal static int ChangeSudokuRating(bool didWin)
-    {
-        int gain = -SudokuRating;
-
-        SudokuRating = Math.Min(SudokuRating + SodukoGameWinRatingChange, 2999); // Limit to 2999
-
-        gain += SudokuRating;
-
-
-        MiniGamesMultipliers[(int)MiniGameNames.SudokuProblem] = SudokuRating/1000f;
-
-        Debug.Log("SAVESYSTEM - Changed player Sudoku Rating to "+ SudokuRating);
-
-        SavingUtility.playerGameData.PlayerSudokuRating = SudokuRating;
-
-        StatsUpdated?.Invoke();
-
-        return gain;
-
-    }
-    
-    internal static void RatingDropEachMinute(int amt = 1)
-    {
-        Debug.Log("RatingDrop Happening - each minute");
-
-        ChessRating = Math.Max(ChessRating - amt,1000);
-        MiniGamesMultipliers[(int)MiniGameNames.ChessProblem] = ChessRating/1000f;
-
-        MineSweeperRating = Math.Max(MineSweeperRating - amt, 1000);
-        MiniGamesMultipliers[(int)MiniGameNames.MineSweeper] = MineSweeperRating/1000f;
-        
-        SudokuRating = Math.Max(SudokuRating - amt, 1000);
-        MiniGamesMultipliers[(int)MiniGameNames.SudokuProblem] = SudokuRating/1000f;
-
-
-        UpdateSaveRatings();
-        StatsUpdated?.Invoke();
-        CPSUpdated?.Invoke();
-
-        // Also Re-save this new info
-        SavingUtility.playerGameData.TriggerSave();
-
-    }
-
-    private static void UpdateSaveRatings()
-    {
-        SavingUtility.playerGameData.PlayerChessRating = ChessRating;
-        SavingUtility.playerGameData.PlayerMinesweeperRating = MineSweeperRating;
-    }
-
-    internal static void SetMiniGameStats(int playerChessRating, int playerMinesweeperRating, int playerSudokuRating)
-    {
-        // Sets data from save ? Do not save it?
-        ChessRating = Math.Max(playerChessRating,1000);
-        MineSweeperRating = Math.Max(playerMinesweeperRating,1000);
-        SudokuRating = Math.Max(playerSudokuRating,1000);
-
-
-        MiniGamesMultipliers[(int)MiniGameNames.ChessProblem] = ChessRating / 1000f;
-        MiniGamesMultipliers[(int)MiniGameNames.MineSweeper] = MineSweeperRating / 1000f;
-        MiniGamesMultipliers[(int)MiniGameNames.SudokuProblem] = SudokuRating/ 1000f;
-
-
-        Debug.Log("Rating loaded into stats as " + ChessRating);
-
-    }
-
+    // MineSweeper
+    /*
     internal static int IncreaseMinesweeperRating(int boardDifficulty)
     {
         // Have stats increase less when higher=
@@ -265,20 +228,19 @@ public static class Stats
         // 2000+     - 0.1
 
 
-        float multiplier = MinesweeperDifficultyRatingAwardedMultiplier(boardDifficulty);
+        float multiplier = MinesweeperRatingGain(boardDifficulty);
 
         int ratingGain = (int)(boardDifficulty * multiplier);
 
-        Debug.Log("MS: Rating gain "+ratingGain);
+        Debug.Log("MS: Rating gain " + ratingGain);
 
         // If there will be a loss possible this needs to exist to limit it to 1000
         MineSweeperRating = Math.Max(MineSweeperRating + ratingGain, 1000);
 
-        MiniGamesMultipliers[(int)MiniGameNames.MineSweeper] = MineSweeperRating/ 1000f;
+        MiniGameRatings[(int)MiniGame.MineSweeper] = MineSweeperRating / 1000f;
 
         Debug.Log("SAVESYSTEM - Changed player Rating to " + ChessRating);
 
-        SavingUtility.playerGameData.PlayerMinesweeperRating = MineSweeperRating;
 
         UpdateSaveRatings();
         StatsUpdated?.Invoke();
@@ -288,12 +250,12 @@ public static class Stats
 
 
         return ratingGain;
-    }
+    }*/
 
 
-    private static float MinesweeperDifficultyRatingAwardedMultiplier(int boardDifficulty)
-    {        
-        float multiplier = MineSweeperRating switch
+    public static int MinesweeperRatingGain(int boardDifficulty)
+    {
+        float multiplier = MiniGameRatings[(int)MiniGame.MineSweeper] switch
         {
             < 1400 => 1,
             < 1600 => 0.8f,
@@ -301,6 +263,41 @@ public static class Stats
             < 2000 => 0.3f,
             _ => 0.1f
         };
-        return multiplier;
+        return (int)(multiplier * boardDifficulty);
     }
+
+
+    internal static void RatingDropEachMinute(int amt = 1)
+    {
+        Debug.Log("RatingDrop Happening - each minute");
+
+        // Decrease every mini Game
+        for (int i = 0; i < MiniGameRatings.Length; i++) {            
+            MiniGameRatings[i] = Math.Clamp(MiniGameRatings[i] - amt, MiniGameMin, MiniGameMax);
+        }
+
+        UpdateSaveRatings();
+
+        StatsUpdated?.Invoke();
+        CPSUpdated?.Invoke();
+
+        // Also Re-save this new info
+        SavingUtility.playerGameData.TriggerSave();
+
+    }
+
+    private static void UpdateSaveRatings() => SavingUtility.playerGameData.MiniGameRatings = MiniGameRatings;
+
+    internal static void SetMiniGameStats(int[] miniGameRatings)
+    {
+        if (miniGameRatings == null)
+            return; // Keep the default values
+
+        // Overwrite all games in the game - allows for new games to be added and save file still working. (if array placement is kept - need id save for it to work with any)
+        for (int i = 0; i < miniGameRatings.Length; i++) {
+            MiniGameRatings[i] = miniGameRatings[i];
+        }
+    }
+
+    internal static int MiniGameRating(MiniGame game) => MiniGameRatings[(int)game];
 }

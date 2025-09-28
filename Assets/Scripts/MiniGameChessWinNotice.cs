@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ChessWinNotice : MonoBehaviour
+public class MiniGameChessWinNotice : MonoBehaviour
 {
 
     [SerializeField] private TextMeshProUGUI textMeshProText;

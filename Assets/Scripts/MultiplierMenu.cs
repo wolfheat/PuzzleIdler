@@ -56,8 +56,9 @@ public class MultiplierMenu : MonoBehaviour
     public void UpdateStats()
     {
         //Debug.Log("SAVESYSTEM - Updating Minigame stats");
-        float[] multipliers = Stats.MiniGamesMultipliers;
+        Stats.UpdateMiniGameTotalMultiplier();
 
+        float[] multipliers = Stats.AllMiniGamesMultipliers();
         for (int i = 0; i < multipierValues.Length && i < multipliers.Length; i++) {
             multipierValues[i].text = "x " + multipliers[i].ToString("F2");
             //Debug.Log(i+" "+ multipliers[i]);

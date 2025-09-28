@@ -88,7 +88,7 @@ public class ChessGameEngine
     }
 }*/
 
-public class Chess : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPointerMoveHandler
+public class Chess : MiniGameBase, IPointerDownHandler, IPointerUpHandler, IPointerMoveHandler
 {
     [SerializeField] private bool isGenerator = false;
 
@@ -105,7 +105,7 @@ public class Chess : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPoi
 
     [SerializeField] private PiecePromotion piecePromotion;
 
-    [SerializeField] private ChessWinNotice winNotice;
+    [SerializeField] private MiniGameChessWinNotice winNotice;
 
 
     [SerializeField] private TextMeshProUGUI playerRating;
@@ -222,7 +222,7 @@ public class Chess : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPoi
         ChessPuzzleData data = new ChessPuzzleData();
         
         if(specificType == 0)
-            data = ChessProblemDatas.Instance.GetRandomProblem(Stats.ChessRating);
+            data = ChessProblemDatas.Instance.GetRandomProblem(Stats.MiniGameRating(MiniGame.Chess));
         else if(specificType == -1) {
             // Find long castle
 
@@ -693,13 +693,9 @@ public class Chess : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPoi
         winNotice.SetWin(didWin);
 
         // Award Rating and reward
-        Stats.ChangeChessRating(didWin);
+        Stats.ChangeMiniGameRating(MiniGame.Chess, didWin ? Stats.ChessGameWinRatingChange : Stats.ChessGameLossRatingChange);
         
-        UpdateRating();
-
-        // Send save needed event
-        Debug.Log("SAVESYSTEM - Trigger Save");
-        SavingUtility.playerGameData.TriggerSave();
+        // Stats own Event Action StatsUpdated will run and update this game panel correctly
     }
 
 
@@ -707,11 +703,7 @@ public class Chess : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPoi
     private void UpdateRating()
     {
         Debug.Log("UPDATING PLAYER RATING");
-        playerRating.text = "Rating: " + Stats.ChessRating;
-
-        Debug.Log("SAVESYSTEM - Rating set to "+Stats.ChessRating);
-        //problemRating.text = "Problem: " + Stats.ChessRating;
-        
+        playerRating.text = "Rating: " + Stats.MiniGameRating(MiniGame.Chess);
     }
 
     private void UpdateProblemRating(int rating) => problemRating.text = rating.ToString();

@@ -117,11 +117,8 @@ public class PlayerGameData
     }
 
     // MINI GAMES STATS
-    public int PlayerChessRating { get; set; } = 1000;
-    public int PlayerMinesweeperRating { get; set; } = 1000;
-    public int PlayerSudokuRating { get; set; } = 1000;
+    public int[] MiniGameRatings { get; set; }
 
-    
     // Held coins
     public BigDouble coins{ get; set; } 
 

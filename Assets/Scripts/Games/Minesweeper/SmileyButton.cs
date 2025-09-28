@@ -26,7 +26,7 @@ public class SmileyButton : MonoBehaviour, IPointerDownHandler
     public void MouseDown()
     {
         Debug.Log("Clicking Smiley!");
-        LevelCreator.Instance.RestartGame(true);
+        MineSweeper.Instance.RestartGame(true);
         image.sprite = sprites[1];
         pressedTimer = PressTime;
 

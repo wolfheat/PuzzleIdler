@@ -1,13 +1,11 @@
-using System;
 using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using WolfheatProductions;
-using static UnityEditor.PlayerSettings;
-public class Sudoku : MonoBehaviour, IPointerMoveHandler, IPointerDownHandler
-{
 
+public class Sudoku : MiniGameBase, IPointerMoveHandler, IPointerDownHandler
+{
     [SerializeField] private RectTransform rectTransform;
 
     [SerializeField] private SodukoBox[] allBoxes;
@@ -20,7 +18,7 @@ public class Sudoku : MonoBehaviour, IPointerMoveHandler, IPointerDownHandler
     [SerializeField] private TextMeshProUGUI problemRating;
     [SerializeField] private TextMeshProUGUI playerRating;
 
-    [SerializeField] private ChessWinNotice winNotice;
+    [SerializeField] private MiniGameChessWinNotice winNotice;
 
     private const int BoxSize = 65;
 
@@ -62,9 +60,9 @@ public class Sudoku : MonoBehaviour, IPointerMoveHandler, IPointerDownHandler
     private void UpdateRating()
     {
         Debug.Log("UPDATING PLAYER RATING");
-        playerRating.text = "Rating: " + Stats.SudokuRating;
+        playerRating.text = "Rating: " + Stats.MiniGameRating(GameType);
 
-        Debug.Log("SAVESYSTEM - Rating set to " + Stats.SudokuRating);
+        Debug.Log("SAVESYSTEM - Rating set to " + Stats.MiniGameRating(GameType));
         //problemRating.text = "Problem: " + Stats.ChessRating;
 
 
@@ -122,7 +120,7 @@ public class Sudoku : MonoBehaviour, IPointerMoveHandler, IPointerDownHandler
 
     public void DecreaseRating()
     {
-        Stats.DecreaseSudokuRating(100);
+        Stats.ChangeMiniGameRating(GameType, -100);
     }
 
     public void ResetGame()
@@ -132,7 +130,7 @@ public class Sudoku : MonoBehaviour, IPointerMoveHandler, IPointerDownHandler
 
         Debug.Log("Reset game");
         // Load a new problem of correct difficulty level
-        (int[,] level, int diff) = SudokuProblemDatas.Instance.GetRandomProblem(Stats.SudokuRating);
+        (int[,] level, int diff) = SudokuProblemDatas.Instance.GetRandomProblem(Stats.MiniGameRating(GameType));
 
         //Debug.Log("Loaded level " + level[0,0]+" level "+level.GetLength(0)+","+level.GetLength(1));
 
@@ -240,21 +238,22 @@ public class Sudoku : MonoBehaviour, IPointerMoveHandler, IPointerDownHandler
         Debug.Log("YOU WIN");
         GameActive = false;
         
-        winNotice.gameObject.SetActive(true);
-        
+        // Also make this general?
+        winNotice.gameObject.SetActive(true);        
         winNotice.SetWin(didWin);
 
+        // Added Rating
+        int increase = didWin ? Stats.SudokuGameWinRatingChange : Stats.SudokuGameLossRatingChange;
+
         // Award Rating and reward
-        int increase = Stats.ChangeSudokuRating(didWin);
-
-        UpdateRating();
-
+        Stats.ChangeMiniGameRating(GameType, increase);
+        
+        // Popup - also make reusable TODO
         ShowRatingIncreaseText(increase);
-
-        // Send save needed event
-        Debug.Log("SAVESYSTEM - Trigger Save");
-        SavingUtility.playerGameData.TriggerSave();
     }
+
+    //public static float GetDistanceV2(this Vector2 main, Vector2 other) => (main - other).sqrMagnitude;
+
 
     private bool EmptySpotsRemain()
     {

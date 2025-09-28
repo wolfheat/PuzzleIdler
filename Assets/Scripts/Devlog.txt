@@ -73,7 +73,11 @@ Aug 2025
 		* Sudoku loadable from database
 		* Showing problem and player rating, player can Win game
 		* Sudoku now implemented fully, needs tweeking
+28/9	* Cleaned up some Stats code
+		* Added base mini game class
 
+
+		* Clean upi updating save file from any games, make it better
 
 		
 		* Decide what to do with games multipliers when offline, 

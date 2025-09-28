@@ -8,6 +8,12 @@ public class GamePanel : MonoBehaviour
 
     public void OpenStartGame(int index)
     {
+        // If clicking allready open panle close it!
+        if (panels[index].activeSelf) {
+            panels[index].SetActive(false);
+            return;
+        }
+
         for (int i = 0; i < panels.Length; i++) {
             panels[i].SetActive(index == i);
         }
