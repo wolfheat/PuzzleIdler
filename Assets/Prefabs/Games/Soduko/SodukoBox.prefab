@@ -88,6 +88,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c8e356409672ee149ab678a0ffc0ddc2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  image: {fileID: 8129857185669078262}
   sprites:
   - {fileID: 1316677113, guid: 28cefbbfe2e684a4a8b930eddc10e680, type: 3}
   - {fileID: -926054817, guid: 28cefbbfe2e684a4a8b930eddc10e680, type: 3}

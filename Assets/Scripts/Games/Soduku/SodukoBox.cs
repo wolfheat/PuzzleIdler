@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 public class SodukoBox : MonoBehaviour
 {
-    private Image image;
+    [SerializeField] private Image image;
     [SerializeField] Sprite[] sprites;
     private int currentType = 0;
     private bool isFixed = false;
@@ -14,15 +14,15 @@ public class SodukoBox : MonoBehaviour
 
     private void Start()
     {
-        Debug.Log("Wanting to set type at start to "+currentType);
-        image = GetComponent<Image>();
         UpdateSprite();
     }
 
     public void SetAsFixed(int number, bool fix=true)
     {
-        Debug.Log("Setting as fixed = "+fix+" value = "+number);
-        currentType = number;
+        Debug.Log("Setting as fixed = "+fix+" value = "+number, this);
+        Debug.Log("Image = "+image);
+
+        ChangeType(number);
         isFixed = fix;
     }
     

@@ -4,13 +4,16 @@ using UnityEngine;
 
 
 
-public enum MiniGameNames{ChessProblem,MineSweeper,DuckCantSwim,Bomberman,Tetris,Snake,BubbleTanks};
+public enum MiniGameNames{ChessProblem,MineSweeper,SudokuProblem,Bomberman,Tetris,Snake,BubbleTanks};
 
 public static class Stats
 {
     public const int MinimumChessRating = 1000;
     private const int ChessGameLossRatingChange = -50;
     private const int ChessGameWinRatingChange = 10;
+
+    // SODUKO
+    private const int SodukoGameWinRatingChange = 100;
 
     // Coinds and Gems - Held
     public static BigDouble CoinsHeld { get; private set; } = 0;
@@ -179,6 +182,33 @@ public static class Stats
 
     }
     
+    internal static void DecreaseSudokuRating(int amt)
+    {
+        SudokuRating = SudokuRating - amt-SodukoGameWinRatingChange; // Limit to 2999
+        ChangeSudokuRating(true);
+    }
+
+    internal static int ChangeSudokuRating(bool didWin)
+    {
+        int gain = -SudokuRating;
+
+        SudokuRating = Math.Min(SudokuRating + SodukoGameWinRatingChange, 2999); // Limit to 2999
+
+        gain += SudokuRating;
+
+
+        MiniGamesMultipliers[(int)MiniGameNames.SudokuProblem] = SudokuRating/1000f;
+
+        Debug.Log("SAVESYSTEM - Changed player Sudoku Rating to "+ SudokuRating);
+
+        SavingUtility.playerGameData.PlayerSudokuRating = SudokuRating;
+
+        StatsUpdated?.Invoke();
+
+        return gain;
+
+    }
+    
     internal static void RatingDropEachMinute(int amt = 1)
     {
         Debug.Log("RatingDrop Happening - each minute");
@@ -188,6 +218,10 @@ public static class Stats
 
         MineSweeperRating = Math.Max(MineSweeperRating - amt, 1000);
         MiniGamesMultipliers[(int)MiniGameNames.MineSweeper] = MineSweeperRating/1000f;
+        
+        SudokuRating = Math.Max(SudokuRating - amt, 1000);
+        MiniGamesMultipliers[(int)MiniGameNames.SudokuProblem] = SudokuRating/1000f;
+
 
         UpdateSaveRatings();
         StatsUpdated?.Invoke();
@@ -204,15 +238,17 @@ public static class Stats
         SavingUtility.playerGameData.PlayerMinesweeperRating = MineSweeperRating;
     }
 
-    internal static void SetMiniGameStats(int playerChessRating, int playerMinesweeperRating)
+    internal static void SetMiniGameStats(int playerChessRating, int playerMinesweeperRating, int playerSudokuRating)
     {
         // Sets data from save ? Do not save it?
         ChessRating = Math.Max(playerChessRating,1000);
         MineSweeperRating = Math.Max(playerMinesweeperRating,1000);
+        SudokuRating = Math.Max(playerSudokuRating,1000);
 
 
         MiniGamesMultipliers[(int)MiniGameNames.ChessProblem] = ChessRating / 1000f;
         MiniGamesMultipliers[(int)MiniGameNames.MineSweeper] = MineSweeperRating / 1000f;
+        MiniGamesMultipliers[(int)MiniGameNames.SudokuProblem] = SudokuRating/ 1000f;
 
 
         Debug.Log("Rating loaded into stats as " + ChessRating);

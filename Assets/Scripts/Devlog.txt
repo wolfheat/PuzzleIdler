@@ -71,6 +71,9 @@ Aug 2025
 		* Imported 3m sudoku problems, size = 86Mb
 		* Limit to 5000 problems per level (10 levels) => 4.3Mb
 		* Sudoku loadable from database
+		* Showing problem and player rating, player can Win game
+		* Sudoku now implemented fully, needs tweeking
+
 
 		
 		* Decide what to do with games multipliers when offline, 

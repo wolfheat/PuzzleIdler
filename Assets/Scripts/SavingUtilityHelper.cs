@@ -25,7 +25,7 @@ public class SavingUtilityHelper : MonoBehaviour
         Stats.SetCoinsAndGems(SavingUtility.playerGameData.coins, SavingUtility.playerGameData.gems);
 
         // Mini Games
-        Stats.SetMiniGameStats(SavingUtility.playerGameData.PlayerChessRating, SavingUtility.playerGameData.PlayerMinesweeperRating);
+        Stats.SetMiniGameStats(SavingUtility.playerGameData.PlayerChessRating, SavingUtility.playerGameData.PlayerMinesweeperRating, SavingUtility.playerGameData.PlayerSudokuRating);
 
 
         long seconds = (long)(DateTime.Now - SavingUtility.playerGameData.SaveTime).TotalSeconds;

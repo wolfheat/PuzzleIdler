@@ -6,6 +6,7 @@ public class SudokuProblemDatas : MonoBehaviour
 {
 
     [SerializeField] private PuzzleDatabase sudokuPuzzleDatabase;
+    [SerializeField] private string easyLevel;
 
 
     public static SudokuProblemDatas Instance { get; private set; }
@@ -20,7 +21,7 @@ public class SudokuProblemDatas : MonoBehaviour
     }
 
 
-    public int[,] GetRandomProblem(int rating = 1000)
+    public (int[,],int) GetRandomProblem(int rating = 1000)
     {
         // Player rating can be 1000-2999 ???
         // Problem rating level can be 0 - 9
@@ -37,7 +38,7 @@ public class SudokuProblemDatas : MonoBehaviour
 
         if(sudokuPuzzleDatabase.data[section].values.Count == 0) {
             Debug.Log("Section is Empty - ");
-            return data; // return empty level
+            return (data,section); // return empty level
         }
 
         int tries = 0;
@@ -48,13 +49,13 @@ public class SudokuProblemDatas : MonoBehaviour
             int randomProblem = UnityEngine.Random.Range(0, sudokuPuzzleDatabase.data[section].values.Count);
 
             string problem = sudokuPuzzleDatabase.data[section].values[randomProblem];
-
+            Debug.Log("Loading problem "+problem);
             // Create a problem from this string
             if(TryParseStringToLevelData(problem, out data))
                 problemFound = true;
         }
         
-        return data;
+        return (data, section);
     }
 
     private bool TryParseStringToLevelData(string problem, out int[,] data)
@@ -76,5 +77,11 @@ public class SudokuProblemDatas : MonoBehaviour
             data[col, row] = val;
         }
         return true;
+    }
+
+    internal (int[,] level, int diff) GetEasyLevel()
+    {
+        TryParseStringToLevelData(easyLevel, out int[,] data);
+        return (data, 0);
     }
 }
