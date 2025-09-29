@@ -198,7 +198,7 @@ public class MineSweeper : MiniGameBase
     // RATING
     private void UpdateRatingText()
     {
-        playerRating.text = "Rating: " + Stats.MiniGameRating(gameType);     
+        playerRating.text = "Rating: " + Stats.MiniGameRating(GameType);     
         Debug.Log("UPDATING PLAYER RATING");
     }
 

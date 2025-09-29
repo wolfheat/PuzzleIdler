@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class ThemePicker : MonoBehaviour
 {
-    public NumberThemeSO current;
+    public NumberThemeSO currentMinesweeper;
     [SerializeField] NumberThemeSO[] themes;
 
     public static ThemePicker Instance { get; private set; }
@@ -27,6 +27,6 @@ public class ThemePicker : MonoBehaviour
     {
         if (index >= themes.Length) return;
 
-        current = themes[index];
+        currentMinesweeper = themes[index];
     }
 }

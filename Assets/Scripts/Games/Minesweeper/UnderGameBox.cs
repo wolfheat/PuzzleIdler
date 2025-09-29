@@ -32,7 +32,7 @@ public class UnderGameBox : MonoBehaviour
         //Debug.Log("Updating Under sprite to type "+boxType+" = "+(int)boxType);
 
         if(type == -1) {
-            image.sprite = ThemePicker.Instance.current.flags[(int)MineBoxType.Busted];
+            image.sprite = ThemePicker.Instance.currentMinesweeper.flags[(int)MineBoxType.Busted];
             return;
         }
         UpdateSprite();
@@ -94,5 +94,5 @@ public class UnderGameBox : MonoBehaviour
 
     //internal void SetOrderingLeyer(int v) => spriteRenderer.sortingOrder = v;
 
-    internal void UpdateSprite() => image.sprite = ThemePicker.Instance.current.numbers[(int)boxType];
+    internal void UpdateSprite() => image.sprite = ThemePicker.Instance.currentMinesweeper.numbers[(int)boxType];
 }

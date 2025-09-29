@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using BreakInfinity;
 //using NUnit.Framework; 
 // make sure BreakInfinity.cs is in your project
@@ -72,7 +73,7 @@ public static class IncrementalNumberFormatter
         if (value.Sign() == 0) return "0";
 
         if(value.Exponent < 3) {
-            return $"{value.ToString($"F{decimals}")}";
+            return $"{value.ToString($"F{decimals}", CultureInfo.InvariantCulture)}";
         }
 
         // Get exponent in base 10 - Do I need this at all?
@@ -91,10 +92,10 @@ public static class IncrementalNumberFormatter
         switch (notation) {
             case NumberNotation.Scientific:
                 if (group < shortAbbr.Length) {
-                    return $"{displayValue.ToString($"F{decimals}")}{shortAbbr[group]}";
+                    return $"{displayValue.ToString($"F{decimals}", CultureInfo.InvariantCulture)}{shortAbbr[group]}";
                 }
                 // Fallback if out of strings to show                    
-                return displayValue.ToString($"E{decimals}e{exponent}");
+                return displayValue.ToString($"E{decimals}e{exponent}", CultureInfo.InvariantCulture);
             case NumberNotation.Engineering: {
                     exponent = group * 3;
                     return displayValue.ToString("0.00") + "e" + (exponent < 100 ? exponent.ToString("00") : exponent.ToString("000"));
@@ -103,20 +104,20 @@ public static class IncrementalNumberFormatter
                     // convert group to alpha
                     // 10³⁶ = aa (10^36)
                     if (group < AlphabeticScientificEndsAt) {
-                        return $"{displayValue.ToString($"F{decimals}")}{shortAbbr[group]}";
+                        return $"{displayValue.ToString($"F{decimals}", CultureInfo.InvariantCulture)}{shortAbbr[group]}";
                     }
                     else {
                         group -= AlphabeticScientificEndsAt;
                         // convert number to aa system
                         string alphaName = ""+(char)('a' + (group / 26)) + (char)('a' + (group % 26));
 
-                        return $"{displayValue.ToString($"F{decimals}")}{alphaName}";
+                        return $"{displayValue.ToString($"F{decimals}", CultureInfo.InvariantCulture)}{alphaName}";
                     }
                 }
             case NumberNotation.Mathematical:
             default: {
                     double mathematicalDisplayValue = Math.Truncate(value.Mantissa * 100) / 100;
-                    return mathematicalDisplayValue.ToString("0.00") + "e" + (exponent<100 ? exponent.ToString("00"): exponent.ToString("000"));
+                    return mathematicalDisplayValue.ToString("0.00", CultureInfo.InvariantCulture) + "e" + (exponent<100 ? exponent.ToString("00"): exponent.ToString("000"));
                     //return displayValue.ToString($"E{decimals}e{exponent}");
                 }            
         }

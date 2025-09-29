@@ -8,21 +8,19 @@ public enum MiniGame{Chess,MineSweeper,Sudoku,Bomberman,Tetris,Snake,BubbleTanks
 
 public static class Stats
 {
-    public const int MinimumChessRating = 1000;
-    public const int ChessGameLossRatingChange = -50;
-    public const int ChessGameWinRatingChange = 10;
-    
-    public const int SudokuGameLossRatingChange = 0;
-    public const int SudokuGameWinRatingChange = 150;
-
-
-
+    // Specific game limitations
     private const int MiniGameMin = 1000;
     private const int MiniGameMax = 2999;
 
-    // SODUKO
-    private const int SodukoGameWinRatingChange = 100;
+    // Chess
+    public const int ChessGameLossRatingChange = -50;
+    public const int ChessGameWinRatingChange = 10;
+    // Minesweeper
+    // Sudoku
+    public const int SudokuGameLossRatingChange = 0;
+    public const int SudokuGameWinRatingChange = 150;
 
+    
     // Coinds and Gems - Held
     public static BigDouble CoinsHeld { get; private set; } = 0;
     public static BigDouble GemsHeld { get; private set; } = 0;
@@ -91,8 +89,8 @@ public static class Stats
     private static BigDouble CPSPerTick() => BuildingsBaseIncome * GetCPSTotalMultiplier();
 
 
-    public static string ReturnAsString(BigDouble item) => IncrementalNumberFormatter.Format(item, ActiveNumberNotation); // Use the new numberformatter class to decide how to show the number
-    public static string ReturnAsString(float item) => IncrementalNumberFormatter.Format(item, ActiveNumberNotation); // Use the new numberformatter class to decide how to show the number
+    public static string ReturnAsString(BigDouble item, int decimals = 2) => IncrementalNumberFormatter.Format(item, ActiveNumberNotation, decimals); // Use the new numberformatter class to decide how to show the number
+    public static string ReturnAsString(float item, int decimals = 2) => IncrementalNumberFormatter.Format(item, ActiveNumberNotation, decimals); // Use the new numberformatter class to decide how to show the number
 
     public static void Tick() => AddCoinByTicks(); // Tick the timer once
 

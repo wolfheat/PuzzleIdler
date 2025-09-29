@@ -92,7 +92,7 @@ public class StatsPanel : MonoBehaviour
             BuildingsListItem item = Instantiate(listItemPrefab, gamesTextHolder.transform);
 
             item.SetName(names[i]);
-            item.SetValue(Stats.ReturnAsString(income));
+            item.SetValue(Stats.ReturnAsString(income,3));
             item.SetImage((int)IconType.Multiply);
             product *= income;
         }

@@ -1,8 +1,8 @@
-﻿using System;
-using System.Security.Cryptography.X509Certificates;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
+// Make this clickable
+
 
 public class GameBox : MonoBehaviour
 {
@@ -30,7 +30,7 @@ public class GameBox : MonoBehaviour
         boxType = (MineBoxType)type;
         Debug.Log("Updating sprite to type "+boxType+" = "+(int)boxType);
         if(type == -1) {
-            image.sprite = ThemePicker.Instance.current.flags[(int)MineBoxType.Busted];
+            image.sprite = ThemePicker.Instance.currentMinesweeper.flags[(int)MineBoxType.Busted];
             return;
         }
         UpdateSprite();
@@ -153,7 +153,7 @@ public class GameBox : MonoBehaviour
 
     //internal void SetOrderingLeyer(int v) => spriteRenderer.sortingOrder = v;
 
-    internal void UpdateSprite() => image.sprite = ThemePicker.Instance.current.flags[(int)boxType];
+    internal void UpdateSprite() => image.sprite = ThemePicker.Instance.currentMinesweeper.flags[(int)boxType];
 
     internal void SetAsPressed()
     {

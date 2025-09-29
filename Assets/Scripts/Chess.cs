@@ -222,7 +222,7 @@ public class Chess : MiniGameBase, IPointerDownHandler, IPointerUpHandler, IPoin
         ChessPuzzleData data = new ChessPuzzleData();
         
         if(specificType == 0)
-            data = ChessProblemDatas.Instance.GetRandomProblem(Stats.MiniGameRating(MiniGame.Chess));
+            data = ChessProblemDatas.Instance.GetRandomProblem(Stats.MiniGameRating(GameType));
         else if(specificType == -1) {
             // Find long castle
 
@@ -693,7 +693,7 @@ public class Chess : MiniGameBase, IPointerDownHandler, IPointerUpHandler, IPoin
         winNotice.SetWin(didWin);
 
         // Award Rating and reward
-        Stats.ChangeMiniGameRating(MiniGame.Chess, didWin ? Stats.ChessGameWinRatingChange : Stats.ChessGameLossRatingChange);
+        Stats.ChangeMiniGameRating(GameType, didWin ? Stats.ChessGameWinRatingChange : Stats.ChessGameLossRatingChange);
         
         // Stats own Event Action StatsUpdated will run and update this game panel correctly
     }
@@ -703,7 +703,7 @@ public class Chess : MiniGameBase, IPointerDownHandler, IPointerUpHandler, IPoin
     private void UpdateRating()
     {
         Debug.Log("UPDATING PLAYER RATING");
-        playerRating.text = "Rating: " + Stats.MiniGameRating(MiniGame.Chess);
+        playerRating.text = "Rating: " + Stats.MiniGameRating(GameType);
     }
 
     private void UpdateProblemRating(int rating) => problemRating.text = rating.ToString();

@@ -75,7 +75,7 @@ Aug 2025
 		* Sudoku now implemented fully, needs tweeking
 28/9	* Cleaned up some Stats code
 		* Added base mini game class
-
+		* Tetris minigame base functionality working
 
 		* Clean upi updating save file from any games, make it better
 

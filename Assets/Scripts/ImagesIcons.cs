@@ -1,11 +1,10 @@
 using UnityEngine;
-
-
 public enum IconType{CPS,GPS,Coins,Gems, Multiply,Research,Buildings,Upgrades}
 
 public class ImagesIcons : MonoBehaviour
 {
     [SerializeField] Sprite[] icons;
+    [SerializeField] Sprite[] tetrisBoxes;
     public static ImagesIcons Instance { get; private set; }
 
     private void Awake()
@@ -17,8 +16,9 @@ public class ImagesIcons : MonoBehaviour
         Instance = this;
     }
 
-
     public Sprite GetIcon(int index) => icons[index];
+    
+    public Sprite GetTetrisIcon(int index) => tetrisBoxes[index];
 
 
 }

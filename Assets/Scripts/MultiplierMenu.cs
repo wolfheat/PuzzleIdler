@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Globalization;
 using System.Linq;
 using TMPro;
 using Unity.VisualScripting;
@@ -60,10 +61,10 @@ public class MultiplierMenu : MonoBehaviour
 
         float[] multipliers = Stats.AllMiniGamesMultipliers();
         for (int i = 0; i < multipierValues.Length && i < multipliers.Length; i++) {
-            multipierValues[i].text = "x " + multipliers[i].ToString("F2");
+            multipierValues[i].text = "x " + multipliers[i].ToString("F3", CultureInfo.InvariantCulture);
             //Debug.Log(i+" "+ multipliers[i]);
         }
-        totalValue.text = "x " + Stats.MiniGamesMultipliersTotal.ToString("F2");
+        totalValue.text = "x " + Stats.MiniGamesMultipliersTotal.ToString("F3", CultureInfo.InvariantCulture);
     }
 
     private void AnimatePanelInto(bool active)
