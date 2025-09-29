@@ -76,6 +76,14 @@ Aug 2025
 28/9	* Cleaned up some Stats code
 		* Added base mini game class
 		* Tetris minigame base functionality working
+		* Tetris rotations now correct
+
+
+		* Need to fix rotation in different directions
+		* Need to add drop by space? Holding down drop slow tap down drop?
+		* Need to read loss
+		* Need to be able to remove lines
+
 
 		* Clean upi updating save file from any games, make it better
 

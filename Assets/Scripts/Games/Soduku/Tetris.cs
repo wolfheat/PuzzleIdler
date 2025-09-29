@@ -155,8 +155,20 @@ public class Tetris : MiniGameBase
     private void PlaceTestBlock()
     {
         // Place O at 4,0
-        TetrisPiece piece = new OPiece();
+        int type = UnityEngine.Random.Range(0, 7);
 
+        TetrisPiece piece = type switch
+        {
+            0 => new IPiece(),
+            1 => new JPiece(),
+            2 => new LPiece(),
+            3 => new OPiece(),
+            4 => new SPiece(),
+            5 => new TPiece(),
+            6 => new ZPiece(),
+            _ => new OPiece()
+        };
+        
         activePiece = piece;
         activePiece.pos = new Vector2Int(4, 2);
 

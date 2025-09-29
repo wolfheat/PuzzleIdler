@@ -45,8 +45,10 @@ public class JPiece : TetrisPiece
     public JPiece() {
         type = TetrisBlockType.J;
         // Add the rotations positions
-        List<Vector2Int> rotA = new List<Vector2Int> {new Vector2Int(-1, -1), new Vector2Int(-1, 0), new Vector2Int(0, 0), new Vector2Int(1, 0)};
-        List<Vector2Int> rotB = new List<Vector2Int> {new Vector2Int(-1, 1), new Vector2Int(0, 1), new Vector2Int(0, 0), new Vector2Int(0, -1)};
+        List<Vector2Int> rotA = new List<Vector2Int> { new Vector2Int(-1, 0), new Vector2Int(0, 0), new Vector2Int(1, 0), new Vector2Int(-1, -1) };
+        List<Vector2Int> rotB = new List<Vector2Int> { new Vector2Int(0, -1), new Vector2Int(0, 0), new Vector2Int(0, 1), new Vector2Int(-1, 1) };
+        List<Vector2Int> rotC = new List<Vector2Int> { new Vector2Int(-1, 0), new Vector2Int(0, 0), new Vector2Int(1, 0), new Vector2Int(1, 1) };
+        List<Vector2Int> rotD = new List<Vector2Int> { new Vector2Int(0, -1), new Vector2Int(0, 0), new Vector2Int(0, 1), new Vector2Int(1, -1) };
         //  O       
         //  O X 0
 
@@ -54,7 +56,7 @@ public class JPiece : TetrisPiece
         //    X       
         //  O O 
 
-        occupySpots = new List<List<Vector2Int>>() { rotA, rotB };
+        occupySpots = new List<List<Vector2Int>>() { rotA, rotB, rotC, rotD };
     }
 }
 
@@ -63,8 +65,10 @@ public class LPiece : TetrisPiece
     public LPiece() {
         type = TetrisBlockType.L;
         // Add the rotations positions
-        List<Vector2Int> rotA = new List<Vector2Int> {new Vector2Int(1, -1), new Vector2Int(-1, 0), new Vector2Int(0, 0), new Vector2Int(1, 0)};
-        List<Vector2Int> rotB = new List<Vector2Int> {new Vector2Int(1, 1), new Vector2Int(0, 1), new Vector2Int(0, 0), new Vector2Int(0, -1)};
+        List<Vector2Int> rotA = new List<Vector2Int> {new Vector2Int(-1, 0), new Vector2Int(0, 0), new Vector2Int(1, 0), new Vector2Int(1, -1)};
+        List<Vector2Int> rotB = new List<Vector2Int> {new Vector2Int(0, -1), new Vector2Int(0, 0), new Vector2Int(0, 1), new Vector2Int(1, 1)};
+        List<Vector2Int> rotC = new List<Vector2Int> {new Vector2Int(-1, 0), new Vector2Int(0, 0), new Vector2Int(1, 0), new Vector2Int(-1, 1)};
+        List<Vector2Int> rotD = new List<Vector2Int> {new Vector2Int(0, -1), new Vector2Int(0, 0), new Vector2Int(0, 1), new Vector2Int(-1, -1)};
         //      O       
         //  O X 0
 
@@ -72,7 +76,7 @@ public class LPiece : TetrisPiece
         //    X       
         //    O O 
 
-        occupySpots = new List<List<Vector2Int>>() { rotA, rotB };
+        occupySpots = new List<List<Vector2Int>>() { rotA, rotB, rotC, rotD };
     }
 }
 
@@ -81,8 +85,8 @@ public class SPiece : TetrisPiece
     public SPiece() {
         type = TetrisBlockType.S;
         // Add the rotations positions
-        List<Vector2Int> rotA = new List<Vector2Int> {new Vector2Int(0, -1), new Vector2Int(1, -1), new Vector2Int(0, 0), new Vector2Int(-1, 0)};
-        List<Vector2Int> rotB = new List<Vector2Int> {new Vector2Int(-1, 1), new Vector2Int(-1, 0), new Vector2Int(0, 0), new Vector2Int(1, 0)};
+        List<Vector2Int> rotA = new List<Vector2Int> {new Vector2Int(-1, 0), new Vector2Int(0, 0), new Vector2Int(0, -1), new Vector2Int(1, -1)};
+        List<Vector2Int> rotB = new List<Vector2Int> {new Vector2Int(-1,-1), new Vector2Int(-1, 0), new Vector2Int(0, 0), new Vector2Int(0, 1)};
         //    O O       
         //  O X 
         //  O       
@@ -99,7 +103,7 @@ public class ZPiece : TetrisPiece
         type = TetrisBlockType.Z;
         // Add the rotations positions
         List<Vector2Int> rotA = new List<Vector2Int> {new Vector2Int(-1, -1), new Vector2Int(0, -1), new Vector2Int(0, 0), new Vector2Int(1, 0)};
-        List<Vector2Int> rotB = new List<Vector2Int> {new Vector2Int(0, -1), new Vector2Int(0, 0), new Vector2Int(-1, 0), new Vector2Int(-1,-1)};
+        List<Vector2Int> rotB = new List<Vector2Int> {new Vector2Int(0, -1), new Vector2Int(0, 0), new Vector2Int(-1, 0), new Vector2Int(-1,1)};
         //  O O       
         //    X O
         //    O       
@@ -107,5 +111,24 @@ public class ZPiece : TetrisPiece
         //  O 
 
         occupySpots = new List<List<Vector2Int>>() { rotA, rotB };
+    }
+}
+
+public class TPiece : TetrisPiece
+{
+    public TPiece() {
+        type = TetrisBlockType.Z;
+        // Add the rotations positions
+        List<Vector2Int> rotA = new List<Vector2Int> {new Vector2Int(-1, 0), new Vector2Int(0, -1), new Vector2Int(0, 0), new Vector2Int(1, 0)};
+        List<Vector2Int> rotB = new List<Vector2Int> {new Vector2Int(-1, 0), new Vector2Int(0, 1), new Vector2Int(0, 0), new Vector2Int(0,-1)};
+        List<Vector2Int> rotC = new List<Vector2Int> {new Vector2Int( 1, 0), new Vector2Int(0,-1), new Vector2Int(0, 0), new Vector2Int(0, 1)};
+        List<Vector2Int> rotD = new List<Vector2Int> {new Vector2Int( 1, 0), new Vector2Int(0, 1), new Vector2Int(0, 0), new Vector2Int(0,-1)};
+        //    O       
+        //  O X O
+        //    O       
+        //  O X       
+        //    O 
+
+        occupySpots = new List<List<Vector2Int>>() { rotA, rotB ,rotC, rotD};
     }
 }
