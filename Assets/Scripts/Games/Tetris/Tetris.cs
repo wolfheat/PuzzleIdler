@@ -9,10 +9,15 @@ public class Tetris : MiniGameBase
 
     [SerializeField] private GameObject blockHolder;
     [SerializeField] private TetrisBlock blockPrefab;
+    [SerializeField] private TetrisNextPieceView tetrisNextPieceView;
 
     private bool GameActive = false;
 
     const int BlockSize = 30;
+
+    private int level = 1;
+    private int lines = 0;
+    private float stepTimeSpeedup = StepTime;
 
     TetrisBlock[,] blocks = new TetrisBlock[10, 22]; // 2-4 blocks invisible?
     int[,] blocksData = new int[10, 22]; // 2-4 blocks invisible?
@@ -23,6 +28,9 @@ public class Tetris : MiniGameBase
     [SerializeField] private GameObject playerRatingIncrease;
     [SerializeField] private TextMeshProUGUI problemRating;
 
+    [SerializeField] private TextMeshProUGUI tetrisLevelText;
+    [SerializeField] private TextMeshProUGUI tetrisLinesText;
+
 
     // Extra Panels
     [SerializeField] private GameObject helpInfo;
@@ -32,7 +40,7 @@ public class Tetris : MiniGameBase
     {
         SetBoxes2DArray();
 
-        ResetGame();
+        //ResetGame();
         Stats.StatsUpdated += OnStatsUpdated;
 
         //Inputs.Instance.PlayerControls.Player.Move.performed += OnPlayerMoveInput;
@@ -58,6 +66,8 @@ public class Tetris : MiniGameBase
 
 
     private const float StepTime = 0.3f;
+    private const float StepTimeDrop = 0.015f;
+
     private float steptimer = StepTime;
 
     private void Update()
@@ -65,7 +75,7 @@ public class Tetris : MiniGameBase
         // AutoStep
         steptimer -= Time.deltaTime;
         if(steptimer <= 0) {
-            steptimer = StepTime;
+            steptimer = stepTimeSpeedup;
             TryStep(Vector2Int.up);
         }
 
@@ -137,6 +147,11 @@ public class Tetris : MiniGameBase
 
         ClearBlocks();
 
+        // Reset
+        ResetGameStats();
+
+        // Set new first block
+        nextBlockType = RandomBlockType();
 
         PlaceNextBlock();
         //Debug.Log("Loaded level " + level[0,0]+" level "+level.GetLength(0)+","+level.GetLength(1));
@@ -146,17 +161,36 @@ public class Tetris : MiniGameBase
 
         //LoadLevel(level);
 
+
         //UpdateLevelRating(diff);
+    }
+
+    private void ResetGameStats()
+    {
+        level = 1;
+        lines = 0;
+        stepTimeSpeedup = StepTime;
+        UpdateLevelAndLines();
+    }
+
+    private void UpdateLevelAndLines()
+    {
+        tetrisLinesText.text = lines.ToString();
+        tetrisLevelText.text = level.ToString();
     }
 
     TetrisPiece activePiece;
 
+    int nextBlockType = -1;
+    private int RandomBlockType() => UnityEngine.Random.Range(0, 7);
+
     private void PlaceNextBlock()
     {
         // Place O at 4,0
-        int type = UnityEngine.Random.Range(0, 7);
+        
+        int nextPiece = RandomBlockType();
 
-        TetrisPiece piece = type switch
+        TetrisPiece piece = nextBlockType switch
         {
             0 => new IPiece(),
             1 => new JPiece(),
@@ -178,7 +212,10 @@ public class Tetris : MiniGameBase
 
         // Show the piece there anyway - makes the lose look good
         PlacePiece();
-        
+
+        // Show Next Piece
+        nextBlockType = nextPiece;
+        tetrisNextPieceView.ShowPiece(nextBlockType);
     }
 
     private void TryDropFully()
@@ -276,11 +313,22 @@ public class Tetris : MiniGameBase
             }
             blocks[boardPos.x, boardPos.y].SetType(type);
         }
-        if(fixate)
-            CheckForTetris();
+        if (fixate) {
+            int removedLines = CheckForTetris();
+
+            AddLines(removedLines);
+            UpdateLevelAndLines();
+        }
     }
 
-    private void CheckForTetris()
+    private void AddLines(int removedLines)
+    {
+        lines += removedLines;
+        level = 1 + lines / 8;
+        stepTimeSpeedup = StepTime - Math.Min(level-1,15)* StepTimeDrop;
+    }
+
+    private int CheckForTetris()
     {
         // Just placed a piece - check for tetris removed lines
         // Check from bottom up and move down
@@ -322,6 +370,7 @@ public class Tetris : MiniGameBase
                 }
             }
         }
+        return removeLines;
 
     }
 

@@ -79,6 +79,13 @@ Aug 2025
 		* Tetris rotations now correct
 29/9	* Tetris remove lines working
 		* Left Rotate added
+30/9	* Tetris Preview Added
+		* Tetris Level, Lines and Speed implemented
+
+
+
+		* Decide a rating system for tetris
+		* Make ratings explanation screen
 
 
 		// - Tetris - inputs
@@ -103,7 +110,7 @@ Aug 2025
 		// Chessmove that still needs a test
 		* Opponent played en-passentable move, player can play en passent but it is not the win, or it is an alternative win
 
-
+		I only know one CEO in person. And that is pushing the meaning of a "CEO", "being" and"in person" a lot...
 
 
 		// Need to check if its check mate and also count that as a win
