@@ -220,32 +220,32 @@ public class Tetris : MiniGameBase
         return false;
     }
 
-    private void TryRotate()
+    private void TryRotate(bool right = true)
     {
-        Debug.Log("Rotate");
+        //Debug.Log("Rotate");
         // Resave Current position
 
         // If Valid remove old pos
-        if (!CheckValidRotationForActivePiece()) {
+        if (!CheckValidRotationForActivePiece(right)) {
             Debug.Log("Invalid Rotation");
             return;
         }
         
-        RotateCurrentPiece();
+        RotateCurrentPiece(right);
     }
 
-    private void RotateCurrentPiece()
+    private void RotateCurrentPiece(bool right = true)
     {
         RemoveCurrentPiecePosBlocks();
-        Debug.Log("Rotations starts at "+activePiece.pos);
-        activePiece.Rotate();
+        //Debug.Log("Rotations starts at "+activePiece.pos);
+        activePiece.Rotate(right);
         PlacePiece();
-        Debug.Log("Rotations ends at "+activePiece.pos);
+        //Debug.Log("Rotations ends at "+activePiece.pos);
     }
 
-    private bool CheckValidRotationForActivePiece()
+    private bool CheckValidRotationForActivePiece(bool right = true)
     {
-        foreach (Vector2Int pos in activePiece.NextRotationSpots) {
+        foreach (Vector2Int pos in activePiece.NextRotationSpots(right)) {
             Vector2Int boardPos = activePiece.pos + pos;
             if (boardPos.x < 0 || boardPos.y < 0 || boardPos.x >= 10 || boardPos.y >= 22)
                 return false;
@@ -362,7 +362,7 @@ public class Tetris : MiniGameBase
     private bool holdPerformed = false;
 
 
-    enum PlayerInputDirection{Left,Right,Up,Down, None };
+    enum PlayerInputDirection{Left,Right,Up,Down, None, RotateLeft };
     private PlayerInputDirection movePerformed;
 
     private void DoPlayerInput()
@@ -371,11 +371,11 @@ public class Tetris : MiniGameBase
         // Releasing a button
         if(holdPerformed) {
             // Was holding something but release it
-            if (!Inputs.Instance.PlayerControls.Player.Move.IsPressed()) {
+            if (!AnyTetrisMoveKeyPressed()) {
                 //Debug.Log("Tetris: Releasing "+movePerformed);
                 // Releasing rotate, do rotate
-                if (movePerformed == PlayerInputDirection.Up) {
-                    TryRotate();
+                if (movePerformed == PlayerInputDirection.Up || movePerformed == PlayerInputDirection.RotateLeft) {
+                    TryRotate(movePerformed == PlayerInputDirection.Up);
                     holdTimer = 0;
                     heldAtLeastOneFullStep = false;
                     holdPerformed = false;
@@ -412,7 +412,6 @@ public class Tetris : MiniGameBase
                 return;
             }
 
-            // Holding something
             PlayerInputDirection currentDirection = ReadPlayerDirection();
 
             // New Input - Reset
@@ -443,13 +442,12 @@ public class Tetris : MiniGameBase
             return;
         }
 
-        if(!Inputs.Instance.PlayerControls.Player.Move.IsPressed())
+        if(!AnyTetrisMoveKeyPressed())
             return;
 
         // Starting to Hold something
         PlayerInputDirection newDirection = ReadPlayerDirection();
-
-        //Debug.Log("Tetris: Starting to press " + newDirection);
+                
         // New Input - Reset
         heldAtLeastOneFullStep = false;
         holdTimer = 0;
@@ -460,6 +458,10 @@ public class Tetris : MiniGameBase
 
     }
 
+    private bool AnyTetrisMoveKeyPressed() => Inputs.Instance.PlayerControls.Player.Move.IsPressed() || Inputs.Instance.PlayerControls.Player.RotateLeft.IsPressed();
+
+    private bool ReadRotate() => Inputs.Instance.PlayerControls.Player.RotateLeft.WasPerformedThisFrame();
+
     private static Vector2Int InputToMove(PlayerInputDirection dir)
     {
         return dir switch
@@ -468,6 +470,7 @@ public class Tetris : MiniGameBase
             PlayerInputDirection.Right => new Vector2Int(1, 0),
             PlayerInputDirection.Down => new Vector2Int(0, 1),
             PlayerInputDirection.Up => new Vector2Int(0, -1),
+            PlayerInputDirection.RotateLeft => new Vector2Int(0, 0),
             _ => new Vector2Int(-1, 0) // Left
         };
     }
@@ -481,8 +484,11 @@ public class Tetris : MiniGameBase
             return PlayerInputDirection.Right;
         if(move.y > 0)
             return PlayerInputDirection.Up;
-        
-        return PlayerInputDirection.Down;
+        if(move.y < 0)
+            return PlayerInputDirection.Down;
+        if(Inputs.Instance.PlayerControls.Player.RotateLeft.IsPressed())
+            return PlayerInputDirection.RotateLeft;
+        return PlayerInputDirection.None;
     }
 
     private Vector2Int GetLimitedMove(InputAction.CallbackContext context)

@@ -9,8 +9,9 @@ public class TetrisPiece
     public TetrisBlockType type;
 
     public List<Vector2Int> CurrentRotationSpots => occupySpots[activeRotation];
-    public List<Vector2Int> NextRotationSpots => occupySpots[(activeRotation == occupySpots.Count-1) ? 0 : activeRotation+1];
-    public void Rotate() => activeRotation = (activeRotation == occupySpots.Count - 1) ? 0 : (activeRotation + 1);
+    //public List<Vector2Int> NextRotationSpots => occupySpots[(activeRotation + 1) % occupySpots.Count];
+    public List<Vector2Int> NextRotationSpots(bool right) => occupySpots[(activeRotation + occupySpots.Count + (right ? 1 : -1)) % occupySpots.Count];
+    public void Rotate(bool right) => activeRotation = (activeRotation + occupySpots.Count +(right ? 1 : -1)) % occupySpots.Count;
     public TetrisBlockType Type => type;
 }
 
@@ -46,9 +47,9 @@ public class JPiece : TetrisPiece
         type = TetrisBlockType.J;
         // Add the rotations positions
         List<Vector2Int> rotA = new List<Vector2Int> { new Vector2Int(-1, 0), new Vector2Int(0, 0), new Vector2Int(1, 0), new Vector2Int(-1, -1) };
-        List<Vector2Int> rotB = new List<Vector2Int> { new Vector2Int(0, -1), new Vector2Int(0, 0), new Vector2Int(0, 1), new Vector2Int(-1, 1) };
+        List<Vector2Int> rotB = new List<Vector2Int> { new Vector2Int(0, -1), new Vector2Int(0, 0), new Vector2Int(0, 1), new Vector2Int(1, -1) };
         List<Vector2Int> rotC = new List<Vector2Int> { new Vector2Int(-1, 0), new Vector2Int(0, 0), new Vector2Int(1, 0), new Vector2Int(1, 1) };
-        List<Vector2Int> rotD = new List<Vector2Int> { new Vector2Int(0, -1), new Vector2Int(0, 0), new Vector2Int(0, 1), new Vector2Int(1, -1) };
+        List<Vector2Int> rotD = new List<Vector2Int> { new Vector2Int(0, -1), new Vector2Int(0, 0), new Vector2Int(0, 1), new Vector2Int(-1, 1) };
         //  O       
         //  O X 0
 
@@ -120,9 +121,9 @@ public class TPiece : TetrisPiece
         type = TetrisBlockType.T;
         // Add the rotations positions
         List<Vector2Int> rotA = new List<Vector2Int> {new Vector2Int(-1, 0), new Vector2Int(0, -1), new Vector2Int(0, 0), new Vector2Int(1, 0)};
-        List<Vector2Int> rotB = new List<Vector2Int> {new Vector2Int(-1, 0), new Vector2Int(0, 1), new Vector2Int(0, 0), new Vector2Int(0,-1)};
+        List<Vector2Int> rotB = new List<Vector2Int> {new Vector2Int( 1, 0), new Vector2Int(0, 1), new Vector2Int(0, 0), new Vector2Int(0,-1)};
         List<Vector2Int> rotC = new List<Vector2Int> {new Vector2Int( -1, 0), new Vector2Int(0,1), new Vector2Int(0, 0), new Vector2Int(1, 0)};
-        List<Vector2Int> rotD = new List<Vector2Int> {new Vector2Int( 1, 0), new Vector2Int(0, 1), new Vector2Int(0, 0), new Vector2Int(0,-1)};
+        List<Vector2Int> rotD = new List<Vector2Int> {new Vector2Int(-1, 0), new Vector2Int(0, 1), new Vector2Int(0, 0), new Vector2Int(0,-1)};
         //    O       
         //  O X O
         //    O       

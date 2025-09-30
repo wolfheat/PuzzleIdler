@@ -78,13 +78,17 @@ Aug 2025
 		* Tetris minigame base functionality working
 		* Tetris rotations now correct
 29/9	* Tetris remove lines working
+		* Left Rotate added
 
 
-		* Need to fix rotation in different directions
-		* Need to add drop by space? Holding down drop slow tap down drop?
-		* Need to read loss
-		* Need to be able to remove lines
-
+		// - Tetris - inputs
+		/ I think people usually have their controls as the reverse of yours, using left hand for hard drop and spinning and right hand 
+		/ for moving left/right. personally i use z/c for spinning, x for hard drop, arrow left/right arrow keys for moving, up for hold, 
+		/ down for soft drop, and lshift for 180 spins.
+		//
+		/ Left hand: Z/X/C to rotate and Space bar to Hold, and ESC to pause
+		/ 
+		/ Right hand: arrow keys to move/soft drop/hard drop 
 
 		* Clean upi updating save file from any games, make it better
 
