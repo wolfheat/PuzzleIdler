@@ -12,7 +12,7 @@ public class MiniGameChessWinNotice : MonoBehaviour
 
     public void SetWin(bool win)
     {
-        textMeshProText.text = win ? "YOU WIN" : "INCORRECT";
+        textMeshProText.text = win ? "YOU WIN" : "GAME OVER";
         backgroundImage.color = win ? winColor : loseColor;
 
     }

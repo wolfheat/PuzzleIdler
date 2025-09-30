@@ -77,6 +77,7 @@ Aug 2025
 		* Added base mini game class
 		* Tetris minigame base functionality working
 		* Tetris rotations now correct
+29/9	* Tetris remove lines working
 
 
 		* Need to fix rotation in different directions

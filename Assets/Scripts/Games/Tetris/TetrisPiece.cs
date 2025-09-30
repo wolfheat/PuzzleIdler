@@ -117,11 +117,11 @@ public class ZPiece : TetrisPiece
 public class TPiece : TetrisPiece
 {
     public TPiece() {
-        type = TetrisBlockType.Z;
+        type = TetrisBlockType.T;
         // Add the rotations positions
         List<Vector2Int> rotA = new List<Vector2Int> {new Vector2Int(-1, 0), new Vector2Int(0, -1), new Vector2Int(0, 0), new Vector2Int(1, 0)};
         List<Vector2Int> rotB = new List<Vector2Int> {new Vector2Int(-1, 0), new Vector2Int(0, 1), new Vector2Int(0, 0), new Vector2Int(0,-1)};
-        List<Vector2Int> rotC = new List<Vector2Int> {new Vector2Int( 1, 0), new Vector2Int(0,-1), new Vector2Int(0, 0), new Vector2Int(0, 1)};
+        List<Vector2Int> rotC = new List<Vector2Int> {new Vector2Int( -1, 0), new Vector2Int(0,1), new Vector2Int(0, 0), new Vector2Int(1, 0)};
         List<Vector2Int> rotD = new List<Vector2Int> {new Vector2Int( 1, 0), new Vector2Int(0, 1), new Vector2Int(0, 0), new Vector2Int(0,-1)};
         //    O       
         //  O X O
