@@ -81,12 +81,14 @@ Aug 2025
 		* Left Rotate added
 30/9	* Tetris Preview Added
 		* Tetris Level, Lines and Speed implemented
+		* Tetris rating gain system added and explained
+		* Tetris rotations always available
 
+		* Minesweeper allows last to bust and still counts as win - fix
+		* Score from tetris counts to bomberman and not tetris value - fix
 
-
-		* Decide a rating system for tetris
-		* Make ratings explanation screen
-
+		* Maybe - have preview drop down
+		* Maybe - Have drop allow quick movement after drop?
 
 		// - Tetris - inputs
 		/ I think people usually have their controls as the reverse of yours, using left hand for hard drop and spinning and right hand 

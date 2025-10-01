@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Globalization;
 using BreakInfinity;
-//using NUnit.Framework; 
+// 
 // make sure BreakInfinity.cs is in your project
 
 public enum NumberNotation

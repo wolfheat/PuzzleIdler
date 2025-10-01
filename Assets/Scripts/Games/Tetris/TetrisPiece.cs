@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class TetrisPiece
@@ -10,8 +11,11 @@ public class TetrisPiece
 
     public List<Vector2Int> CurrentRotationSpots => occupySpots[activeRotation];
     //public List<Vector2Int> NextRotationSpots => occupySpots[(activeRotation + 1) % occupySpots.Count];
-    public List<Vector2Int> NextRotationSpots(bool right) => occupySpots[(activeRotation + occupySpots.Count + (right ? 1 : -1)) % occupySpots.Count];
-    public void Rotate(bool right) => activeRotation = (activeRotation + occupySpots.Count +(right ? 1 : -1)) % occupySpots.Count;
+    public List<Vector2Int> NextRotationSpots(int offset) => occupySpots[(activeRotation + occupySpots.Count + offset) % occupySpots.Count];
+    public void Rotate(int offset) => activeRotation = (activeRotation + occupySpots.Count + offset) % occupySpots.Count;
+
+    internal bool CanTurn() => occupySpots.Count > 2;
+
     public TetrisBlockType Type => type;
 }
 
