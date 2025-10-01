@@ -2,10 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using static UnityEditor.PlayerSettings;
 
 public class Snake : MiniGameBase
 {
@@ -30,7 +28,8 @@ public class Snake : MiniGameBase
 
     private Queue<Vector2Int> snake = new();
     private Vector2Int snakePos = new();
-    private int direction = 3;
+    private PlayerInputDirection direction = PlayerInputDirection.Left;
+    private PlayerInputDirection lastCompletedMoveDirection = PlayerInputDirection.Left;
     private int blocksToAdd = 4; // Starting with 4 blocks extra
 
     // Rating Textfields
@@ -53,8 +52,6 @@ public class Snake : MiniGameBase
 
         //ResetGame();
         Stats.StatsUpdated += OnStatsUpdated;
-
-        Inputs.Instance.PlayerControls.Player.Rotate.performed += OnPlayerRotateInput;
     }
 
     private void SetBoxes2DArray()
@@ -162,19 +159,13 @@ public class Snake : MiniGameBase
         // Reset
         ResetGameStats();
 
-        // Set new first block
-        nextBlockType = RandomBlockType();
+        direction = PlayerInputDirection.Left;
 
+        // Place Snake
         PlaceSnakeAt(new Vector2Int(25,10));
-        //Debug.Log("Loaded level " + level[0,0]+" level "+level.GetLength(0)+","+level.GetLength(1));
-
+        
         // Remove Win Screen Notice
         winNotice.gameObject.SetActive(false);
-
-        //LoadLevel(level);
-
-
-        //UpdateLevelRating(diff);
     }
 
     private void ResetGameStats()
@@ -187,7 +178,7 @@ public class Snake : MiniGameBase
 
     private void UpdateLevelAndLines()
     {
-        tetrisLinesText.text = lines.ToString();
+        tetrisLinesText.text = snake.Count.ToString();
         tetrisLevelText.text = level.ToString();
         ratingPlusText.text = RatingGain().ToString();
     }
@@ -210,7 +201,7 @@ public class Snake : MiniGameBase
         PlaceSnake(placePos);
     }
 
-    public bool TryStep(int move)
+    private bool TryStep(PlayerInputDirection move)
     {
         Debug.Log("Try Step direction "+move);
 
@@ -238,14 +229,14 @@ public class Snake : MiniGameBase
         return false;
     }
 
-    private Vector2Int MoveToVector(int move)
+    private Vector2Int MoveToVector(PlayerInputDirection move)
     {
-        return move switch
+        return (int)move switch
         {
-            0 => new Vector2Int(0, -1),
+            0 => new Vector2Int(-1, 0),
             1 => new Vector2Int(1, 0),
-            2 => new Vector2Int(0, 1),
-            3 => new Vector2Int(-1, 0),
+            2 => new Vector2Int(0, -1),
+            3 => new Vector2Int(0, 1),
             _ => new Vector2Int(0, 0)
         };
     }
@@ -260,16 +251,9 @@ public class Snake : MiniGameBase
         RotateCurrentPiece();
     }
 
-    private void RotateCurrentPiece(bool isRight = true)
-    {
-        // Only changes direction
-        direction = (4 + (isRight ? 1 : -1)) % 4;
+    // Only changes direction
+    private void RotateCurrentPiece(bool isRight = true) => direction = (PlayerInputDirection)(((int)direction + (isRight ? 1 : -1)) % 4);
 
-        //Debug.Log("Rotations starts at "+activePiece.pos);
-        //activePiece.Rotate(rotations);
-        //PlaceSnake();
-        //Debug.Log("Rotations ends at "+activePiece.pos);
-    }
 
     private int[] ActualRotationsToPerform = { -1, 1, 2, 0 };
 
@@ -307,6 +291,9 @@ public class Snake : MiniGameBase
             blocksToAdd = blocksToAdd-1;
 
         PlaceSnake(newPos);
+
+        // Save this as last directionperformed 
+        lastCompletedMoveDirection = direction;
     }
 
     private void RemoveSnake()
@@ -325,6 +312,8 @@ public class Snake : MiniGameBase
         // Make this the snake
         blocks[pos.x, pos.y].SetType(SnakeType);
         snakePos = pos;
+
+        UpdateLevelAndLines();
     }
 
     private void AddLines(int removedLines)
@@ -423,33 +412,6 @@ public class Snake : MiniGameBase
     private PlayerInputDirection movePerformed;
     private PlayerInputRotation rotationPerformed;
 
-    private void OnPlayerRotateInput(InputAction.CallbackContext context)
-    {
-        if (!GameActive) return;
-        
-        ReadRotationInput(context);
-
-        PerformRotation();
-
-        Debug.Log("Rotating: " + rotationPerformed);
-    }
-
-    private void ReadRotationInput(InputAction.CallbackContext context)
-    {
-
-        // Read the rotation value
-        Vector2 value = context.ReadValue<Vector2>();
-        if (value.y < 0)
-            rotationPerformed = PlayerInputRotation.Up;
-        else if (value.x < 0)
-            rotationPerformed = PlayerInputRotation.Left;
-        else if (value.x > 0)
-            rotationPerformed = PlayerInputRotation.Right;
-        else {
-            rotationPerformed = PlayerInputRotation.None;
-        }
-    }
-
     private void PerformRotation()
     {
         if (rotationPerformed == PlayerInputRotation.None)
@@ -465,84 +427,17 @@ public class Snake : MiniGameBase
     }
 
     private void DoPlayerInput()
-   {
-        // Releasing a button
-        if (holdPerformed) {
-            // Was holding something but release it
-            if (!AnyTetrisMoveKeyPressed()) {
-                //Debug.Log("Tetris: Releasing "+movePerformed);
-                // Releasing rotate, do rotate
-
-                // Releasing down - check if enough time elapsed
-                if (movePerformed == PlayerInputDirection.Down && !heldAtLeastOneFullStep) {
-                    //Debug.Log("Tetris: Drop");
-                   // Drop
-                    //TryDropFully();
-                    heldAtLeastOneFullStep = false;
-                    holdTimer = 0;
-                    holdPerformed = false;
-                    movePerformed = PlayerInputDirection.None;
-                    return;
-                }
-
-                // Do one step here if not passed the threshold
-                if (!heldAtLeastOneFullStep) {
-                    //Debug.Log("Tetris: Tapped " + movePerformed + " - perform it");
-                    //Do a step here
-                    holdTimer = 0;
-                    heldAtLeastOneFullStep = false;
-                    TryStep(direction);
-                }
-
-
-                // Else stop timers
-                heldAtLeastOneFullStep = false;
-                holdTimer = 0;
-                holdPerformed = false;
-                movePerformed = PlayerInputDirection.None;
-                return;
-            }
-
-            PlayerInputDirection currentDirection = ReadPlayerDirection();
-
-            // New Input - Reset
-            if (movePerformed != currentDirection) {
-                //Debug.Log("Tetris: Held " + movePerformed+" changed to "+currentDirection);
-                heldAtLeastOneFullStep = false;
-                holdTimer = 0;
-                movePerformed = currentDirection;
-                return;
-            }
-
-
-            // Step is held
-
-            holdTimer += Time.deltaTime;
-
-            if (holdTimer >= HoldTimeSensibility) {
-                Debug.Log("Tetris: Held " + movePerformed+" until limit - perfrom it");
-                //Do a step here
-                holdTimer = 0;
-                heldAtLeastOneFullStep = true;
-                TryStep(direction);
-            }
-            return;
-        }
-
-        if(!AnyTetrisMoveKeyPressed())
-            return;
-
-        // Starting to Hold something
+    {
         PlayerInputDirection newDirection = ReadPlayerDirection();
-                
-        // New Input - Reset
-        heldAtLeastOneFullStep = false;
-        holdTimer = 0;
-        holdPerformed = true;
-        movePerformed = newDirection;
-        return;
+        if (newDirection == PlayerInputDirection.None) 
+            return;
+        
+        // Trying to continue ahead or 180 turn
+        if ((int)lastCompletedMoveDirection < 2 && (int)newDirection < 2 || (int)lastCompletedMoveDirection >= 2 && (int)newDirection >= 2) 
+            return;
 
-
+        // Valid change do it
+        direction = newDirection;
     }
 
     private bool AnyTetrisMoveKeyPressed() => Inputs.Instance.PlayerControls.Player.TetrisMove.IsPressed();
@@ -560,15 +455,16 @@ public class Snake : MiniGameBase
         };
     }
     private PlayerInputDirection ReadPlayerDirection()
-    {
-        Vector2 move = Inputs.Instance.PlayerControls.Player.TetrisMove.ReadValue<Vector2>();
+    {        
+        Vector2 move = Inputs.Instance.PlayerControls.Player.Move.ReadValue<Vector2>();
         if(move.x < 0)
             return PlayerInputDirection.Left;
         if(move.x > 0)
             return PlayerInputDirection.Right;
         if(move.y < 0)
             return PlayerInputDirection.Down;        
-
+        if(move.y > 0)
+            return PlayerInputDirection.Up; // Shouldnt ever happen
         return PlayerInputDirection.None; // Shouldnt ever happen
     }
 
