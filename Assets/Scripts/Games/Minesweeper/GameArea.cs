@@ -342,7 +342,8 @@ public class GameArea : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, I
 
         bool didOpen =  OpenBox(pos,playerInitiated);
 
-
+        if(GamePaused)
+            return; // Do not continue if it busted
 
         if (didOpen) {
             opened++;

@@ -83,8 +83,8 @@ Aug 2025
 		* Tetris Level, Lines and Speed implemented
 		* Tetris rating gain system added and explained
 		* Tetris rotations always available
+1/10	* Minesweeper last bust counting as win fixed 
 
-		* Minesweeper allows last to bust and still counts as win - fix
 		* Score from tetris counts to bomberman and not tetris value - fix
 
 		* Maybe - have preview drop down
