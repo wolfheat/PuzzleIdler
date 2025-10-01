@@ -86,11 +86,13 @@ Aug 2025
 1/10	* Minesweeper last bust counting as win fixed 
 		* Changed so Minigame panel is generated - which also fixed score issue
 		* Made Black White clearer for chess
+		* Snake started
+		* Snake basic move and enlarging working
 
 		* Maybe - have preview drop down
 		* Maybe - Have drop allow quick movement after drop?
 
-		
+					
 		// CHESS
 		* make players color show better
 

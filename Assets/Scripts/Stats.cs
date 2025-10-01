@@ -4,7 +4,7 @@ using System.Linq;
 using BreakInfinity;
 using UnityEngine;
 
-public enum MiniGame{Chess,MineSweeper,Sudoku,Tetris, Bomberman, Snake,BubbleTanks};
+public enum MiniGame{Chess,MineSweeper,Sudoku,Tetris, Snake, Bomberman, BubbleTanks };
 
 public static class Stats
 {
