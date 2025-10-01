@@ -85,12 +85,16 @@ Aug 2025
 		* Tetris rotations always available
 1/10	* Minesweeper last bust counting as win fixed 
 		* Changed so Minigame panel is generated - which also fixed score issue
-
+		* Made Black White clearer for chess
 
 		* Maybe - have preview drop down
 		* Maybe - Have drop allow quick movement after drop?
 
-		// - Tetris - inputs
+		
+		// CHESS
+		* make players color show better
+
+		// TETRIS - inputs
 		/ I think people usually have their controls as the reverse of yours, using left hand for hard drop and spinning and right hand 
 		/ for moving left/right. personally i use z/c for spinning, x for hard drop, arrow left/right arrow keys for moving, up for hold, 
 		/ down for soft drop, and lshift for 180 spins.

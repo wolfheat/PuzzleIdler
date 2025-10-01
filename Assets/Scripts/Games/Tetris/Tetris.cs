@@ -103,7 +103,7 @@ public class Tetris : MiniGameBase
     {
         Debug.Log("UPDATING PLAYER RATING - "+GameType+" = "+(int)GameType);
 
-        playerRating.text = "Rating: " + Stats.MiniGameRating(GameType);
+        playerRating.text = Stats.MiniGameRating(GameType).ToString();
 
         Debug.Log("SAVESYSTEM - Rating set to " + Stats.MiniGameRating(GameType));
         //problemRating.text = "Problem: " + Stats.ChessRating;

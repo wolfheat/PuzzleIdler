@@ -66,7 +66,7 @@ public class MultiplierMenu : MonoBehaviour
             Debug.Log("Creating button "+i);
             MiniGameButton button = Instantiate(miniGameButtonPrefab, miniButtonHolder.transform);
             miniGameButtons.Add(button);
-            button.SetButtonInfo(gameNames[i],multipliers[i],i);
+            button.SetButtonInfo(gameNames[i],multipliers[i],i,i<miniGames.Count);
             if(i < multipliers.Length -1 && i < gameNames.Length -1)
                 Instantiate(timesPrefab, miniButtonHolder.transform);
         }

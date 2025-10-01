@@ -228,6 +228,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   GameNameText: {fileID: 6734749873988512670}
   multiplierText: {fileID: 5465303882591381058}
+  image: {fileID: 2913819413191821864}
+  existColor: {r: 0.2036962, g: 0.447, b: 0.21501267, a: 1}
+  nonExistColor: {r: 0.46226418, g: 0.18016918, b: 0, a: 1}
 --- !u!1 &8691346818453111680
 GameObject:
   m_ObjectHideFlags: 0

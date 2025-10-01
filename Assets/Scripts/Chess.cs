@@ -104,6 +104,7 @@ public class Chess : MiniGameBase, IPointerDownHandler, IPointerUpHandler, IPoin
     [SerializeField] private RectTransform chessBoardRect;
 
     [SerializeField] private PiecePromotion piecePromotion;
+    [SerializeField] private PlayerColorView playerColorView;
 
     [SerializeField] private MiniGameChessWinNotice winNotice;
 
@@ -251,6 +252,9 @@ public class Chess : MiniGameBase, IPointerDownHandler, IPointerUpHandler, IPoin
 
         // PLayer is inverse of the one making first move
         playerColor = setup[64] == 1 ? 0 : 1;
+
+        // Updates the players Colors
+        playerColorView.SetColor(playerColor);
 
         // Set new list of winMoves
         winCondition = new List<ChessMove>();
