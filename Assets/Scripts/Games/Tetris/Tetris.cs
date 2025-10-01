@@ -101,7 +101,8 @@ public class Tetris : MiniGameBase
 
     private void UpdateRating()
     {
-        Debug.Log("UPDATING PLAYER RATING");
+        Debug.Log("UPDATING PLAYER RATING - "+GameType+" = "+(int)GameType);
+
         playerRating.text = "Rating: " + Stats.MiniGameRating(GameType);
 
         Debug.Log("SAVESYSTEM - Rating set to " + Stats.MiniGameRating(GameType));
@@ -615,7 +616,7 @@ public class Tetris : MiniGameBase
         // Let the rating player got be the added value?
 
         int ratingAchieved = RatingGain();
-        int currentRating = Stats.MiniGameRatings[(int)MiniGame.Tetris];
+        int currentRating = Stats.MiniGameRatings[(int)GameType];
 
         int increase = ratingAchieved-currentRating;
 

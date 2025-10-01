@@ -84,8 +84,8 @@ Aug 2025
 		* Tetris rating gain system added and explained
 		* Tetris rotations always available
 1/10	* Minesweeper last bust counting as win fixed 
+		* Changed so Minigame panel is generated - which also fixed score issue
 
-		* Score from tetris counts to bomberman and not tetris value - fix
 
 		* Maybe - have preview drop down
 		* Maybe - Have drop allow quick movement after drop?
