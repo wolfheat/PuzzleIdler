@@ -153,7 +153,7 @@ public class MultiplierMenu : MonoBehaviour
 
     internal void ToggleGame(int index)
     {
-        Debug.Log("Activating Menu "+index);
+        Debug.Log("Activating Menu "+index+" currently open = "+activeGameIndex);
 
         if (index >= miniGames.Count)
             return;

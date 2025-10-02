@@ -1,21 +1,22 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 public class Snake : MiniGameBase
 {
 
     [SerializeField] private GameObject blockHolder;
-    [SerializeField] private TetrisBlock blockPrefab;
+    [SerializeField] private SnakeBlock blockPrefab;
     [SerializeField] private TetrisNextPieceView tetrisNextPieceView;
 
     private bool GameActive = false;
 
     const int BlockSize = 30;
 
+    private int minLevel = 1;
     private int level = 1;
     private int lines = 0;
     private float stepTimeSpeedup = StepTime;
@@ -23,14 +24,16 @@ public class Snake : MiniGameBase
     private const int GameHeight = 20;
     private const int GameWidth = 30;
 
-    TetrisBlock[,] blocks = new TetrisBlock[GameWidth, GameHeight]; // 2-4 blocks invisible?
-    int[,] blocksData = new int[30, 20]; // 2-4 blocks invisible?
+    SnakeBlock[,] blocks = new SnakeBlock[GameWidth, GameHeight]; // 2-4 blocks invisible?
 
     private Queue<Vector2Int> snake = new();
     private Vector2Int snakePos = new();
     private PlayerInputDirection direction = PlayerInputDirection.Left;
     private PlayerInputDirection lastCompletedMoveDirection = PlayerInputDirection.Left;
-    private int blocksToAdd = 4; // Starting with 4 blocks extra
+
+    private const int SnakeLengthToBeginWith = 4;
+    private int snakeLengthToAdd = SnakeLengthToBeginWith; // Starting with 4 blocks extra
+    private Vector2Int StartPos = new Vector2Int(25, 10);
 
     // Rating Textfields
     [SerializeField] private TextMeshProUGUI playerRating;
@@ -40,11 +43,20 @@ public class Snake : MiniGameBase
 
     [SerializeField] private TextMeshProUGUI tetrisLevelText;
     [SerializeField] private TextMeshProUGUI tetrisLinesText;
+    [SerializeField] private TextMeshProUGUI speedText;
     [SerializeField] private TextMeshProUGUI ratingPlusText;
 
     // Extra Panels
     [SerializeField] private GameObject helpInfo;
     [SerializeField] private MiniGameChessWinNotice winNotice;
+
+    private const float StepTime = 0.3f;
+    private const float StepTimeDrop = 0.015f;
+
+    private float steptimer = StepTime;
+
+    private const int SnakeType = 6;
+    private const int AppleType = 8;
 
     void Start()
     {
@@ -54,13 +66,14 @@ public class Snake : MiniGameBase
         Stats.StatsUpdated += OnStatsUpdated;
     }
 
+    // Define game area
     private void SetBoxes2DArray()
     {
         for (int j = 0; j < blocks.GetLength(0); j++) {
             for (int i = 0; i < blocks.GetLength(1); i++) {
-                TetrisBlock box = Instantiate(blockPrefab, blockHolder.transform);
+                SnakeBlock box = Instantiate(blockPrefab as SnakeBlock, blockHolder.transform);
                 blocks[j, i] = box;
-                box.transform.localPosition = new Vector2(j* BlockSize, -i* BlockSize);
+                box.transform.localPosition = new Vector2(j * BlockSize, -i * BlockSize);
             }
         }
     }
@@ -70,12 +83,6 @@ public class Snake : MiniGameBase
         UpdateRating();
         //Inputs.NumberPressed += OnNumberPressed;
     }
-
-
-    private const float StepTime = 0.3f;
-    private const float StepTimeDrop = 0.015f;
-
-    private float steptimer = StepTime;
 
     private void Update()
     {
@@ -94,58 +101,8 @@ public class Snake : MiniGameBase
         DoPlayerInput();
     }
 
-    private void OnStatsUpdated()
-    {
-        UpdateRating();
-    }
 
-    // RATING
-    private void UpdateLevelRating(int diff)
-    {
-        Debug.Log("UPDATING Problem rating");
-        problemRating.text = "Difficulty Level: " + (diff+1);
-    }
-
-    private void UpdateRating()
-    {
-        Debug.Log("UPDATING PLAYER RATING - "+GameType+" = "+(int)GameType);
-
-        playerRating.text = Stats.MiniGameRating(GameType).ToString();
-
-        Debug.Log("SAVESYSTEM - Rating set to " + Stats.MiniGameRating(GameType));
-        //problemRating.text = "Problem: " + Stats.ChessRating;
-
-
-    }
-
-    private void ShowRatingIncreaseText(int increase)
-    {
-        StartCoroutine(ShowRatingIncreaseCO(increase));
-
-    }
-
-    private IEnumerator ShowRatingIncreaseCO(int increase)
-    {
-        playerRatingIncrease.SetActive(true);
-        playerRatingIncreaseText.text = "+" + increase;
-
-        //Time the visability
-
-        float timer = 2f;
-
-        // Handle fade
-
-        while (timer > 0) {
-            timer -= Time.deltaTime;
-            yield return null;
-        }
-
-        playerRatingIncrease.SetActive(false);
-
-    }
-
-
-    public void ResetGame()
+    public void ResetGame(int levelIn = 1)
     {
         // Make playr able to interract with board again
         GameActive = true;
@@ -156,54 +113,83 @@ public class Snake : MiniGameBase
 
         ClearBlocks();
 
+        snakeLengthToAdd = SnakeLengthToBeginWith;
+        snake.Clear();
+
         // Reset
-        ResetGameStats();
+        ResetGameStats(levelIn);
 
         direction = PlayerInputDirection.Left;
 
-        // Place Snake
-        PlaceSnakeAt(new Vector2Int(25,10));
+        // Place Snake        
+        PlaceSnake(StartPos);
+
+        PlaceRandomApple();
         
         // Remove Win Screen Notice
         winNotice.gameObject.SetActive(false);
     }
 
-    private void ResetGameStats()
+    private void PlaceRandomApple()
     {
+        Vector2Int[] validSpots = GetRandomFrePos();
+
+        Vector2Int placeAt = validSpots[UnityEngine.Random.Range(0, validSpots.Length)];
+
+        PlaceApple(placeAt);
+    }
+
+    // Find an empty space to place the apple
+    private Vector2Int[] GetRandomFrePos() => Enumerable.Range(0, blocks.GetLength(0)).SelectMany(x => Enumerable.Range(0, blocks.GetLength(1)).Where(y => blocks[x, y].IsEmpty).Select(y => new Vector2Int(x, y))).ToArray();
+
+    private void ResetGameStats(int levelIn)
+    {
+        minLevel = levelIn;
         level = 1;
         lines = 0;
         stepTimeSpeedup = StepTime;
         UpdateLevelAndLines();
+        UpdateLevelSpeed();
     }
 
     private void UpdateLevelAndLines()
     {
         tetrisLinesText.text = snake.Count.ToString();
         tetrisLevelText.text = level.ToString();
+        
+        speedText.text = Mathf.RoundToInt(100f/stepTimeSpeedup).ToString();
         ratingPlusText.text = RatingGain().ToString();
     }
 
-    private int RatingGain() => 1000 + (level-1)*100;
+    private int RatingGain()
+    {
+        // level 11-30 -> 20 / level
+        // level 31-50 -> 40 / level
+        // level 51-60 -> 80/ level
+        // level 51-60 -> 100/ level
+        int sum = 1000;
+        if (level <= 10)
+            return sum;
+        if (level <= 30)
+            return sum += (level - 10) * 20; // => 1000 + 20 * 20 = 1400
+        sum += 20 * 20;
+        if (level <= 50)
+            return sum += (level - 30) * 40; // => 1500 + 20 * 40 = 2200
+        sum += 20 * 40;
+        return Math.Min(2999,sum += (level - 50) * 80); // => 2200 + 80 * 10 = 3000
+
+        //return 1000 + (level - 1) * 100;
+    }
 
     TetrisPiece activePiece;
 
     int nextBlockType = -1;
     private int RandomBlockType() => UnityEngine.Random.Range(0, 7);
 
-    private void PlaceSnakeAt(Vector2Int placePos)
-    {
-        // Place O at 4,0
-
-        Debug.Log("Placing Snake at "+placePos);
-
-
-        // All snakes are type (Blue) = L
-        PlaceSnake(placePos);
-    }
 
     private bool TryStep(PlayerInputDirection move)
     {
-        Debug.Log("Try Step direction "+move);
+        //Debug.Log("Try Step direction "+move);
 
         if (!GameActive)
             return false;
@@ -216,7 +202,7 @@ public class Snake : MiniGameBase
         Vector2Int newPos = snakePos + moveDir;
         
         // If Valid remove old pos
-        if (!CheckValidPositionForActivePiece(newPos)) {
+        if (!CheckIfPlacementPositionIsValid(newPos)) {
             //Debug.Log("Invalid Move");
             //Lock
             Debug.Log("Game Ended At "+move);
@@ -241,39 +227,11 @@ public class Snake : MiniGameBase
         };
     }
 
-    private void TryRotate(int rotations = 0)
-    {
-        if (!ValidRotationForActivePiece(rotations)) {
-            Debug.Log("Invalid Rotation");
-            return;
-        }
-        
-        RotateCurrentPiece();
-    }
-
     // Only changes direction
     private void RotateCurrentPiece(bool isRight = true) => direction = (PlayerInputDirection)(((int)direction + (isRight ? 1 : -1)) % 4);
 
 
     private int[] ActualRotationsToPerform = { -1, 1, 2, 0 };
-
-    private bool ValidRotationForActivePiece(int rotations = 0)
-    {
-        // If trying to do 180° check if it has more than 2 states
-        if (rotations == 2 && !activePiece.CanTurn())
-            return false;
-
-        foreach (Vector2Int pos in activePiece.NextRotationSpots(rotations)) {
-            Vector2Int boardPos = activePiece.pos + pos;
-            if (OutsideTetrisBoard(ref boardPos))
-                return false;
-            if (BlockIsEmpty(boardPos))
-                return false;
-        }
-        return true;
-    }
-
-    private bool BlockIsEmpty(Vector2Int boardPos) => blocksData[boardPos.x, boardPos.y] != 0;
 
     private static bool OutsideTetrisBoard(ref Vector2Int boardPos)
     {
@@ -282,13 +240,14 @@ public class Snake : MiniGameBase
         return false;
     }
 
+    // Movement
     private void MoveCurrentPiece(Vector2Int newPos)
     {
         // If moving remove the last one and place the new one
-        if(blocksToAdd == 0)
+        if(snakeLengthToAdd == 0)
             RemoveSnake();
         else
-            blocksToAdd = blocksToAdd-1;
+            snakeLengthToAdd = snakeLengthToAdd-1;
 
         PlaceSnake(newPos);
 
@@ -303,10 +262,14 @@ public class Snake : MiniGameBase
         blocks[pos.x, pos.y].SetType(0);
     }
 
-    private const int SnakeType = 2;
 
     private void PlaceSnake(Vector2Int pos)
     {
+        // Apple check
+        if (blocks[pos.x, pos.y].IsApple)
+            EatApple();
+
+
         snake.Enqueue(pos);
 
         // Make this the snake
@@ -316,86 +279,37 @@ public class Snake : MiniGameBase
         UpdateLevelAndLines();
     }
 
-    private void AddLines(int removedLines)
+    private void EatApple()
     {
-        lines += removedLines;
-        level = 1 + lines / 8;
-        stepTimeSpeedup = StepTime - Math.Min(level-1,15)* StepTimeDrop;
+        // Increase level and stats
+        Debug.Log("Omnom + stats and level");
+        level++;
+        snakeLengthToAdd += SnakeLengthToBeginWith;
+
+        UpdateLevelSpeed();
+
+        // Create a new apple
+        PlaceRandomApple();
     }
 
-    private int CheckForTetris()
+    private void UpdateLevelSpeed()
     {
-        // Just placed a piece - check for tetris removed lines
-        // Check from bottom up and move down
+        int levelForSpeed = Math.Max(minLevel,level);
 
-        Debug.Log("Tetris: - Clear Lines");
-        int removeLines = 0;
-        for (int j = blocks.GetLength(1) - 1; j >= 0; j--) {
-            int blockAmt = 0;
-            bool removed = false;
-            for (int i = 0; i < blocks.GetLength(0); i++) {
-                if(blocksData[i, j] == 1)
-                    blockAmt++;
-            }
-
-            if(blockAmt == 10) {
-                removeLines++;
-                removed = true;
-            }
-
-            // Row moved down
-            if (!removed) {
-                // Drop this line to bottom since it shall stay
-                if (removeLines == 0)
-                    continue;
-
-                // Copy them down
-
-                // Copy from line j to j - removedlines
-                int targetLine = j + removeLines;
-
-                //Debug.Log("Moving from line "+j+" to "+targetLine);
-
-                for (int i = 0; i < blocks.GetLength(0); i++) {
-                    int movedPieceIndex = blocksData[i, j];
-                    blocks[i, targetLine].SetType(movedPieceIndex);
-                    blocks[i, j].SetType(0);
-                    blocksData[i, targetLine] = movedPieceIndex;
-                    blocksData[i, j] = 0;
-                }
-            }
-        }
-        return removeLines;
-
+        stepTimeSpeedup = Math.Max(0.01f, StepTime - levelForSpeed * 0.005f); // 0.28 tot which gives max speed at level 56
     }
 
-    private void RemoveCurrentPiecePosBlocks()
-    {
-        foreach (Vector2Int pos in activePiece.CurrentRotationSpots) {
-            Vector2Int boardPos = activePiece.pos + pos;
-            blocks[boardPos.x, boardPos.y].SetType(0);
-        }
-    }
+    // Make this an apple
+    private void PlaceApple(Vector2Int pos) => blocks[pos.x, pos.y].SetType(AppleType);
 
-    private bool CheckValidPositionForActivePiece(Vector2Int placePos)
-    {
-        // Check outisde board
-        if(placePos.x < 0 || placePos.y < 0 || placePos.x >= GameWidth || placePos.y >= GameHeight)
-            return false;
-
-        // Check occupied
-        if (blocksData[placePos.x, placePos.y] != 0)
-            return false;
-        return true;
-    }
+    private bool CheckIfPlacementPositionIsValid(Vector2Int placePos) => !(placePos.x < 0 || placePos.y < 0 || placePos.x >= GameWidth || placePos.y >= GameHeight || blocks[placePos.x, placePos.y].IsSnake);
 
     private void ClearBlocks()
     {
-        Debug.Log("Tetris - Clear");
+        Debug.Log("Snake - Clear");
         for (int j = 0; j < blocks.GetLength(0); j++) {
             for (int i = 0; i < blocks.GetLength(1); i++) {
-                blocksData[j,i] = 0;
-                blocks[j, i].SetType(blocksData[j,i]);
+                blocks[j, i].SetType(0);
             }
         }
     }
@@ -412,20 +326,8 @@ public class Snake : MiniGameBase
     private PlayerInputDirection movePerformed;
     private PlayerInputRotation rotationPerformed;
 
-    private void PerformRotation()
-    {
-        if (rotationPerformed == PlayerInputRotation.None)
-            return;
 
-        int rotations = ActualRotationsToPerform[(int)rotationPerformed];
-
-        // Do the rotation
-        TryRotate(rotations);
-        
-        // Unset the rotation
-        rotationPerformed = PlayerInputRotation.None;
-    }
-
+    // Inputs
     private void DoPlayerInput()
     {
         PlayerInputDirection newDirection = ReadPlayerDirection();
@@ -440,8 +342,6 @@ public class Snake : MiniGameBase
         direction = newDirection;
     }
 
-    private bool AnyTetrisMoveKeyPressed() => Inputs.Instance.PlayerControls.Player.TetrisMove.IsPressed();
-
     private static Vector2Int InputToMove(PlayerInputDirection dir)
     {
         return dir switch
@@ -454,6 +354,7 @@ public class Snake : MiniGameBase
             _ => new Vector2Int(-1, 0) // Left
         };
     }
+
     private PlayerInputDirection ReadPlayerDirection()
     {        
         Vector2 move = Inputs.Instance.PlayerControls.Player.Move.ReadValue<Vector2>();
@@ -468,23 +369,15 @@ public class Snake : MiniGameBase
         return PlayerInputDirection.None; // Shouldnt ever happen
     }
 
-    private Vector2Int GetLimitedMove(InputAction.CallbackContext context)
-    {
-
-        Vector2 movement = context.ReadValue<Vector2>();        
-        // Clamp if two directions?
-        if (movement.x != 0)
-            movement = new Vector2(movement.x, 0);
-        return Vector2ToIntInverseY(movement);
-    }
-
+    // Data Handling
     private Vector2Int Vector2ToIntInverseY(Vector2 vector) => new Vector2Int(vector.x < 0 ? -1 : (vector.x > 0 ? 1 : 0), vector.y < 0 ? 1 : (vector.y > 0 ? -1 : 0));
 
-    private void TryDropStep()
-    {
-        Debug.Log("Drop");
-    }
 
+    public void ReduceRating()
+    {
+
+        Stats.SetMiniGameValue(GameType, Math.Max(Stats.MiniGameRatings[(int)GameType]-100,1000));
+    }
 
     private void Win(bool didWin)
     {
@@ -521,5 +414,32 @@ public class Snake : MiniGameBase
     //public static float GetDistanceV2(this Vector2 main, Vector2 other) => (main - other).sqrMagnitude;
 
 
-    
+    // RATING
+    private void OnStatsUpdated() => UpdateRating();
+
+    private void UpdateRating() => playerRating.text = Stats.MiniGameRating(GameType).ToString();
+
+    private void ShowRatingIncreaseText(int increase) => StartCoroutine(ShowRatingIncreaseCO(increase));
+
+    private IEnumerator ShowRatingIncreaseCO(int increase)
+    {
+        playerRatingIncrease.SetActive(true);
+        playerRatingIncreaseText.text = "+" + increase;
+
+        //Time the visability
+        float timer = 2f;
+
+        // Handle fade
+        while (timer > 0) {
+            timer -= Time.deltaTime;
+            yield return null;
+        }
+
+        playerRatingIncrease.SetActive(false);
+
+    }
+
+
+
+
 }

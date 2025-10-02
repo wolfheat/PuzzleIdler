@@ -89,6 +89,7 @@ Aug 2025
 		* Snake started
 		* Snake basic move and enlarging working
 		* Snake can turn
+		* Snake fully implelemted
 
 		* Make snake collide with self
 		* Make snake grow on apples
@@ -224,6 +225,14 @@ Aug 2025
 		* n = cost for building number n
 
 		* Bulk buy =>  TotalCost = BaseCost * Multiplier^n*(multiplier^k-1)/(Multiplier -1)
+
+
+		// Credits
+
+		// Sudoku
+		The puzzles were generated using Blagovest Dachev's Sudoku generator and solver, at https://github.com/dachev/sudoku.
+
+		// Chess
 
 
 

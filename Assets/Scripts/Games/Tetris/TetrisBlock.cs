@@ -6,7 +6,8 @@ public enum TetrisBlockType { Empty, Fixed, I, J, L, O, S, T, Z }
 public class TetrisBlock : MonoBehaviour
 {
 
-    private TetrisBlockType boxType = TetrisBlockType.Empty;
+    protected TetrisBlockType boxType = TetrisBlockType.Empty;
+
 
     [SerializeField] Image image;
 
