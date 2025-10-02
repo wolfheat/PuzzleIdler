@@ -90,14 +90,14 @@ Aug 2025
 		* Snake basic move and enlarging working
 		* Snake can turn
 		* Snake fully implelemted
-
-		* Make snake collide with self
-		* Make snake grow on apples
-		* Make snake Speed Up on apples?
-
+2/10	* Added tettris drop preview
+				
+		* Explain tetris moves in info
 
 
+		// Tetris
 		* Maybe - have preview drop down
+
 		* Maybe - Have drop allow quick movement after drop?
 
 					

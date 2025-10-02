@@ -98,7 +98,13 @@ public class MineSweeper : MiniGameBase
 
     internal void ChangeGameSize(int type)
     {
-        USerInfo.BoardType = (BoardTypes)(type + 1);
+        if(type == -1) {
+            USerInfo.BoardType = BoardTypes.Slider;
+
+
+        }else
+            USerInfo.BoardType = (BoardTypes)(type + 1);
+
         Debug.Log("MS: Changing board type to " + type + " " + USerInfo.BoardType);
         RestartGame();
     }

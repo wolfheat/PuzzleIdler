@@ -6,7 +6,12 @@ namespace WolfheatProductions
 {
     public class Converter
     {
-        // Takes an int array and scrambles it using FisherYates
+        
+        /// <summary>
+        /// Removes all non characters from a string.
+        /// </summary>
+        /// <param name="s">source string.</param>
+        /// <returns>Resulting string.</returns>
         public static string RemoveAllNonCharacters(string s)
         {
             char[] chars = s.ToCharArray();
@@ -16,7 +21,13 @@ namespace WolfheatProductions
                     sb.Append(c);
             return sb.ToString();
         }
+
         // Takes an int array and scrambles it using FisherYates
+        /// <summary>
+        /// Scramble an array using the FisherYates method
+        /// </summary>
+        /// <param name="allPos">The array to scramble.</param>
+        /// <returns>The resulting scrambled array.</returns>
         public static int[] FisherYatesScramble(int[] allPos)
         {
             int n = allPos.Length;
@@ -32,7 +43,13 @@ namespace WolfheatProductions
             return allPos;
         }
 
-
+        /// <summary>
+        /// Converts the local mouse position inside a recttransform into a Vector2Int index as if its tiles on a grid of size Boxsize.
+        /// </summary>
+        /// <param name="eventData">Need the Click eventdata to read the mouse position.</param>
+        /// <param name="rectTransform">Recttransform of the local displayobject.</param>
+        /// <param name="BoxSize">The size of the grid or tiles.</param>
+        /// <returns>Vector with the local index position.</returns>
         // get the position inside a rect - supply the rect and eventdata and boxSize
         public static Vector2Int GetMouseLocalPositionIndex(PointerEventData eventData,RectTransform rectTransform, int BoxSize)
         {
@@ -49,6 +66,17 @@ namespace WolfheatProductions
 
             return new Vector2Int(xPos, yPos);
         }
+
+
+
+    }
+    public static class TextColor
+    {
+
+        /// <summary>
+        /// Color a string red.
+        /// </summary>
+        public static string ColorStringRed(string s) => $"<color=red>{s}</color>";
 
 
 

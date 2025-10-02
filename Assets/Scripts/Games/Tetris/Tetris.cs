@@ -185,6 +185,8 @@ public class Tetris : MiniGameBase
     private int RatingGain() => 1000 + (level-1)*100;
 
     TetrisPiece activePiece;
+    TetrisPiece activePiecePreview;
+    private bool showDropPreview = true;
 
     int nextBlockType = -1;
     private int RandomBlockType() => UnityEngine.Random.Range(0, 7);
@@ -208,7 +210,8 @@ public class Tetris : MiniGameBase
         };
         
         activePiece = piece;
-        activePiece.pos = new Vector2Int(4, 2);
+        SetPiecePos(new Vector2Int(4, 2));
+        
 
         if (!CheckValidPositionForActivePiece(activePiece.pos)) {
             Debug.Log("Player Lose");
@@ -221,6 +224,11 @@ public class Tetris : MiniGameBase
         // Show Next Piece
         nextBlockType = nextPiece;
         tetrisNextPieceView.ShowPiece(nextBlockType);
+    }
+
+    private void SetPiecePos(Vector2Int newPos)
+    {
+        activePiece.pos = newPos;
     }
 
     private void TryDropFully()
@@ -311,13 +319,31 @@ public class Tetris : MiniGameBase
     private void MoveCurrentPiece(Vector2Int newPos)
     {
         RemoveCurrentPiecePosBlocks();
-        activePiece.pos = newPos;
+        SetPiecePos(newPos);
         PlacePiece();
     }
 
     private void PlacePiece(bool fixate = false)
     {
+        // handle drop-preview also?
+
+        if (showDropPreview && !fixate) { // No need to show preview if fixating
+            ShowDropPreviewVisuals();
+        }
+
         // Placing piece at current pos
+        PlacePieceVisuals(fixate);
+
+        if (fixate) {
+            int removedLines = CheckForTetris();
+
+            AddLines(removedLines);
+            UpdateLevelAndLines();
+        }
+    }
+
+    private void PlacePieceVisuals(bool fixate)
+    {
         Vector2Int placePos = activePiece.pos;
         foreach (Vector2Int pos in activePiece.CurrentRotationSpots) {
             Vector2Int boardPos = placePos + pos;
@@ -330,11 +356,24 @@ public class Tetris : MiniGameBase
             }
             blocks[boardPos.x, boardPos.y].SetType(type);
         }
-        if (fixate) {
-            int removedLines = CheckForTetris();
+    }
 
-            AddLines(removedLines);
-            UpdateLevelAndLines();
+    private void ShowDropPreviewVisuals()
+    {
+        // Figure out the lowest point this piece can drop to
+        lowestPos = activePiece.pos;
+
+        // While still valid go down
+        while (CheckValidPositionForActivePiece(lowestPos + Vector2Int.up)) {
+            lowestPos += Vector2Int.up;
+        }
+        if (activePiece.pos != lowestPos) {
+            // Show the piece at lowestpoint
+
+            foreach (Vector2Int pos in activePiece.CurrentRotationSpots) {
+                Vector2Int boardPos = lowestPos + pos;
+                blocks[boardPos.x, boardPos.y].SetType((int)TetrisBlockType.Ghost);
+            }
         }
     }
 
@@ -391,12 +430,25 @@ public class Tetris : MiniGameBase
 
     }
 
+    Vector2Int lowestPos = Vector2Int.zero;
+
     private void RemoveCurrentPiecePosBlocks()
     {
         foreach (Vector2Int pos in activePiece.CurrentRotationSpots) {
             Vector2Int boardPos = activePiece.pos + pos;
             blocks[boardPos.x, boardPos.y].SetType(0);
         }
+
+        if (!showDropPreview) return;
+
+        if (activePiece.pos != lowestPos) {
+            // Show the piece at lowestpoint
+            foreach (Vector2Int pos in activePiece.CurrentRotationSpots) {
+                Vector2Int boardPos = lowestPos + pos;
+                blocks[boardPos.x, boardPos.y].SetType(0);
+            }
+        }
+    
     }
 
     private bool CheckValidPositionForActivePiece(Vector2Int placePos)

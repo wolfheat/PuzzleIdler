@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public enum TetrisBlockType { Empty, Fixed, I, J, L, O, S, T, Z }
+public enum TetrisBlockType { Empty, Fixed, I, J, L, O, S, T, Z, Ghost}
 public class TetrisBlock : MonoBehaviour
 {
 

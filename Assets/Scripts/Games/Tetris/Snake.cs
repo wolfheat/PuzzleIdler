@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using UnityEngine;
+using WolfheatProductions;
 
 public class Snake : MiniGameBase
 {
@@ -155,7 +156,11 @@ public class Snake : MiniGameBase
     private void UpdateLevelAndLines()
     {
         tetrisLinesText.text = snake.Count.ToString();
-        tetrisLevelText.text = level.ToString();
+        //tetrisLevelText.text = level.ToString();
+
+        // Test to make it red
+        //tetrisLevelText.text = TextColor.ColorStringRed(level.ToString());
+
         
         speedText.text = Mathf.RoundToInt(100f/stepTimeSpeedup).ToString();
         ratingPlusText.text = RatingGain().ToString();
