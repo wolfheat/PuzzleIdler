@@ -23,6 +23,8 @@ public class Tetris : MiniGameBase
     TetrisBlock[,] blocks = new TetrisBlock[10, 22]; // 2-4 blocks invisible?
     int[,] blocksData = new int[10, 22]; // 2-4 blocks invisible?
 
+    private int[] ActualRotationMapping = { -1, 1, 2, 0 };
+
     // Rating Textfields
     [SerializeField] private TextMeshProUGUI playerRating;
     [SerializeField] private TextMeshProUGUI playerRatingIncreaseText;
@@ -36,6 +38,33 @@ public class Tetris : MiniGameBase
     // Extra Panels
     [SerializeField] private GameObject helpInfo;
     [SerializeField] private MiniGameChessWinNotice winNotice;
+
+
+    TetrisPiece activePiece;
+    TetrisPiece activePiecePreview;
+
+    private bool showDropPreview = true;
+    private bool allowDropMove = true;
+
+    int nextBlockType = -1;
+
+    private const float StepTime = 0.3f;
+    private const float StepTimeDrop = 0.015f;
+
+    private float steptimer = StepTime;
+
+
+    private float holdTimer = 0;
+    private const float HoldTimeSensibility = 0.1f;
+    private bool heldAtLeastOneFullStep = false;
+    private bool holdPerformed = false;
+
+    enum PlayerInputDirection { Left, Right, Up, Down, None, RotateLeft };
+    enum PlayerInputRotation { Left, Right, Up, None };
+
+    private PlayerInputDirection movePerformed;
+    private PlayerInputRotation rotationPerformed;
+
 
     void Start()
     {
@@ -65,10 +94,6 @@ public class Tetris : MiniGameBase
     }
 
 
-    private const float StepTime = 0.3f;
-    private const float StepTimeDrop = 0.015f;
-
-    private float steptimer = StepTime;
 
     private void Update()
     {
@@ -183,12 +208,6 @@ public class Tetris : MiniGameBase
     }
 
     private int RatingGain() => 1000 + (level-1)*100;
-
-    TetrisPiece activePiece;
-    TetrisPiece activePiecePreview;
-    private bool showDropPreview = true;
-
-    int nextBlockType = -1;
     private int RandomBlockType() => UnityEngine.Random.Range(0, 7);
 
     private void PlaceNextBlock()
@@ -234,9 +253,22 @@ public class Tetris : MiniGameBase
     private void TryDropFully()
     {
         Vector2Int down = InputToMove(PlayerInputDirection.Down);
-        while (!TryStep(down)) {
-            //Debug.Log("Dropped one step");
-        } 
+
+        Vector2Int nextPos = activePiece.pos;
+        while (CheckValidPositionForActivePiece(nextPos+down)) {
+            nextPos += down;
+        }
+
+        // If allowing move after drop, dont fixate it
+        if (allowDropMove) {
+            MoveCurrentPiece(nextPos);
+            steptimer = StepTime;
+            return;
+        }
+        
+        PlacePiece(fixate: true);
+        PlaceNextBlock();        
+ 
         Debug.Log("Dropped FULLY");
     }
 
@@ -266,7 +298,7 @@ public class Tetris : MiniGameBase
         }
 
         // Move to New Pos
-        MoveCurrentPiece(newPos);
+        MoveCurrentPiece(newPos);   
         return false;
     }
 
@@ -289,7 +321,6 @@ public class Tetris : MiniGameBase
         //Debug.Log("Rotations ends at "+activePiece.pos);
     }
 
-    private int[] ActualRotationsToPerform = { -1, 1, 2, 0 };
 
     private bool ValidRotationForActivePiece(int rotations = 0)
     {
@@ -441,6 +472,7 @@ public class Tetris : MiniGameBase
 
         if (!showDropPreview) return;
 
+        // Just shows the ghost if not at bottom 
         if (activePiece.pos != lowestPos) {
             // Show the piece at lowestpoint
             foreach (Vector2Int pos in activePiece.CurrentRotationSpots) {
@@ -474,17 +506,6 @@ public class Tetris : MiniGameBase
         }
     }
 
-    private float holdTimer = 0;
-    private const float HoldTimeSensibility = 0.1f;
-    private bool heldAtLeastOneFullStep = false;
-    private bool holdPerformed = false;
-
-
-    enum PlayerInputDirection{Left,Right,Up,Down, None, RotateLeft };
-    enum PlayerInputRotation{Left,Right,Up,None};
-
-    private PlayerInputDirection movePerformed;
-    private PlayerInputRotation rotationPerformed;
     private void OnPlayerRotateInput(InputAction.CallbackContext context)
     {
         if (!GameActive) return;
@@ -517,7 +538,7 @@ public class Tetris : MiniGameBase
         if (rotationPerformed == PlayerInputRotation.None)
             return;
 
-        int rotations = ActualRotationsToPerform[(int)rotationPerformed];
+        int rotations = ActualRotationMapping[(int)rotationPerformed];
 
         // Do the rotation
         TryRotate(rotations);
@@ -536,7 +557,7 @@ public class Tetris : MiniGameBase
                 // Releasing rotate, do rotate
 
                 // Releasing down - check if enough time elapsed
-                if (movePerformed == PlayerInputDirection.Down && !heldAtLeastOneFullStep) {
+                if (movePerformed == PlayerInputDirection.Down && (allowDropMove || !heldAtLeastOneFullStep)) {
                     //Debug.Log("Tetris: Drop");
                    // Drop
                     TryDropFully();
@@ -581,7 +602,7 @@ public class Tetris : MiniGameBase
 
             holdTimer += Time.deltaTime;
 
-            if (holdTimer >= HoldTimeSensibility) {
+            if (holdTimer >= HoldTimeSensibility && !(allowDropMove && currentDirection == PlayerInputDirection.Down)) {
                 Debug.Log("Tetris: Held " + movePerformed+" until limit - perfrom it");
                 //Do a step here
                 holdTimer = 0;
@@ -645,12 +666,6 @@ public class Tetris : MiniGameBase
     }
 
     private Vector2Int Vector2ToIntInverseY(Vector2 vector) => new Vector2Int(vector.x < 0 ? -1 : (vector.x > 0 ? 1 : 0), vector.y < 0 ? 1 : (vector.y > 0 ? -1 : 0));
-
-    private void TryDropStep()
-    {
-        Debug.Log("Drop");
-    }
-
 
     private void Win(bool didWin)
     {

@@ -90,14 +90,13 @@ Aug 2025
 		* Snake basic move and enlarging working
 		* Snake can turn
 		* Snake fully implelemted
-2/10	* Added tettris drop preview
-				
-		* Explain tetris moves in info
+2/10	* Added tetris drop preview
+		* Tetris DropMove implemented removes soft drop				
+
+
 
 
 		// Tetris
-		* Maybe - have preview drop down
-
 		* Maybe - Have drop allow quick movement after drop?
 
 					
