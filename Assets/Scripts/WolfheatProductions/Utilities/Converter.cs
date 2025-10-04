@@ -1,6 +1,7 @@
 using System.Text;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 
 namespace WolfheatProductions
 {
@@ -51,24 +52,35 @@ namespace WolfheatProductions
         /// <param name="BoxSize">The size of the grid or tiles.</param>
         /// <returns>Vector with the local index position.</returns>
         // get the position inside a rect - supply the rect and eventdata and boxSize
-        public static Vector2Int GetMouseLocalPositionIndex(PointerEventData eventData,RectTransform rectTransform, int BoxSize)
+        public static Vector2Int GetMouseLocalPositionIndex(RectTransform rectTransform, int BoxSize, PointerEventData eventData = null)
         {
-            Vector2 pos = new();
-            RectTransformUtility.ScreenPointToLocalPointInRectangle(
-                rectTransform,
-                eventData.position,
-                eventData.pressEventCamera,
-                out pos
-            );
+            Vector2 pos = GetMouseLocalPosition(rectTransform, eventData);
 
             int xPos = (int)pos.x / BoxSize;
             int yPos = (int)-pos.y / BoxSize;
 
             return new Vector2Int(xPos, yPos);
         }
-
-
-
+        
+        /// <summary>
+        /// Converts the local mouse position inside a recttransform into a Vector2Int index as if its tiles on a grid of size Boxsize.
+        /// </summary>
+        /// <param name="eventData">Need the Click eventdata to read the mouse position.</param>
+        /// <param name="rectTransform">Recttransform of the local displayobject.</param>
+        /// <param name="BoxSize">The size of the grid or tiles.</param>
+        /// <returns>Vector with the local index position.</returns>
+        // get the position inside a rect - supply the rect and eventdata and boxSize
+        public static Vector2 GetMouseLocalPosition(RectTransform rectTransform, PointerEventData eventData = null)
+        {
+            Vector2 pos = new();
+            RectTransformUtility.ScreenPointToLocalPointInRectangle(
+                rectTransform,
+                eventData?.position ?? Mouse.current.position.ReadValue(),
+                eventData?.pressEventCamera,
+                out pos
+            );
+            return pos;
+        }
     }
     public static class TextColor
     {

@@ -8,7 +8,6 @@ public class TetrisBlock : MonoBehaviour
 
     protected TetrisBlockType boxType = TetrisBlockType.Empty;
 
-
     [SerializeField] Image image;
 
     public void SetType(int type, bool overLayer = true)

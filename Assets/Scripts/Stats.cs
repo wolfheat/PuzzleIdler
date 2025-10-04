@@ -1,10 +1,9 @@
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using BreakInfinity;
 using UnityEngine;
 
-public enum MiniGame{Chess,MineSweeper,Sudoku,Tetris, Snake, Bomberman, BubbleTanks };
+public enum MiniGame{Chess,MineSweeper,Sudoku,Tetris, Snake, BlocksPuzzle, BubbleTanks };
 
 public static class Stats
 {

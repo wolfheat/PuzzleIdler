@@ -273,7 +273,7 @@ public class Sudoku : MiniGameBase, IPointerMoveHandler, IPointerDownHandler
             return;
 
         // Clicking should loop through all numbers?
-        Vector2Int pos = Converter.GetMouseLocalPositionIndex(eventData, rectTransform, BoxSize);
+        Vector2Int pos = Converter.GetMouseLocalPositionIndex(rectTransform, BoxSize, eventData);
         Debug.Log("Mouse Down on soduko ["+pos.y+","+pos.x+"]");
         // Find this box and update to next number?
 
@@ -301,7 +301,7 @@ public class Sudoku : MiniGameBase, IPointerMoveHandler, IPointerDownHandler
         // When moving over and pressing any number that though appear?
         // Update active soduko box
 
-        Vector2Int pos = Converter.GetMouseLocalPositionIndex(eventData, rectTransform, BoxSize);
+        Vector2Int pos = Converter.GetMouseLocalPositionIndex(rectTransform, BoxSize, eventData);
         if (!ValidPos(pos))
             return;
 

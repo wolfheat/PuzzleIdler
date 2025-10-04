@@ -92,12 +92,13 @@ Aug 2025
 		* Snake fully implelemted
 2/10	* Added tetris drop preview
 		* Tetris DropMove implemented removes soft drop				
+3/10	* Block can be placed in Block Puzzle
+		
 
+		* Need to make placed pieces removed when picked up again
 
-
-
-		// Tetris
-		* Maybe - Have drop allow quick movement after drop?
+		// Blocks Puzzle
+		* Use piece movement in chess for this movement as well
 
 					
 		// CHESS

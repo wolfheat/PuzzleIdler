@@ -727,7 +727,7 @@ public class Chess : MiniGameBase, IPointerDownHandler, IPointerUpHandler, IPoin
         );
 
 
-        //Debug.Log("EventPosition DOWN = ["+eventData.position.x+" , "+eventData.position.y+"] - [" + squareHolder.transform.position.x + " , " + squareHolder.transform.position.y + "] = ["+localPosition.x+","+localPosition.y+"]");
+        Debug.Log("EventPosition DOWN = ["+eventData.position.x+" , "+eventData.position.y+"] - [" + squareHolder.transform.position.x + " , " + squareHolder.transform.position.y + "] = ["+localPosition.x+","+localPosition.y+"]");
 
         int col = (int)localPosition.x / SquareSize;
         int row = (int)localPosition.y / SquareSize;

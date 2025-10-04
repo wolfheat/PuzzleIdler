@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1001 &1773870100249331343
+--- !u!1001 &6002510500931754135
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -62,27 +62,27 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8788972750092664963, guid: 56b8ae0a92eaae5489d714411b29c851, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 1
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 8788972750092664963, guid: 56b8ae0a92eaae5489d714411b29c851, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 1
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 8788972750092664963, guid: 56b8ae0a92eaae5489d714411b29c851, type: 3}
       propertyPath: m_AnchorMin.x
-      value: 0
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 8788972750092664963, guid: 56b8ae0a92eaae5489d714411b29c851, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 0
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 8788972750092664963, guid: 56b8ae0a92eaae5489d714411b29c851, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 0.0000038146973
+      value: 120
       objectReference: {fileID: 0}
     - target: {fileID: 8788972750092664963, guid: 56b8ae0a92eaae5489d714411b29c851, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 0
+      value: 30
       objectReference: {fileID: 0}
     - target: {fileID: 8788972750092664963, guid: 56b8ae0a92eaae5489d714411b29c851, type: 3}
       propertyPath: m_LocalPosition.x
@@ -114,11 +114,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8788972750092664963, guid: 56b8ae0a92eaae5489d714411b29c851, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: -3
       objectReference: {fileID: 0}
     - target: {fileID: 8788972750092664963, guid: 56b8ae0a92eaae5489d714411b29c851, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: 167
       objectReference: {fileID: 0}
     - target: {fileID: 8788972750092664963, guid: 56b8ae0a92eaae5489d714411b29c851, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -139,5 +139,26 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 6530154551825030974, guid: 56b8ae0a92eaae5489d714411b29c851, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7639018772867741597}
   m_SourcePrefab: {fileID: 100100000, guid: 56b8ae0a92eaae5489d714411b29c851, type: 3}
+--- !u!1 &707900255164204969 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6530154551825030974, guid: 56b8ae0a92eaae5489d714411b29c851, type: 3}
+  m_PrefabInstance: {fileID: 6002510500931754135}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &7639018772867741597
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 707900255164204969}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 91d5e80db8983854eb36b13ace63015c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Type: 2
