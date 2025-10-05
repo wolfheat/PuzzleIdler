@@ -2,33 +2,36 @@ using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class MovablePiece : MonoBehaviour, IPointerDownHandler//, IPointerUpHandler, IPointerMoveHandler
+public class MovablePiece : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 {
     public TetrisBlockType Type = TetrisBlockType.Empty;
 
     public Vector2 home = Vector2.zero;
 
+    public RectTransform RectTransform;
+
     public TetrisBlock[] GetAllTetrisBlocks => transform.GetComponentsInChildren<TetrisBlock>();
+    public Vector2Int[] OccupySpots { get; private set; } = new Vector2Int[0];
 
     private void Start()
     {
+        RectTransform = GetComponent<RectTransform>();
         SetHome();
     }
 
-    private void SetHome()
+    public void SetHome()
     {
         home = transform.localPosition;
     }
-    public void SendHome()
+    public void ReturnHome()
     {
-        transform.position = home;
+        transform.localPosition = home;
+        OccupySpots = new Vector2Int[0];
     }
 
     public void OnPointerDown(PointerEventData eventData)
     {
-
-
-        //Debug.Log("Blocks Puzzle:Start Move Piece");    
+        Debug.Log("Blocks Puzzle:Start Move Piece");    
         //Vector2 GridPosition = WolfheatProductions.Converter.GetMouseLocalPosition(eventData, this.GetComponentInParent<RectTransform>());
         //Debug.Log("Blocks Puzzle: Start Move Piece ["+GridPosition.x+","+GridPosition.y+"]");
 
@@ -36,18 +39,29 @@ public class MovablePiece : MonoBehaviour, IPointerDownHandler//, IPointerUpHand
 
         gameObject.SetActive(false);
     }
-    /*
-    public void OnPointerMove(PointerEventData eventData)
+
+    internal void SetOccupySpots(Vector2Int[] indexPositions)
     {
-        Vector2 GridPosition = WolfheatProductions.Converter.GetMouseLocalPosition(eventData, this.GetComponentInParent<RectTransform>(), BlocksPuzzle.BlockSize);
-        Debug.Log("Blocks Puzzle: Move Piece ["+GridPosition.x+","+GridPosition.y+"]");
-        transform.localPosition = GridPosition;
+        OccupySpots = indexPositions;
+        Debug.Log("Adding occypySpots " + OccupySpots?.Length);
     }
 
     public void OnPointerUp(PointerEventData eventData)
     {
-        Vector2 GridPosition = WolfheatProductions.Converter.GetMouseLocalPosition(eventData, this.GetComponentInParent<RectTransform>(), BlocksPuzzle.BlockSize);
-        Debug.Log("Blocks Puzzle: Stop Move Piece ["+GridPosition.x+","+GridPosition.y+"]");
-        //Debug.Log("Blocks Puzzle:  Stop Move Piece");
-    }*/
+        Debug.Log("Blocks Puzzle:Drop Piece");    
+    }
+    /*
+public void OnPointerMove(PointerEventData eventData)
+{
+Vector2 GridPosition = WolfheatProductions.Converter.GetMouseLocalPosition(eventData, this.GetComponentInParent<RectTransform>(), BlocksPuzzle.BlockSize);
+Debug.Log("Blocks Puzzle: Move Piece ["+GridPosition.x+","+GridPosition.y+"]");
+transform.localPosition = GridPosition;
+}
+
+public void OnPointerUp(PointerEventData eventData)
+{
+Vector2 GridPosition = WolfheatProductions.Converter.GetMouseLocalPosition(eventData, this.GetComponentInParent<RectTransform>(), BlocksPuzzle.BlockSize);
+Debug.Log("Blocks Puzzle: Stop Move Piece ["+GridPosition.x+","+GridPosition.y+"]");
+//Debug.Log("Blocks Puzzle:  Stop Move Piece");
+}*/
 }

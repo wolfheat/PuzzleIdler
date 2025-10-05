@@ -6,7 +6,9 @@ public class PiecesHandler : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
 {
     [SerializeField] private BlocksPuzzleGhostController ghostController;
     [SerializeField] private RectTransform gameAreaRect;
-    
+
+    public Vector2 Offset { get; private set; } = new Vector2();
+
     private MovablePiece activePiece;
 
     public static PiecesHandler Instance { get; private set; }
@@ -27,13 +29,9 @@ public class PiecesHandler : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
         if (Mouse.current.leftButton.wasReleasedThisFrame) {
 
             // Place if possible
-            Vector2Int endPosIndex = WolfheatProductions.Converter.GetMouseLocalPositionIndex(gameAreaRect,BlocksPuzzle.BlockSize*BlocksPuzzle.BlockScale);
-            Debug.Log("Drop Piece at index [" + endPosIndex.x + "," + endPosIndex.y + "]");
-            bool placed = BlocksPuzzle.Instance.TryPlacePiece(activePiece, endPosIndex);
+            bool valid = BlocksPuzzle.Instance.TryPlacePiece(activePiece);
 
-            activePiece.gameObject.SetActive(true);
-            ghostController.Hide();
-            activePiece = null;
+            DropPiece(valid);
             // reshow the moved piece
 
         }
@@ -49,12 +47,36 @@ public class PiecesHandler : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
 
     }
 
+    private void DropPiece(bool valid)
+    {
+        activePiece.gameObject.SetActive(true);
+        ghostController.Hide();
+        activePiece = null;
+    }
+
     public void StartMovePiece(PointerEventData eventData, MovablePiece piece)
     {
-        //OnPointerDown(eventData);
-        //Debug.Log("Start To move piece "+piece.name);
         activePiece = piece;
-        ghostController.ActivatePiece(piece.Type);
+        BlocksPuzzle.Instance.ClearBoardSpots(activePiece);
+
+        activePiece = piece;
+
+        // Convert mouse position to world position
+        Vector3 worldMousePos;
+        RectTransformUtility.ScreenPointToWorldPointInRectangle(
+            piece.RectTransform,
+            eventData.position,
+            eventData.pressEventCamera,
+            out worldMousePos
+        );
+
+        // Calculate local offset within the piece
+        Offset = piece.RectTransform.InverseTransformPoint(worldMousePos);
+
+        // Activate the ghost using the offset
+        ghostController.ActivatePiece(piece.Type, Offset);
+
+        BlocksPuzzle.Instance.ClearBoardSpots(activePiece);
     }
 
     public void OnPointerUp(PointerEventData eventData)

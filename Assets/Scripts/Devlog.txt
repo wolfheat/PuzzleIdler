@@ -93,7 +93,7 @@ Aug 2025
 2/10	* Added tetris drop preview
 		* Tetris DropMove implemented removes soft drop				
 3/10	* Block can be placed in Block Puzzle
-		
+4/10	* Block Puzzle before refactoring		
 
 		* Need to make placed pieces removed when picked up again
 

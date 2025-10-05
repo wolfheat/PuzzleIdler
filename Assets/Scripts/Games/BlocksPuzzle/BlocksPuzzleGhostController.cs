@@ -5,6 +5,7 @@ public class BlocksPuzzleGhostController : MonoBehaviour
 {
 
     [SerializeField] private GameObject[] tetrisPieces;
+    [SerializeField] private GameObject ghostHolder;
 
     private int activeType = 0;
 
@@ -19,20 +20,16 @@ public class BlocksPuzzleGhostController : MonoBehaviour
         Instance = this;
     }
 
-
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        ActivatePiece(TetrisBlockType.S);    
-    }
-
-    public void ActivatePiece(TetrisBlockType newType)
+    public void ActivatePiece(TetrisBlockType newType, Vector2 offset)
     {
         activeType = (int)newType - 2;
         Debug.Log("Activating "+newType);
         for (int i = 0; i < tetrisPieces.Length; i++) {
             tetrisPieces[i].gameObject.SetActive(i == activeType);
         }
+
+        // Offset the pickup Point for the ghost
+        ghostHolder.transform.localPosition = -offset;   
     }
 
     internal void Hide()
