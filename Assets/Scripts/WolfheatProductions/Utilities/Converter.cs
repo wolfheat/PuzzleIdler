@@ -81,6 +81,26 @@ namespace WolfheatProductions
             );
             return pos;
         }
+
+        /// <summary>
+        /// Converts the Sent in position inside a recttransform into a Vector2Int index as if its tiles on a grid of size Boxsize.
+        /// </summary>
+        /// <param name="eventData">Need the Click eventdata to read the mouse position.</param>
+        /// <param name="rectTransform">Recttransform of the local displayobject.</param>
+        /// <param name="BoxSize">The size of the grid or tiles.</param>
+        /// <returns>Vector with the local index position.</returns>
+        // get the position inside a rect - supply the rect and eventdata and boxSize
+        public static Vector2 GetMouseLocalPosition(RectTransform rectTransform, Vector2 localPos)
+        {
+            Vector2 pos = new();
+            RectTransformUtility.ScreenPointToLocalPointInRectangle(
+                rectTransform,
+                localPos,
+                null,
+                out pos
+            );
+            return pos;
+        }
     }
     public static class TextColor
     {

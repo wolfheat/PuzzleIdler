@@ -94,6 +94,8 @@ Aug 2025
 		* Tetris DropMove implemented removes soft drop				
 3/10	* Block can be placed in Block Puzzle
 4/10	* Block Puzzle before refactoring		
+6/10	* Block puzzle alignment works
+		* Block puzzle rotations works
 
 		* Need to make placed pieces removed when picked up again
 
