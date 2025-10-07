@@ -151,6 +151,8 @@ public class BlocksPuzzle : MonoBehaviour
 
             // DOES NOT WORK
             activePiece.transform.localPosition = placePos;
+
+
         }
         else {
             // Replace on old valid spot if there is one
@@ -163,6 +165,7 @@ public class BlocksPuzzle : MonoBehaviour
 
             // Inside return to previously placement inside
             OccupySpots(activePiece,activePiece.OccupySpots);
+            activePiece.ResetRotation();
             return false;
             
         }
