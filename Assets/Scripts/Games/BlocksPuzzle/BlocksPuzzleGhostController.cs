@@ -1,9 +1,13 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class BlocksPuzzleGhostController : MonoBehaviour
 {
-    [SerializeField] private GameObject[] tetrisPieces;
+    private GameObject[][] tetrisPieces;
+
+    [SerializeField] private MovablePiece ghost;
+
     [SerializeField] private GameObject ghostHolder;
 
     private int activeType = 0;
@@ -18,38 +22,40 @@ public class BlocksPuzzleGhostController : MonoBehaviour
             return;
         }
         Instance = this;
+
     }
 
     //public void MoveToPosition(Vector2 pos) => transform.localPosition = pos;
 
-    public void ActivatePiece(TetrisBlockType newType, Vector2 offset)
+    public void UpdateOffset(Vector2 offset)
     {
-        activeType = (int)newType - 2;
-        Debug.Log("Activating "+newType);
-        for (int i = 0; i < tetrisPieces.Length; i++) {
-            tetrisPieces[i].gameObject.SetActive(i == activeType);
-        }
-
         // Offset the pickup Point for the ghost
-        ghostHolder.transform.localPosition = - offset;   
+        ghostHolder.transform.localPosition = -offset;
+    }
+
+    public void ActivatePiece(MovablePiece piece, Vector2 offset)
+    {
+        // activate the visuals
+        ghost.gameObject.SetActive(true);
+
+        // Set the ghost to mimic the picked piece
+        ghost.MimicTypeAndRotation(piece);
+
+        // set the type
+        activeType = (int)piece.Type - 2;
+
+        UpdateOffset(offset);
     }
 
     internal void Hide()
     {
-        if(activeType >= 0)
-            tetrisPieces[activeType].gameObject.SetActive(false);
+        ghost.gameObject.SetActive(false);
         activeType = -1;
     }
 
-    internal void SetRotation(int rotations)
+    internal void MimicRotation(MovablePiece piece)
     {
-        Rotation = rotations;
-        ghostHolder.transform.rotation = Quaternion.Euler(0, 0, Rotation*90);
-    }
-
-    internal void Rotate(int rotations)
-    {
-        Rotation = (Rotation + 1) % 4;
-        ghostHolder.transform.rotation = Quaternion.Euler(0, 0, Rotation*90);
+        // Set the ghost to mimic the picked piece
+        ghost.MimicTypeAndRotation(piece);
     }
 }

@@ -96,12 +96,11 @@ Aug 2025
 4/10	* Block Puzzle before refactoring		
 6/10	* Block puzzle alignment works
 		* Block puzzle rotations works
+7/10	* Rotation on mouse spot works
 
-		* Need to make placed pieces removed when picked up again
 
-		// Blocks Puzzle
-		* Use piece movement in chess for this movement as well
-
+		* Piece returns to placed spot with old rotation fixed
+		
 					
 		// CHESS
 		* make players color show better

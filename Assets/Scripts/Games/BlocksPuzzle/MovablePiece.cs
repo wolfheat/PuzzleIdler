@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -10,12 +11,22 @@ public class MovablePiece : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
 
     public RectTransform RectTransform;
     public TetrisBlock[] GetAllTetrisBlocks => transform.GetComponentsInChildren<TetrisBlock>();
+
+    private TetrisBlock[] tetrisBlocks;
     public Vector2Int[] OccupySpots { get; private set; } = new Vector2Int[0];
+
+    public Vector2[] BlockPositions { get; set; }
 
     public int Rotation { get; set; } = 0;
     private void Start()
     {
         RectTransform = GetComponent<RectTransform>();
+
+        tetrisBlocks = transform.GetComponentsInChildren<TetrisBlock>();
+
+        // Store the initial position for 0 rotation for each piece
+        BlockPositions = tetrisBlocks.Select(x => (Vector2)x.transform.localPosition).ToArray();
+
         SetHome();
     }
 
@@ -51,10 +62,54 @@ public class MovablePiece : MonoBehaviour, IPointerDownHandler, IPointerUpHandle
         Debug.Log("Blocks Puzzle:Drop Piece");    
     }
 
-    internal void Rotate(int rotations)
+    internal Vector2 Rotate(int rotation, Vector2 holderOffset)
     {
-        Rotation = (Rotation + 1) % 4;
-        transform.rotation = Quaternion.Euler(0, 0, Rotation * 90);
+        Rotation = (Rotation + 4 + rotation) % 4;
+
+        // Change the internal piecepositions instead of rotating the object
+        for (int i = 0; i < tetrisBlocks.Length; i++) {
+            TetrisBlock box = tetrisBlocks[i];
+            box.transform.localPosition = RotatePoint90(BlockPositions[i], Rotation);
+        }
+        //transform.rotation = Quaternion.Euler(0, 0, Rotation * 90);
+
+        return RotatePoint90(holderOffset,Rotation);
+    }
+    
+    internal void MimicTypeAndRotation(MovablePiece piece)
+    {
+        // Dont need this for the ghost???
+        Rotation = piece.Rotation;
+
+        // Get the other pieces blocks
+        TetrisBlock[] otherBlocks = piece.tetrisBlocks;
+
+        // copy each blocks position
+        for (int i = 0; i < tetrisBlocks.Length; i++) {
+            tetrisBlocks[i].transform.localPosition = otherBlocks[i].transform.localPosition;
+            tetrisBlocks[i].SetType((int)piece.Type);
+        }
+    }
+
+
+    // Helper function to rotate a 2D point around origin
+    public static Vector2 RotatePoint90(Vector2 point, int rotation)
+    {
+        switch (rotation % 4) {
+            case 1: // 90°
+                return new Vector2(point.y, -point.x);
+            case 2: // 180°
+                return new Vector2(-point.x, -point.y);
+            case 3: // 270°
+                return new Vector2(-point.y, point.x);
+            default: // 0°
+                return point;
+        }
+    }
+
+    internal Vector2 GetUnrotatedOffesetForPoint(Vector2 pieceOffestPosition)
+    {
+        return RotatePoint90(pieceOffestPosition, 4 - Rotation);
     }
 }
     /*

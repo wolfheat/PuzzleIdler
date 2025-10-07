@@ -9,6 +9,7 @@ public class PiecesHandler : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
     [SerializeField] private RectTransform rectTransform;
 
     public Vector2 Offset { get; private set; } = new Vector2();
+    public Vector2 UnrotatedOffset { get; private set; } = new Vector2();
 
     private MovablePiece activePiece;
     enum PlayerInputRotation { Left, Right, Up, None };
@@ -38,9 +39,10 @@ public class PiecesHandler : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
 
         ReadRotationInput(context);
 
+        Debug.Log("Rotating: " + rotationPerformed);
+            
         PerformRotation();
 
-        Debug.Log("Rotating: " + rotationPerformed);
     }
 
     private PlayerInputRotation rotationPerformed;
@@ -49,17 +51,20 @@ public class PiecesHandler : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
 
         // Read the rotation value
         Vector2 value = context.ReadValue<Vector2>();
-        if (value.y < 0)
-            rotationPerformed = PlayerInputRotation.Up;
-        else if (value.x < 0)
+        if (value.x < 0)
             rotationPerformed = PlayerInputRotation.Left;
         else if (value.x > 0)
+            rotationPerformed = PlayerInputRotation.Right;
+        else if (value.y > 0)
+            rotationPerformed = PlayerInputRotation.Left;
+        else if (value.y < 0)
             rotationPerformed = PlayerInputRotation.Right;
         else {
             rotationPerformed = PlayerInputRotation.None;
         }
     }
 
+    // Amount of steps to rotate 90°
     private int[] ActualRotationMapping = { -1, 1, 2, 0 };
     private void PerformRotation()
     {
@@ -70,6 +75,10 @@ public class PiecesHandler : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
 
         // Do the rotation
         TryRotate(rotations);
+
+
+        // Activate the ghost using the offset
+        ghostController.UpdateOffset(Offset);
 
         // Unset the rotation
         rotationPerformed = PlayerInputRotation.None;
@@ -82,12 +91,12 @@ public class PiecesHandler : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
 
     private void RotateCurrentPiece(int rotations)
     {
-        //RemoveCurrentPiecePosBlocks();
-        //Debug.Log("Rotations starts at "+activePiece.pos);
-        activePiece.Rotate(rotations);
-        ghostController.Rotate(rotations);
-        //PlacePiece();
-        //Debug.Log("Rotations ends at "+activePiece.pos);
+        if (activePiece == null) return;
+        
+        // Recalculate the offset
+        Offset = activePiece.Rotate(rotations, UnrotatedOffset);
+
+        ghostController.MimicRotation(activePiece);
     }
 
 
@@ -95,6 +104,8 @@ public class PiecesHandler : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
     {
         // Make playr able to interract with board again
         GameActive = true;
+
+        DropPiece(false);
 
         Debug.Log("Reset game");
         // Load a new problem of correct difficulty level
@@ -142,6 +153,8 @@ public class PiecesHandler : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
 
     private void DropPiece(bool valid)
     {
+        if (activePiece == null) return;
+
         activePiece.gameObject.SetActive(true);
         ghostController.Hide();
         activePiece = null;
@@ -154,10 +167,8 @@ public class PiecesHandler : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
 
         // Read the rotation and change ghost accordingly
 
-        int piecerotation = piece.Rotation;
-        ghostController.SetRotation(piecerotation);
-
-
+        //int piecerotation = piece.Rotation;
+        
         // Lifting a piece that was placed
         //BlocksPuzzle.Instance.ClearBoardSpots(activePiece);
 
@@ -167,10 +178,15 @@ public class PiecesHandler : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
 
         // Calculate local offset within the piece
         Offset = pieceOffestPosition;
+
+        // This issnt set correctly for rotated piece
+        UnrotatedOffset = piece.GetUnrotatedOffesetForPoint(pieceOffestPosition);
+
+
         //Offset = piece.RectTransform.InverseTransformPoint(pieceHandlerMousePos);
 
         // Activate the ghost using the offset
-        ghostController.ActivatePiece(piece.Type, Offset);
+        ghostController.ActivatePiece(piece, Offset);
 
         BlocksPuzzle.Instance.ClearBoardSpots(activePiece);
 

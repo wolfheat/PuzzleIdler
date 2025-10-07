@@ -11,6 +11,8 @@ public class BlocksPuzzle : MonoBehaviour
     int[,] board = new int[GameSize, GameSize];
     TetrisBlock[,] boardBlocks = new TetrisBlock[GameSize,GameSize];
 
+    [SerializeField] private GameObject pieceHolder;
+
     [SerializeField] private GameObject boxHolder;
     [SerializeField] private TetrisBlock boxPrefab;
 
@@ -35,6 +37,20 @@ public class BlocksPuzzle : MonoBehaviour
         Debug.Log("BlocksPuzzle: Restart Game");
 
         ResetBoxes();
+
+        // Also handle all placable Pieces
+        ResetAllPieces();
+
+        // Reset Ghost
+        PiecesHandler.Instance.ResetGame();
+
+    }
+
+    private void ResetAllPieces()
+    {
+        foreach (var block in pieceHolder.GetComponentsInChildren<MovablePiece>()) {
+            block.ReturnHome();
+        }
     }
 
     private void ResetBoxes()
@@ -91,6 +107,7 @@ public class BlocksPuzzle : MonoBehaviour
             }
         }
 
+        /*
         // Compute rotated positions for each block
         Vector2Int[] indexPositions = blocks.Select(x => {
             Vector2 rotated = RotatePoint90(x.transform.localPosition, activePiece.Rotation);
@@ -99,16 +116,18 @@ public class BlocksPuzzle : MonoBehaviour
                 -Mathf.FloorToInt((rotated.y + pieceLocalGameAreaDropPosition.y) / (BlockSize * BlockScale)) - 1
             );
         }).ToArray();
-
+        */
 
 
         Vector2 rotated0 = RotatePoint90(blocks[0].transform.localPosition, activePiece.Rotation);
 
         // Get the indexes the piece will occupy - WORKS
-        //Vector2Int[] indexPositions = blocks.Select(x => new Vector2Int(Mathf.FloorToInt((x.transform.localPosition.x + pieceLocalGameAreaDropPosition.x) / (BlockSize * BlockScale)),-Mathf.FloorToInt((x.transform.localPosition.y + pieceLocalGameAreaDropPosition.y) / (BlockSize * BlockScale)) - 1)).ToArray();
+        Vector2Int[] indexPositions = blocks.Select(x => new Vector2Int(Mathf.FloorToInt((x.transform.localPosition.x + pieceLocalGameAreaDropPosition.x) / (BlockSize * BlockScale)),-Mathf.FloorToInt((x.transform.localPosition.y + pieceLocalGameAreaDropPosition.y) / (BlockSize * BlockScale)) - 1)).ToArray();
 
 
-        Vector2 block0dropPosition = new Vector2(rotated0.x + pieceLocalGameAreaDropPosition.x, rotated0.y + pieceLocalGameAreaDropPosition.y);
+        Vector2 block0dropPositionRotated = new Vector2(rotated0.x + pieceLocalGameAreaDropPosition.x, rotated0.y + pieceLocalGameAreaDropPosition.y);
+
+        Vector2 block0dropPosition = new Vector2(blocks[0].transform.localPosition.x + pieceLocalGameAreaDropPosition.x, blocks[0].transform.localPosition.y + pieceLocalGameAreaDropPosition.y);
 
         Vector2 adjusted = new Vector2((BlockSize / 2) + indexPositions[0].x*BlockSize, -(BlockSize / 2) -indexPositions[0].y*BlockSize);
 
