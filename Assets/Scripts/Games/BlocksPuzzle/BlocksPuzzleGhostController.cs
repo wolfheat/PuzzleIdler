@@ -6,7 +6,7 @@ public class BlocksPuzzleGhostController : MonoBehaviour
 {
     private GameObject[][] tetrisPieces;
 
-    [SerializeField] private MovablePiece ghost;
+    [SerializeField] private GhostPiece ghost;
 
     [SerializeField] private GameObject ghostHolder;
 

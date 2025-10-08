@@ -203,6 +203,7 @@ public static class Stats
         UpdateMinigameSaveStats();
     }
 
+
     // Specific games
 
     // Chess

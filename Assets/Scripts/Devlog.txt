@@ -97,9 +97,17 @@ Aug 2025
 6/10	* Block puzzle alignment works
 		* Block puzzle rotations works
 7/10	* Rotation on mouse spot works
+8/10	* Refactored Block Pieces classes
+		* Block puzzle win now give a base 100rating points and updates correctly
 
 
-		* Piece returns to placed spot with old rotation fixed
+		* Need to be able to check for proper win 
+
+		* Create system for saving and loading game problems make a database
+
+		* Make the stats more tidy for block puzzle game . remove unwanted stuff
+
+
 		
 					
 		// CHESS

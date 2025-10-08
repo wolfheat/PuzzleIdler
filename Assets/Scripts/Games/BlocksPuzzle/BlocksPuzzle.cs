@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections;
 using System.Linq;
+using TMPro;
 using UnityEngine;
 
-public class BlocksPuzzle : MonoBehaviour
+public class BlocksPuzzle : MiniGameBase
 {
     public const int BlockSize = 30;
     private const int GameSize = 8;
@@ -16,7 +18,18 @@ public class BlocksPuzzle : MonoBehaviour
     [SerializeField] private GameObject boxHolder;
     [SerializeField] private TetrisBlock boxPrefab;
 
+    // Extra Panels
+    [SerializeField] private GameObject helpInfo;
+    [SerializeField] private MiniGameChessWinNotice winNotice;
+
+    // Rating Textfields
+    [SerializeField] private TextMeshProUGUI playerRating;
+    [SerializeField] private TextMeshProUGUI playerRatingIncreaseText;
+    [SerializeField] private GameObject playerRatingIncrease;
+
     public static BlocksPuzzle Instance { get; private set; }
+
+    public bool GameActive { get; set; }
 
     private void Awake()
     {
@@ -27,9 +40,28 @@ public class BlocksPuzzle : MonoBehaviour
         Instance = this;
     }
 
+    private void OnEnable()
+    {
+        UpdateRating();
+
+    }
     private void Start()
     {
+        Stats.StatsUpdated += OnStatsUpdated;
+
         RestartGame();
+    }
+
+    private void OnStatsUpdated()
+    {
+        UpdateRating();
+    }
+
+
+    private void UpdateRating()
+    {
+        Debug.Log("Blocks: Updating Rating");
+        playerRating.text = Stats.MiniGameRating(GameType).ToString();
     }
 
     public void RestartGame(bool resetPosition = false)
@@ -43,6 +75,9 @@ public class BlocksPuzzle : MonoBehaviour
 
         // Reset Ghost
         PiecesHandler.Instance.ResetGame();
+
+        // Remove Win Screen Notice
+        winNotice.gameObject.SetActive(false);
 
     }
 
@@ -74,7 +109,7 @@ public class BlocksPuzzle : MonoBehaviour
         // Need to read the tiles parts to see if any of them collide with any piece on the board
         // Need to know the main box in the piece and its position and use its rotation to know what boxes that will be placed
 
-        TetrisBlock[] blocks = activePiece.GetAllTetrisBlocks;
+        TetrisBlock[] blocks = activePiece.TetrisBlocks;
 
         // Try to only work in local reference system
 
@@ -152,6 +187,10 @@ public class BlocksPuzzle : MonoBehaviour
             // DOES NOT WORK
             activePiece.transform.localPosition = placePos;
 
+            // Evaluate if winning the game
+            if (EvaluateWin())
+                Win(true);
+
 
         }
         else {
@@ -171,7 +210,73 @@ public class BlocksPuzzle : MonoBehaviour
         }
         return valid;
     }
-    
+
+    private bool EvaluateWin()
+    {
+        return true;
+    }
+
+    private void Win(bool didWin)
+    {
+        Debug.Log(didWin ? "YOU WIN" : "LOST");
+
+        Debug.Log("YOU LOSE");
+        GameActive = false;
+
+        // Also make this general?
+        winNotice.gameObject.SetActive(true);
+        winNotice.SetWin(didWin);
+
+        // Added Rating
+
+        // Let the rating player got be the added value?
+
+        int ratingAchieved = RatingGain();
+        int currentRating = Stats.MiniGameRatings[(int)GameType];
+
+        int increase = Math.Min(2999, currentRating + ratingAchieved) - currentRating;
+
+        if (increase <= 0) {
+            // Do not change rating if not better than current
+            return;
+        }
+
+        // Award Rating and reward
+        Stats.ChangeMiniGameRating(GameType, ratingAchieved);
+
+        // Popup - also make reusable TODO
+        ShowRatingIncreaseText(increase);
+    }
+
+    private int RatingGain() => 100;
+
+
+    private void ShowRatingIncreaseText(int increase)
+    {
+        StartCoroutine(ShowRatingIncreaseCO(increase));
+
+    }
+
+    private IEnumerator ShowRatingIncreaseCO(int increase)
+    {
+        playerRatingIncrease.SetActive(true);
+        playerRatingIncreaseText.text = "+" + increase;
+
+        //Time the visability
+
+        float timer = 2f;
+
+        // Handle fade
+
+        while (timer > 0) {
+            timer -= Time.deltaTime;
+            yield return null;
+        }
+
+        playerRatingIncrease.SetActive(false);
+
+    }
+
     /*
     internal bool TryPlacePiece(MovablePiece activePiece)
     {

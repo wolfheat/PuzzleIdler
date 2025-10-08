@@ -16,7 +16,6 @@ public class PiecesHandler : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
 
     public static PiecesHandler Instance { get; private set; }
 
-    private bool GameActive = false;
 
     private void Awake()
     {
@@ -35,7 +34,7 @@ public class PiecesHandler : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
 
     private void OnPlayerRotateInput(InputAction.CallbackContext context)
     {
-        if (!GameActive) return;
+        if (!BlocksPuzzle.Instance.GameActive) return;
 
         ReadRotationInput(context);
 
@@ -103,11 +102,12 @@ public class PiecesHandler : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
     public void ResetGame()
     {
         // Make playr able to interract with board again
-        GameActive = true;
+        BlocksPuzzle.Instance.GameActive = true;
 
         DropPiece(false);
 
         Debug.Log("Reset game");
+
         // Load a new problem of correct difficulty level
         //(int[,] level, int diff) = SudokuProblemDatas.Instance.GetRandomProblem(Stats.MiniGameRating(GameType));
 
@@ -168,9 +168,14 @@ public class PiecesHandler : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
         // Read the rotation and change ghost accordingly
 
         //int piecerotation = piece.Rotation;
-        
+
         // Lifting a piece that was placed
         //BlocksPuzzle.Instance.ClearBoardSpots(activePiece);
+
+        if(piece == null)
+            Debug.Log("Piece null");
+        if(piece.RectTransform == null)
+            Debug.Log("Piece Recttransform null");
 
         // Convert mouse position to pieceHandler position
         Vector2 pieceOffestPosition = WolfheatProductions.Converter.GetMouseLocalPosition(piece.RectTransform, eventData);
