@@ -99,6 +99,8 @@ Aug 2025
 7/10	* Rotation on mouse spot works
 8/10	* Refactored Block Pieces classes
 		* Block puzzle win now give a base 100rating points and updates correctly
+9/10	* Parsing of levels working can load a level
+
 
 
 		* Need to be able to check for proper win 

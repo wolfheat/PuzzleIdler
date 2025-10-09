@@ -14,8 +14,9 @@ public class BasePiece : MonoBehaviour
     public Vector2[] BlockPositions { get; set; }
 
 
-    protected virtual void Start()
+    protected virtual void Awake()
     {
+        Debug.Log("Blocks: BasePiece start for " + name);
         TetrisBlocks = transform.GetComponentsInChildren<TetrisBlock>();
         // Store thge pieces transform and block
         RectTransform = GetComponent<RectTransform>();
@@ -34,11 +35,9 @@ public class MovablePiece : BasePiece, IPointerDownHandler, IPointerUpHandler
     public Vector2Int[] OccupySpots { get; private set; } = new Vector2Int[0];
     public int OccupyRotation { get; set; } = 0;
 
-
-
-    override protected void Start()
+    override protected void Awake()
     {
-        base.Start();
+        base.Awake();
         // Store the piece home position
         home = transform.localPosition;
     }

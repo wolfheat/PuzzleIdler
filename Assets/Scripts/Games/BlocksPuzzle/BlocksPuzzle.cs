@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Linq;
+using System.Text;
 using TMPro;
 using UnityEngine;
 
@@ -23,6 +24,8 @@ public class BlocksPuzzle : MiniGameBase
     [SerializeField] private MiniGameChessWinNotice winNotice;
 
     // Rating Textfields
+    [SerializeField] private TextMeshProUGUI nextRatingGain;
+
     [SerializeField] private TextMeshProUGUI playerRating;
     [SerializeField] private TextMeshProUGUI playerRatingIncreaseText;
     [SerializeField] private GameObject playerRatingIncrease;
@@ -62,6 +65,13 @@ public class BlocksPuzzle : MiniGameBase
     {
         Debug.Log("Blocks: Updating Rating");
         playerRating.text = Stats.MiniGameRating(GameType).ToString();
+
+        // Update next rating value
+
+        int ratingGain = Stats.BlockPuzzleRatingGain();
+
+        nextRatingGain.text = ratingGain.ToString();
+
     }
 
     public void RestartGame(bool resetPosition = false)
@@ -70,8 +80,13 @@ public class BlocksPuzzle : MiniGameBase
 
         ResetBoxes();
 
+
         // Also handle all placable Pieces
         ResetAllPieces();
+
+
+        // Load a fix level
+        LoadLevel();
 
         // Reset Ghost
         PiecesHandler.Instance.ResetGame();
@@ -79,6 +94,101 @@ public class BlocksPuzzle : MiniGameBase
         // Remove Win Screen Notice
         winNotice.gameObject.SetActive(false);
 
+    }
+
+    private void LoadLevel()
+    {
+
+        (bool[,] gameAreaLoaded, int[] piecesLoaded) = BlockPuzzleProblemDatas.Instance.GetRandomProblem();
+        
+        // Load gameArea
+        ResetBoxes(gameAreaLoaded);
+
+        // Load Pieces to place
+
+    }
+
+    [ContextMenu("Game Area string Print")]
+    public void PrintLevelGameAreaString()
+    {
+        string gameAreaString = ReadOccupiedSpotsAsGameAreaString();
+        Debug.Log("GameArea = "+gameAreaString);
+
+        
+    }
+
+    private string ReadOccupiedSpotsAsGameAreaString()
+    {
+        // Decoding is done
+        // alternating occypied / not occupied as a = 0
+        StringBuilder sb = new StringBuilder();
+
+        Debug.Log("BlocksPuzzle: Creating Boxes");
+        int count = 0;
+        bool readingAsOccupied = true;
+
+        // Seven different pieces that can be placed, check how many are of each type
+        int[] pieces = new int[7];
+
+        // Fix for first non occupied
+        if(board[0, 0] != ((int)TetrisBlockType.Ghost)) {
+            readingAsOccupied = !readingAsOccupied;
+        }
+
+        for (int i = 0; i < board.GetLength(0); i++) {
+            for (int j = 0; j < board.GetLength(1); j++) {
+                bool spotOccupied = board[j, i] != ((int)TetrisBlockType.Ghost);
+                
+                Debug.Log("Reading = ["+j+","+i+"] = "+(spotOccupied?1:0));
+
+                // Count pieces
+                if (spotOccupied) {
+                    int type = (int)(board[j, i]-2);
+                    pieces[type]++;
+                }
+
+                // Found what we looking for
+                if (spotOccupied == readingAsOccupied ) {
+                    count++;
+                    Debug.Log("Count = "+count);
+                    continue;
+                }
+
+                // Swap
+                Debug.Log("Append = "+count+" => "+ CountToChar(count, readingAsOccupied));
+                sb.Append(CountToChar(count,readingAsOccupied));
+                readingAsOccupied = !readingAsOccupied;
+                count = 1;
+            }
+        }
+
+        // Read last
+        if (count > 0) {
+            Debug.Log("Last append = "+count+" => "+ CountToChar(count, readingAsOccupied));
+            sb.Append(CountToChar(count, readingAsOccupied));
+        }
+
+        // Pieces
+        StringBuilder sb2 = new StringBuilder();
+        foreach (int amt in pieces) {
+            int pieceAmt = amt/4;
+            sb2.Append(pieceAmt == 0?'.':(char)('A'+(pieceAmt - 1)));
+        }
+        sb2.Append(',');
+        
+        return sb2.ToString() + sb.ToString();
+
+        static string CountToChar(int count, bool readingAsOccupied)
+        {
+            // Occupied = 'A' , Unoccupied = 'a'
+            StringBuilder sb = new StringBuilder();
+            while (count > 0) {
+                int characterVal = (count > 26 ? 26 : count);
+                sb.Append((char)((readingAsOccupied ? 'A':'a') + (characterVal-1)));
+                count -= characterVal;
+            }
+            return sb.ToString();
+        }
     }
 
     private void ResetAllPieces()
@@ -93,9 +203,25 @@ public class BlocksPuzzle : MiniGameBase
         Debug.Log("BlocksPuzzle: Creating Boxes");
         for (int i = 0; i < board.GetLength(0); i++) {
             for (int j = 0; j < board.GetLength(1); j++) {
-                board[j, i] = 1;
-                boardBlocks[j, i] = Instantiate(boxPrefab, boxHolder.transform);
-                boardBlocks[j, i].SetType(1);
+                board[j, i] = (int)TetrisBlockType.Ghost;
+                if(boardBlocks[j, i] == null)
+                    boardBlocks[j, i] = Instantiate(boxPrefab, boxHolder.transform);
+                boardBlocks[j, i].SetType(board[j,i]);
+                boardBlocks[j, i].transform.localScale = new Vector3(BlockScale, BlockScale);
+                boardBlocks[j, i].transform.localPosition = new Vector3(i*BlockSize* BlockScale, -j*BlockSize* BlockScale);
+            }
+        }
+    }
+    
+    private void ResetBoxes(bool[,] levelToLoad)
+    {
+        Debug.Log("BlocksPuzzle: Creating Boxes");
+        for (int i = 0; i < board.GetLength(0); i++) {
+            for (int j = 0; j < board.GetLength(1); j++) {
+                board[j, i] = levelToLoad[j,i]? (int)TetrisBlockType.Ghost : (int)TetrisBlockType.Fixed;
+                if(boardBlocks[j, i] == null)
+                    boardBlocks[j, i] = Instantiate(boxPrefab, boxHolder.transform);
+                boardBlocks[j, i].SetType(board[j,i]);
                 boardBlocks[j, i].transform.localScale = new Vector3(BlockScale, BlockScale);
                 boardBlocks[j, i].transform.localPosition = new Vector3(i*BlockSize* BlockScale, -j*BlockSize* BlockScale);
             }
@@ -231,7 +357,7 @@ public class BlocksPuzzle : MiniGameBase
 
         // Let the rating player got be the added value?
 
-        int ratingAchieved = RatingGain();
+        int ratingAchieved = Stats.BlockPuzzleRatingGain();
         int currentRating = Stats.MiniGameRatings[(int)GameType];
 
         int increase = Math.Min(2999, currentRating + ratingAchieved) - currentRating;
@@ -247,9 +373,6 @@ public class BlocksPuzzle : MiniGameBase
         // Popup - also make reusable TODO
         ShowRatingIncreaseText(increase);
     }
-
-    private int RatingGain() => 100;
-
 
     private void ShowRatingIncreaseText(int increase)
     {
@@ -448,8 +571,8 @@ public class BlocksPuzzle : MiniGameBase
                 return (false,true);
             }
 
-            if (board[pos.y, pos.x] != 1) {
-                //Debug.Log("Blocks: Piece not Empty [" + pos.x + "," + pos.y + "]");
+            if (board[pos.y, pos.x] != (int)TetrisBlockType.Ghost) {
+                Debug.Log("Blocks: Piece not Empty [" + pos.x + "," + pos.y + "] = "+ board[pos.y, pos.x]+" = "+ (TetrisBlockType)board[pos.y, pos.x]);
                 return (false, false);
             }
             //Debug.Log("Blocks: Valid placement board[" + pos.x + "," + pos.y + "] = " + board[pos.y, pos.x]);
@@ -492,7 +615,7 @@ public class BlocksPuzzle : MiniGameBase
 
         if (occypySpots != null) {
             foreach (Vector2Int pos in occypySpots) {
-                board[pos.y, pos.x] = (int)TetrisBlockType.Fixed;
+                board[pos.y, pos.x] = (int)TetrisBlockType.Ghost;
                 boardBlocks[pos.y, pos.x].SetType(board[pos.y, pos.x]);
 
                 //Debug.Log("Blocks: Unsetting [" + pos.x + "," + pos.y + "] = " + board[pos.y, pos.x]);

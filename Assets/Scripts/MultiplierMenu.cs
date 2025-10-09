@@ -161,7 +161,7 @@ public class MultiplierMenu : MonoBehaviour
         if(activeGameIndex >= 0)
             miniGames[activeGameIndex].SetActive(false);
 
-        if(activeGameIndex == index) {
+        if(activeGameIndex == index && miniGames[activeGameIndex].activeSelf) {
             activeGameIndex = -1;
             return;
         }

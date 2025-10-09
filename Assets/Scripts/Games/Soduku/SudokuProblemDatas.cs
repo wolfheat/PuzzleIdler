@@ -1,6 +1,5 @@
 using System;
 using UnityEngine;
-using static System.Collections.Specialized.BitVector32;
 
 public class SudokuProblemDatas : MonoBehaviour
 {

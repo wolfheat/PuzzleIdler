@@ -19,6 +19,8 @@ public static class Stats
     public const int SudokuGameLossRatingChange = 0;
     public const int SudokuGameWinRatingChange = 150;
 
+    public const int BlocksPuzzleBaseWinRatingChange = 100;
+
     
     // Coinds and Gems - Held
     public static BigDouble CoinsHeld { get; private set; } = 0;
@@ -262,6 +264,20 @@ public static class Stats
             _ => 0.1f
         };
         return (int)(multiplier * boardDifficulty);
+    }
+    
+    public static int BlockPuzzleRatingGain()
+    {
+        
+        float multiplier = MiniGameRatings[(int)MiniGame.BlocksPuzzle] switch
+        {
+            < 1400 => 1,
+            < 1600 => 0.8f,
+            < 1800 => 0.5f,
+            < 2000 => 0.3f,
+            _ => 0.1f
+        };
+        return (int)(multiplier * BlocksPuzzleBaseWinRatingChange);
     }
 
 

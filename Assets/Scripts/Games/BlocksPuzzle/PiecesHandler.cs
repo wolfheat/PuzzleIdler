@@ -28,7 +28,7 @@ public class PiecesHandler : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
 
         Inputs.Instance.PlayerControls.Player.Rotate.performed += OnPlayerRotateInput;
 
-        ResetGame();
+        //ResetGame();
 
     }
 
@@ -106,7 +106,9 @@ public class PiecesHandler : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
 
         DropPiece(false);
 
-        Debug.Log("Reset game");
+        Debug.Log("Blocks: Reset game");
+
+        ghostController.Hide();
 
         // Load a new problem of correct difficulty level
         //(int[,] level, int diff) = SudokuProblemDatas.Instance.GetRandomProblem(Stats.MiniGameRating(GameType));

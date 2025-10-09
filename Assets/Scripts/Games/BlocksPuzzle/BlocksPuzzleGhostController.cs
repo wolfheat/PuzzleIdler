@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class BlocksPuzzleGhostController : MonoBehaviour
@@ -22,7 +20,6 @@ public class BlocksPuzzleGhostController : MonoBehaviour
             return;
         }
         Instance = this;
-
     }
 
     //public void MoveToPosition(Vector2 pos) => transform.localPosition = pos;
@@ -35,6 +32,7 @@ public class BlocksPuzzleGhostController : MonoBehaviour
 
     public void ActivatePiece(MovablePiece piece, Vector2 offset)
     {
+        Debug.Log("Blocks: Activate Ghost Piece");
         // activate the visuals
         ghost.gameObject.SetActive(true);
 
@@ -49,6 +47,7 @@ public class BlocksPuzzleGhostController : MonoBehaviour
 
     internal void Hide()
     {
+        Debug.Log("Blocks: Hide Ghost Piece");
         ghost.gameObject.SetActive(false);
         activeType = -1;
     }
