@@ -100,10 +100,10 @@ Aug 2025
 8/10	* Refactored Block Pieces classes
 		* Block puzzle win now give a base 100rating points and updates correctly
 9/10	* Parsing of levels working can load a level
+11/10	* Pieces placed on piecepositions correctly
+		* Player limited from moving pieces after a win
+		* Proper win check
 
-
-
-		* Need to be able to check for proper win 
 
 		* Create system for saving and loading game problems make a database
 

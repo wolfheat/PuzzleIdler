@@ -26,7 +26,7 @@ PrefabInstance:
       objectReference: {fileID: -1441435818, guid: 3947215736224c647a9f0e0a742d7e99, type: 3}
     - target: {fileID: 6108967441951959463, guid: 7b9c54b4ce09eaf4a9559b92f205ea1a, type: 3}
       propertyPath: m_Name
-      value: SPiecePreview Variant
+      value: SPieceBlocksPuzzle
       objectReference: {fileID: 0}
     - target: {fileID: 6108967441951959463, guid: 7b9c54b4ce09eaf4a9559b92f205ea1a, type: 3}
       propertyPath: m_IsActive
@@ -54,19 +54,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8619917537801139738, guid: 7b9c54b4ce09eaf4a9559b92f205ea1a, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8619917537801139738, guid: 7b9c54b4ce09eaf4a9559b92f205ea1a, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0.5
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8619917537801139738, guid: 7b9c54b4ce09eaf4a9559b92f205ea1a, type: 3}
       propertyPath: m_AnchorMin.x
-      value: 0.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8619917537801139738, guid: 7b9c54b4ce09eaf4a9559b92f205ea1a, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 0.5
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8619917537801139738, guid: 7b9c54b4ce09eaf4a9559b92f205ea1a, type: 3}
       propertyPath: m_SizeDelta.x
@@ -110,7 +110,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8619917537801139738, guid: 7b9c54b4ce09eaf4a9559b92f205ea1a, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -195
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8619917537801139738, guid: 7b9c54b4ce09eaf4a9559b92f205ea1a, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x

@@ -18,19 +18,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1269698925012087321, guid: e1ee3385fb4e9244ba3a33c660484f2c, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1269698925012087321, guid: e1ee3385fb4e9244ba3a33c660484f2c, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0.5
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1269698925012087321, guid: e1ee3385fb4e9244ba3a33c660484f2c, type: 3}
       propertyPath: m_AnchorMin.x
-      value: 0.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1269698925012087321, guid: e1ee3385fb4e9244ba3a33c660484f2c, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 0.5
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1269698925012087321, guid: e1ee3385fb4e9244ba3a33c660484f2c, type: 3}
       propertyPath: m_SizeDelta.x
@@ -74,7 +74,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1269698925012087321, guid: e1ee3385fb4e9244ba3a33c660484f2c, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -115
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1269698925012087321, guid: e1ee3385fb4e9244ba3a33c660484f2c, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -94,7 +94,7 @@ PrefabInstance:
       objectReference: {fileID: 1548975607, guid: 3947215736224c647a9f0e0a742d7e99, type: 3}
     - target: {fileID: 3673125992080649636, guid: e1ee3385fb4e9244ba3a33c660484f2c, type: 3}
       propertyPath: m_Name
-      value: ZPiecePreview Variant
+      value: ZPieceBlocksPuzzle
       objectReference: {fileID: 0}
     - target: {fileID: 3673125992080649636, guid: e1ee3385fb4e9244ba3a33c660484f2c, type: 3}
       propertyPath: m_IsActive

@@ -1,12 +1,14 @@
-﻿using System;
-using System.Text;
+﻿using System.Text;
 using UnityEngine;
 
 public class BlockPuzzleProblemDatas : MonoBehaviour
 {
 
-    [SerializeField] private PuzzleDatabase blocksPuzzleDatabase;
+    //[SerializeField] private PuzzleDatabase blocksPuzzleDatabase;
     [SerializeField] private string easyLevel;
+    [SerializeField] private string easyLevelB;
+    [SerializeField] private string easyLevelC;
+    [SerializeField] private string[] easyLevels;
 
     public static BlockPuzzleProblemDatas Instance { get; private set; }
 
@@ -19,6 +21,18 @@ public class BlockPuzzleProblemDatas : MonoBehaviour
         Instance = this;
     }
 
+    public (bool[,], int[]) LoadEasyA() => GetSpecificProblem(easyLevel);
+    public (bool[,], int[]) LoadEasyB() => GetSpecificProblem(easyLevelB);
+    public (bool[,] , int[]) GetSpecificProblem(string problem)
+    {
+        Debug.Log("Parsing easy level: " + problem);
+        (bool[,] gameArea, int[] pieces) = ParseBlocksPuzzleString(problem);
+
+        //PrintLevel(gameArea);
+
+        return (gameArea, pieces);
+    }
+    
     public (bool[,] , int[]) GetRandomProblem(int rating = 1000)
     {
         // Player rating can be 1000-2999 ???
@@ -37,10 +51,10 @@ public class BlockPuzzleProblemDatas : MonoBehaviour
 
         //int randomProblem = UnityEngine.Random.Range(0, blocksPuzzleDatabase.data[section].values.Count);
 
-        Debug.Log("Parsing easy level: "+easyLevel);
+        //Debug.Log("Parsing easy level: "+easyLevel);
         (bool[,] gameArea, int[] pieces) = ParseBlocksPuzzleString(easyLevel);
 
-        PrintLevel(gameArea);
+        //PrintLevel(gameArea);
 
         return (gameArea, pieces);
     }
@@ -76,10 +90,10 @@ public class BlockPuzzleProblemDatas : MonoBehaviour
         foreach (char occupyAmtChar in parts[1]) {
             bool isOccupied = char.IsUpper(occupyAmtChar);
             int amtChars = occupyAmtChar - ( isOccupied ? 'A' : 'a')+1;
-            Debug.Log("Parsing char: "+ occupyAmtChar+" = "+amtChars);
+            //Debug.Log("Parsing char: "+ occupyAmtChar+" = "+amtChars);
             for (int i = 0; i < amtChars; i++) {
-                int col = index / 8;
-                int row = index % 8;
+                int col = index % 8;
+                int row = index / 8;
                 gameArea[col,row] = isOccupied;
                 index++;
             }
@@ -113,5 +127,11 @@ public class BlockPuzzleProblemDatas : MonoBehaviour
     {
         TryParseStringToLevelData(easyLevel, out int[,] data);
         return (data, 0);
+    }
+
+    internal (bool[,] gameAreaLoaded, int[] piecesLoaded) GetRandomEasyLevel()
+    {
+        int index = Random.Range(0, easyLevels.Length);
+        return GetSpecificProblem(easyLevels[index]);
     }
 }

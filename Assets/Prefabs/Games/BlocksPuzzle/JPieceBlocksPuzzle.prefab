@@ -22,19 +22,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 950091471345191045, guid: 2919fe7d9f25a104ca2300e2f53a01c9, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 950091471345191045, guid: 2919fe7d9f25a104ca2300e2f53a01c9, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0.5
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 950091471345191045, guid: 2919fe7d9f25a104ca2300e2f53a01c9, type: 3}
       propertyPath: m_AnchorMin.x
-      value: 0.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 950091471345191045, guid: 2919fe7d9f25a104ca2300e2f53a01c9, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 0.5
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 950091471345191045, guid: 2919fe7d9f25a104ca2300e2f53a01c9, type: 3}
       propertyPath: m_SizeDelta.x
@@ -78,7 +78,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 950091471345191045, guid: 2919fe7d9f25a104ca2300e2f53a01c9, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -42
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 950091471345191045, guid: 2919fe7d9f25a104ca2300e2f53a01c9, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -102,7 +102,7 @@ PrefabInstance:
       objectReference: {fileID: -705435038, guid: 3947215736224c647a9f0e0a742d7e99, type: 3}
     - target: {fileID: 3334941885731591992, guid: 2919fe7d9f25a104ca2300e2f53a01c9, type: 3}
       propertyPath: m_Name
-      value: JPiecePreview Variant
+      value: JPieceBlocksPuzzle
       objectReference: {fileID: 0}
     - target: {fileID: 3334941885731591992, guid: 2919fe7d9f25a104ca2300e2f53a01c9, type: 3}
       propertyPath: m_IsActive

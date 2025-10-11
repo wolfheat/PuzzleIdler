@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class BlocksPuzzle : MiniGameBase
 {
@@ -14,7 +15,10 @@ public class BlocksPuzzle : MiniGameBase
     int[,] board = new int[GameSize, GameSize];
     TetrisBlock[,] boardBlocks = new TetrisBlock[GameSize,GameSize];
 
+    [SerializeField] private MovablePiece[] movablePiecePrefabs;
+
     [SerializeField] private GameObject pieceHolder;
+    [SerializeField] private Transform[] pieceHolderPositions;
 
     [SerializeField] private GameObject boxHolder;
     [SerializeField] private TetrisBlock boxPrefab;
@@ -30,9 +34,12 @@ public class BlocksPuzzle : MiniGameBase
     [SerializeField] private TextMeshProUGUI playerRatingIncreaseText;
     [SerializeField] private GameObject playerRatingIncrease;
 
+    [SerializeField] private Toggle snapToggle;
+
     public static BlocksPuzzle Instance { get; private set; }
 
     public bool GameActive { get; set; }
+    public static bool Snap { get; private set; }
 
     private void Awake()
     {
@@ -47,7 +54,15 @@ public class BlocksPuzzle : MiniGameBase
     {
         UpdateRating();
 
+        // read snap toggle setting
+        UpdateSnap();
     }
+
+    public void UpdateSnap()
+    {
+        Snap = snapToggle.isOn;
+    }
+
     private void Start()
     {
         Stats.StatsUpdated += OnStatsUpdated;
@@ -78,33 +93,94 @@ public class BlocksPuzzle : MiniGameBase
     {
         Debug.Log("BlocksPuzzle: Restart Game");
 
-        ResetBoxes();
+        //ResetBoxes();
 
 
         // Also handle all placable Pieces
-        ResetAllPieces();
+        //ResetAllPieces();
 
 
         // Load a fix level
-        LoadLevel();
+        LoadRandomLevel();
+
+    }
+
+    private void LoadRandomLevel()
+    {
+        LoadEasyLevel();
+    }
+
+    public void LoadLevelCreate()
+    {
+        bool[,] level = new bool[16,16];
+
+
+        for (int j = 0; j < level.GetLength(1); j++) {
+            for (int i = 0; i < level.GetLength(0); i++) {
+                level[i, j] = true;
+            }
+        }
+
+        // Load empty area
+        int[] pieces = { 1, 1, 1, 1, 1, 1, 1 };
+        // Load all pieces
+        LoadLevel(level,pieces);
+    }
+
+    public void LoadEasyLevel()
+    {
+        (bool[,] gameAreaLoaded, int[] piecesLoaded) = BlockPuzzleProblemDatas.Instance.GetRandomEasyLevel();
+        LoadLevel(gameAreaLoaded, piecesLoaded);
+    }
+
+    private void LoadPieces(int[] piecesLoaded)
+    {
+        RemoveAllPieces();
+
+        // Remove all current pieces and add the new ones
+        int index = 0;
+        for (int i = 0; i < piecesLoaded.Length; i++) {
+            for (int j = 0; j < piecesLoaded[i]; j++) {
+                MovablePiece newPiece = Instantiate(movablePiecePrefabs[i],pieceHolder.transform);
+                Debug.Log("Loacal position for placeposition is " + pieceHolderPositions[index].localPosition);
+                newPiece.SetHome(pieceHolderPositions[index].position);
+                //newPiece.transform.localPosition = pieceHolderPositions[index].localPosition;
+                index++;
+            }   
+        }
+
+        //Debug.Log("First actual position is [" + pieceHolderPositions[0].position.x + "," + pieceHolderPositions[0].position.y + "]");
+        //Debug.Log("First local position is [" + pieceHolderPositions[0].localPosition.x + "," + pieceHolderPositions[0].localPosition.y + "]");
+
+    }
+
+    private void RemoveAllPieces()
+    {
+        foreach (var movablePiece in pieceHolder.GetComponentsInChildren<MovablePiece>()) {
+            Destroy(movablePiece.gameObject);
+        }
+    }
+
+    public void LoadEasyLevelB()
+    {
+        (bool[,] gameAreaLoaded, int[] piecesLoaded) = BlockPuzzleProblemDatas.Instance.LoadEasyB();
+
+        LoadLevel(gameAreaLoaded, piecesLoaded);
+    }
+
+    private void LoadLevel(bool[,] gameAreaLoaded, int[] piecesLoaded)
+    {
+        GameActive = true;
+
+        // Load gameArea
+        ResetBoxes(gameAreaLoaded);
+        LoadPieces(piecesLoaded);
 
         // Reset Ghost
         PiecesHandler.Instance.ResetGame();
 
         // Remove Win Screen Notice
         winNotice.gameObject.SetActive(false);
-
-    }
-
-    private void LoadLevel()
-    {
-
-        (bool[,] gameAreaLoaded, int[] piecesLoaded) = BlockPuzzleProblemDatas.Instance.GetRandomProblem();
-        
-        // Load gameArea
-        ResetBoxes(gameAreaLoaded);
-
-        // Load Pieces to place
 
     }
 
@@ -242,6 +318,8 @@ public class BlocksPuzzle : MiniGameBase
         // All blocks local position inside the piece - Can work with these offsets if valid after rotation
         Vector2[] positions = blocks.Select(x => new Vector2(x.transform.localPosition.x, x.transform.localPosition.y)).ToArray();
 
+
+
         // Works with placing the piece at the correct offset
         Vector2 pieceLocalGameAreaDropPosition = WolfheatProductions.Converter.GetMouseLocalPosition(GetComponent<RectTransform>()) - PiecesHandler.Instance.Offset;
 
@@ -339,6 +417,13 @@ public class BlocksPuzzle : MiniGameBase
 
     private bool EvaluateWin()
     {
+        // Check if any value is unplaced
+        for (int j = 0; j < board.GetLength(0); j++) {
+            for (int i = 0; i < board.GetLength(1); i++) {
+                if (board[i, j] == (int)TetrisBlockType.Ghost)
+                    return false;
+            }
+        }
         return true;
     }
 

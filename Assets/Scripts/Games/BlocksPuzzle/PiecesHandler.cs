@@ -184,11 +184,11 @@ public class PiecesHandler : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
         Vector2 mouseLocalPosition = WolfheatProductions.Converter.GetMouseLocalPosition(gameAreaRect, eventData);
 
         // Calculate local offset within the piece
-        Offset = pieceOffestPosition;
+        Offset = BlocksPuzzle.Snap ? Vector2.zero : pieceOffestPosition;
 
         // This issnt set correctly for rotated piece
-        UnrotatedOffset = piece.GetUnrotatedOffesetForPoint(pieceOffestPosition);
-
+        UnrotatedOffset = BlocksPuzzle.Snap ? Vector2.zero : piece.GetUnrotatedOffesetForPoint(pieceOffestPosition);
+        
 
         //Offset = piece.RectTransform.InverseTransformPoint(pieceHandlerMousePos);
 
@@ -197,7 +197,7 @@ public class PiecesHandler : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
 
         BlocksPuzzle.Instance.ClearBoardSpots(activePiece);
 
-        ghostController.transform.localPosition = mouseLocalPosition;
+        ghostController.transform.localPosition = BlocksPuzzle.Snap ? Vector2.zero : mouseLocalPosition;
     }
 
     public void OnPointerUp(PointerEventData eventData)

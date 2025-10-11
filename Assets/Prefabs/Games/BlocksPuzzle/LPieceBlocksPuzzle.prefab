@@ -18,7 +18,7 @@ PrefabInstance:
       objectReference: {fileID: 187152776, guid: 3947215736224c647a9f0e0a742d7e99, type: 3}
     - target: {fileID: 6179518109928684494, guid: 6ef84e53cace62040bd61865156f587e, type: 3}
       propertyPath: m_Name
-      value: LPiecePreview Variant
+      value: LPieceBlocksPuzzle
       objectReference: {fileID: 0}
     - target: {fileID: 6768055045019455076, guid: 6ef84e53cace62040bd61865156f587e, type: 3}
       propertyPath: m_Sprite
@@ -42,19 +42,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8549378186508936307, guid: 6ef84e53cace62040bd61865156f587e, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8549378186508936307, guid: 6ef84e53cace62040bd61865156f587e, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0.5
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8549378186508936307, guid: 6ef84e53cace62040bd61865156f587e, type: 3}
       propertyPath: m_AnchorMin.x
-      value: 0.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8549378186508936307, guid: 6ef84e53cace62040bd61865156f587e, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 0.5
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8549378186508936307, guid: 6ef84e53cace62040bd61865156f587e, type: 3}
       propertyPath: m_SizeDelta.x
@@ -98,7 +98,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8549378186508936307, guid: 6ef84e53cace62040bd61865156f587e, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 29
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8549378186508936307, guid: 6ef84e53cace62040bd61865156f587e, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x

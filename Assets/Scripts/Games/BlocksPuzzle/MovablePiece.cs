@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -39,19 +40,33 @@ public class MovablePiece : BasePiece, IPointerDownHandler, IPointerUpHandler
     {
         base.Awake();
         // Store the piece home position
-        home = transform.localPosition;
+    }
+
+
+
+    public void SetHome(Vector3 localPosition)
+    {
+        Debug.Log("Creating movable piece at position "+localPosition);
+        home = localPosition;
+        ReturnHome();
+        StartCoroutine(DelayedReturnHome());
+    }
+
+    private IEnumerator DelayedReturnHome()
+    {
+        yield return null;
+        ReturnHome();
     }
 
     public void ReturnHome()
     {
-        transform.localPosition = home;
+        transform.position = home;
         OccupySpots = new Vector2Int[0];
     }
     internal void SetOccupySpots(Vector2Int[] indexPositions)
     {
         OccupySpots = indexPositions;
         OccupyRotation = Rotation;
-        Debug.Log("Adding occypySpots " + OccupySpots?.Length);
     }
 
 
@@ -103,6 +118,7 @@ public class MovablePiece : BasePiece, IPointerDownHandler, IPointerUpHandler
     // Mouse Pointer Interractions
     public void OnPointerDown(PointerEventData eventData)
     {
+        if (!BlocksPuzzle.Instance.GameActive) return;
         Debug.Log("Blocks Puzzle:Start Move Piece");    
         //Vector2 GridPosition = WolfheatProductions.Converter.GetMouseLocalPosition(eventData, this.GetComponentInParent<RectTransform>());
         //Debug.Log("Blocks Puzzle: Start Move Piece ["+GridPosition.x+","+GridPosition.y+"]");
@@ -114,6 +130,7 @@ public class MovablePiece : BasePiece, IPointerDownHandler, IPointerUpHandler
 
     public void OnPointerUp(PointerEventData eventData)
     {
+        if (!BlocksPuzzle.Instance.GameActive) return;
         Debug.Log("Blocks Puzzle:Drop Piece");    
     }
 
