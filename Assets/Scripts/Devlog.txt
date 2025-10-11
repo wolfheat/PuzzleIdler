@@ -103,6 +103,7 @@ Aug 2025
 11/10	* Pieces placed on piecepositions correctly
 		* Player limited from moving pieces after a win
 		* Proper win check
+		* Serializan error fixed - Was Editor Code outtside editor folder? And UIElements using statement
 
 
 		* Create system for saving and loading game problems make a database

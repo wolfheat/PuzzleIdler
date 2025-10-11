@@ -52,7 +52,7 @@ public class PieceSelector : MonoBehaviour
         activeType = selectedType;
         Debug.Log("Left size = "+ left.GetComponentsInChildren<Transform>(false).Length);
         GameObject selected = selectedType < 6 ? left.GetComponentsInChildren<Transform>(false)[selectedType+1].gameObject : right.GetComponentsInChildren<Transform>(false)[selectedType % 6+1].gameObject;
-        Debug.Log("Selector set to "+selected.name);
+        //Debug.Log("Selector set to "+selected.name);
         selector.transform.position = selected.transform.position;
     }
 }
