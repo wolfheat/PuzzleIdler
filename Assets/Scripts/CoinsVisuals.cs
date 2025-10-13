@@ -1,4 +1,5 @@
-using TMPro;        
+using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class CoinsVisuals : MonoBehaviour
@@ -25,12 +26,23 @@ public class CoinsVisuals : MonoBehaviour
         // Add listener for added coin event
         Stats.CoinUpdated += UpdateNeeded;
         Stats.CPSUpdated += UpdateCPSNeeded;
+        Canvas.willRenderCanvases += DoPendingUpdates;
     }
+
+    private void OnDisable()
+    {
+        Stats.CoinUpdated -= UpdateTexts;
+        Stats.CPSUpdated -= UpdateCPSNeeded;
+        Canvas.willRenderCanvases -= DoPendingUpdates;
+    }
+
+
+
     private bool doUpdate = false;
     private bool doCPSUpdate = false;
     private void UpdateNeeded() => doUpdate = true;
     private void UpdateCPSNeeded() => doCPSUpdate = true;
-    private void LateUpdate()
+    private void DoPendingUpdates()
     {
         if (doUpdate) {
             UpdateTexts();
@@ -40,11 +52,6 @@ public class CoinsVisuals : MonoBehaviour
         }
         doUpdate = false;
         doCPSUpdate = false;
-    }
-
-    private void OnDisable()
-    {
-        Stats.CoinUpdated -= UpdateTexts;        
     }
 
 
@@ -60,9 +67,11 @@ public class CoinsVisuals : MonoBehaviour
     }
     public void UpdateCPSTexts()
     {
-        Debug.Log("** Updating Texts Stats.CPSAsString = "+ Stats.CPSAsString);
+        Debug.Log("** A Updating Texts Stats.CPSAsString = "+ Stats.CPSAsString);
         cps.text = Stats.CPSAsString;
+        Debug.Log("** B Updating Texts Stats.CPSAsString = "+ Stats.CPSAsString);
         gems.text = Stats.GemsHeldAsString;
+        Debug.Log("** C Updating Texts Stats.CPSAsString = "+ Stats.CPSAsString);
         //Debug.Log("Updating Texts-Complete");
     }
 }

@@ -104,13 +104,16 @@ Aug 2025
 		* Player limited from moving pieces after a win
 		* Proper win check
 		* Serializan error fixed - Was Editor Code outtside editor folder? And UIElements using statement
+12/10	* Created random level generator
+
+
+
+		* dO WE WANT SCALING OF THE BlocksPuzzle?
+		* Scaling kinda works but pieces arent centered correctly on top of game area
 
 
 		* Create system for saving and loading game problems make a database
-
 		* Make the stats more tidy for block puzzle game . remove unwanted stuff
-
-
 		
 					
 		// CHESS

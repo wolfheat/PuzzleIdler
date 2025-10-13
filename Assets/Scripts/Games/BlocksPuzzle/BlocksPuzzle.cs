@@ -34,6 +34,9 @@ public class BlocksPuzzle : MiniGameBase
     [SerializeField] private TextMeshProUGUI playerRatingIncreaseText;
     [SerializeField] private GameObject playerRatingIncrease;
 
+    // Debug Texfields
+    [SerializeField] private TextMeshProUGUI levelCreateTextfield;
+
     [SerializeField] private Toggle snapToggle;
 
     public static BlocksPuzzle Instance { get; private set; }
@@ -100,19 +103,57 @@ public class BlocksPuzzle : MiniGameBase
         //ResetAllPieces();
 
 
-        // Load a fix level
-        LoadRandomLevel();
+        // Load a predefined easy level
+        LoadEasyLevel();
 
     }
-
-    private void LoadRandomLevel()
+    
+    public void RestartGeneratedGame()
     {
-        LoadEasyLevel();
+        Debug.Log("BlocksPuzzle: Restart Generated Game");
+
+        // Load a generated level
+
+        int diff = 5 + (Stats.MiniGameRatings[(int)GameType] - 1000) / 200;
+
+        Debug.Log("rating 1000 = "+ (5 + (1000 - 1000) / 200));
+        Debug.Log("rating 1400 = "+ (5 + (1400 - 1000) / 200));
+        Debug.Log("rating 1700 = "+ (5 + (1700 - 1000) / 200));
+        Debug.Log("rating 1999 = "+ (5 + (1999 - 1000) / 200));
+        Debug.Log("rating 2000 = "+ (5 + (2000 - 1000) / 200));
+        Debug.Log("rating 2100 = "+ (5 + (2100 - 1000) / 200));
+
+        // Level depends on rating, difficulty is the amount of pieces that should go from 1000 rating = 5 to 3000 = 10 ?
+
+        GenerateLevel(diff);
+    }
+
+    private void GenerateLevel(int difficulty)
+    {
+        // Generate the level and pieces
+
+
+        
+
+
+        (bool[,] level, int[] pieces) = BlockPuzzleProblemDatas.Instance.GenerateRandomLevel(difficulty);
+
+        LoadLevel(level,pieces);
     }
 
     public void LoadLevelCreate()
     {
-        bool[,] level = new bool[16,16];
+        bool[,] level = GetEmptyLevelBoard();
+
+        // Load empty area
+        int[] pieces = { 1, 1, 1, 1, 1, 1, 1 };
+        // Load all pieces
+        LoadLevel(level, pieces);
+    }
+
+    public static bool[,] GetEmptyLevelBoard()
+    {
+        bool[,] level = new bool[16, 16];
 
 
         for (int j = 0; j < level.GetLength(1); j++) {
@@ -121,10 +162,7 @@ public class BlocksPuzzle : MiniGameBase
             }
         }
 
-        // Load empty area
-        int[] pieces = { 1, 1, 1, 1, 1, 1, 1 };
-        // Load all pieces
-        LoadLevel(level,pieces);
+        return level;
     }
 
     public void LoadEasyLevel()
@@ -142,9 +180,7 @@ public class BlocksPuzzle : MiniGameBase
         for (int i = 0; i < piecesLoaded.Length; i++) {
             for (int j = 0; j < piecesLoaded[i]; j++) {
                 MovablePiece newPiece = Instantiate(movablePiecePrefabs[i],pieceHolder.transform);
-                Debug.Log("Loacal position for placeposition is " + pieceHolderPositions[index].localPosition);
                 newPiece.SetHome(pieceHolderPositions[index].position);
-                //newPiece.transform.localPosition = pieceHolderPositions[index].localPosition;
                 index++;
             }   
         }
@@ -190,7 +226,7 @@ public class BlocksPuzzle : MiniGameBase
         string gameAreaString = ReadOccupiedSpotsAsGameAreaString();
         Debug.Log("GameArea = "+gameAreaString);
 
-        
+        levelCreateTextfield.text = gameAreaString;
     }
 
     private string ReadOccupiedSpotsAsGameAreaString()

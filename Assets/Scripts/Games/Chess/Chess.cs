@@ -137,6 +137,8 @@ public class Chess : MiniGameBase, IPointerDownHandler, IPointerUpHandler, IPoin
         }
         Instance = this;
 
+        FIndAllTextfields();
+
         SquareSize = (int)chessBoardRect.rect.width/8;
 
 
@@ -146,6 +148,19 @@ public class Chess : MiniGameBase, IPointerDownHandler, IPointerUpHandler, IPoin
         // Derive the square size at current scale
         squareSizeScaled = squareHolder.GetComponent<RectTransform>().sizeDelta.x;
         Debug.Log("**-- SquareSize = "+squareSizeScaled);
+    }
+
+    private void FIndAllTextfields()
+    {
+
+        TMP_Text[] fields = Resources.FindObjectsOfTypeAll<TMP_Text>();
+        //TMP_Text[] fields = FindObjectsOfType<TMP_Text>();
+        foreach (TMP_Text field in fields) {
+            if (field.font == null) {
+                Debug.LogWarning($"TMP_Text '{field.name}' has no Font assigned!");
+            }
+        }
+
     }
 
     private void OnEnable()
@@ -209,6 +224,8 @@ public class Chess : MiniGameBase, IPointerDownHandler, IPointerUpHandler, IPoin
     {
         // Clear last problem
         ClearBoard();
+
+        /*
 
         // Remove Win Screen Notice
         winNotice.gameObject.SetActive(false);
@@ -298,7 +315,7 @@ public class Chess : MiniGameBase, IPointerDownHandler, IPointerUpHandler, IPoin
 
         // Perform the first computer move
         StartCoroutine(AnimateComputerMove());
-
+        */
     }
 
     private string ArrayString(int[] solution)

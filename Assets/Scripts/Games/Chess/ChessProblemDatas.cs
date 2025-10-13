@@ -128,9 +128,10 @@ public class ChessProblemDatas : MonoBehaviour
     {
         string[] levelParts = selectedLevel.Split(',');
 
-        ChessPuzzleData data = new ChessPuzzleData();
+        Debug.Log("Thread ID: " + System.Threading.Thread.CurrentThread.ManagedThreadId);
+        ChessPuzzleData data = ScriptableObject.CreateInstance<ChessPuzzleData>();
 
-        data.name = levelParts[0];
+        //data.name = levelParts[0];
 
         data.rating = Int32.Parse(levelParts[3]);
 

@@ -165,6 +165,7 @@ public class Tetris : MiniGameBase
 
     public void ResetGame()
     {
+        
         // Make playr able to interract with board again
         GameActive = true;
 
