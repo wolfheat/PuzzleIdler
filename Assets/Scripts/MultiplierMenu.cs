@@ -17,12 +17,13 @@ public class MultiplierMenu : MonoBehaviour
     [SerializeField] private GameObject equalPrefab;
     [SerializeField] private GameObject timesPrefab;
 
+    [SerializeField] private GameObject miniGameHolder;
     [SerializeField] private GameObject miniButtonHolder;
 
     private bool active = false;
     private int activeGameIndex = -1;
 
-    private Vector3 activePosition = new Vector3(0,0,0);
+    private Vector3 activePosition = new Vector3(0f, 0,0);
     private Vector3 inActivePosition = new Vector3(-1110,0,0);
 
     private const float AnimationSpeed = 4500f;

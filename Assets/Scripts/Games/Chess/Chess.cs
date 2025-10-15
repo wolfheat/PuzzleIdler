@@ -225,7 +225,7 @@ public class Chess : MiniGameBase, IPointerDownHandler, IPointerUpHandler, IPoin
         // Clear last problem
         ClearBoard();
 
-        /*
+        
 
         // Remove Win Screen Notice
         winNotice.gameObject.SetActive(false);
@@ -315,7 +315,7 @@ public class Chess : MiniGameBase, IPointerDownHandler, IPointerUpHandler, IPoin
 
         // Perform the first computer move
         StartCoroutine(AnimateComputerMove());
-        */
+        
     }
 
     private string ArrayString(int[] solution)

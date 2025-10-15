@@ -105,6 +105,14 @@ Aug 2025
 		* Proper win check
 		* Serializan error fixed - Was Editor Code outtside editor folder? And UIElements using statement
 12/10	* Created random level generator
+14/10	* Rewamp of the UI
+
+
+		* Fix alignment of block puzzle pieces
+
+
+		* Gems can be used to unlock features in the games? Or to improve main game.
+
 
 
 
@@ -129,6 +137,11 @@ Aug 2025
 		/ Right hand: arrow keys to move/soft drop/hard drop 
 
 		* Clean upi updating save file from any games, make it better
+
+
+		// ASSETS
+		Gems and Crystals - Free	Aztech Games
+
 
 		
 		* Decide what to do with games multipliers when offline, 
