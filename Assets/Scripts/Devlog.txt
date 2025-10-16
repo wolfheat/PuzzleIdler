@@ -106,7 +106,10 @@ Aug 2025
 		* Serializan error fixed - Was Editor Code outtside editor folder? And UIElements using statement
 12/10	* Created random level generator
 14/10	* Rewamp of the UI
+16/10	* More Rewamp of the UI
+		
 
+		* Make numbers select menus when imputed with no game loaded
 
 		* Fix alignment of block puzzle pieces
 

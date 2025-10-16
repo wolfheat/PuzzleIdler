@@ -354,8 +354,6 @@ public class BlocksPuzzle : MiniGameBase
         // All blocks local position inside the piece - Can work with these offsets if valid after rotation
         Vector2[] positions = blocks.Select(x => new Vector2(x.transform.localPosition.x, x.transform.localPosition.y)).ToArray();
 
-
-
         // Works with placing the piece at the correct offset
         Vector2 pieceLocalGameAreaDropPosition = WolfheatProductions.Converter.GetMouseLocalPosition(GetComponent<RectTransform>()) - PiecesHandler.Instance.Offset;
 

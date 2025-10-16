@@ -5,9 +5,12 @@ public class Options : MonoBehaviour
 {
     [SerializeField] private GameObject[] panels; 
     [SerializeField] private GameObject settings; 
-    [SerializeField] private GameObject stats; 
-
+    [SerializeField] private GameObject stats;
+        
     private int active = -1;
+
+    public bool AnyStatsPanelOpen => stats.activeSelf || settings.activeSelf;
+
     public void SelectOption(int newSelected)
     {
         // if not same close all and open it
@@ -26,8 +29,20 @@ public class Options : MonoBehaviour
             panel.SetActive(false);
     }
 
-    public void ToggleSettings() => settings.SetActive(!settings.activeSelf);
-    public void ToggleStats() => stats.SetActive(!stats.activeSelf);
+    public void ToggleSettings()
+    {
+        // Cloase other panels
+        stats.SetActive(false);
+
+        settings.SetActive(!settings.activeSelf);
+    }
+    public void ToggleStats()
+    {
+        // Cloase other panels
+        settings.SetActive(false);
+
+        stats.SetActive(!stats.activeSelf);
+    }
 
     private void OpenPanel(int newPanel) => panels[newPanel].SetActive(true);
 }

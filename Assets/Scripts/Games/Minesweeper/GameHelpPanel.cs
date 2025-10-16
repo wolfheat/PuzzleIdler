@@ -12,6 +12,8 @@ public class GameHelpPanel : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        if(textHolders.Length == 0 || textHolders[0] == null)
+            return;
         UpdateInfo();    
     }
 
@@ -25,7 +27,8 @@ public class GameHelpPanel : MonoBehaviour
 
         // Clear the Holders and populate with new info
         foreach (var holder in textHolders) {
-            foreach(Transform t in holder.transform)
+            if (holder == null) continue;
+            foreach (Transform t in holder.transform)
                 Destroy(t);
         }
 

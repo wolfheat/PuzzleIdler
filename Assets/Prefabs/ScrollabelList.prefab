@@ -103,7 +103,7 @@ MonoBehaviour:
   m_FillClockwise: 1
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
+  m_PixelsPerUnitMultiplier: 3
 --- !u!114 &5106808466072619185
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -155,8 +155,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0, y: -8}
-  m_SizeDelta: {x: 234.4868, y: 413.88}
+  m_AnchoredPosition: {x: 0, y: -2.5}
+  m_SizeDelta: {x: -5, y: 413.88}
   m_Pivot: {x: 0.50000006, y: 1}
 --- !u!222 &3660577493160111252
 CanvasRenderer:
@@ -211,7 +211,7 @@ MonoBehaviour:
   m_Content: {fileID: 8034319570680891142}
   m_Horizontal: 0
   m_Vertical: 1
-  m_MovementType: 1
+  m_MovementType: 2
   m_Elasticity: 0.1
   m_Inertia: 1
   m_DecelerationRate: 0.135

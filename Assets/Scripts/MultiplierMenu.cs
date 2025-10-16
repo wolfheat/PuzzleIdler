@@ -32,6 +32,7 @@ public class MultiplierMenu : MonoBehaviour
 
 
     public static MultiplierMenu Instance { get; private set; }
+    public bool GameIsLoaded => activeGameIndex != -1;
 
     private void Awake()
     {

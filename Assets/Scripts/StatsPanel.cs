@@ -45,7 +45,8 @@ public class StatsPanel : MonoBehaviour
     private void OnStatsLoaded()
     {
         Debug.Log("** LOADING COMPLETE - StatsPanel");
-        StartCoroutine(DelayedUpdate());
+        if(gameObject.activeSelf)
+            StartCoroutine(DelayedUpdate());
     }
 
     void OnEnable() => StartCoroutine(DelayedUpdate());
