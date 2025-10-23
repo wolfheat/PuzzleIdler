@@ -78,7 +78,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1630277316629265527, guid: 527e34e27c1eb524d85a0b3ca764ad58, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -0.0000076293945
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1630277316629265527, guid: 527e34e27c1eb524d85a0b3ca764ad58, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -99,6 +99,10 @@ PrefabInstance:
     - target: {fileID: 3889025704500831178, guid: 527e34e27c1eb524d85a0b3ca764ad58, type: 3}
       propertyPath: m_Name
       value: OPiecePreview Variant
+      objectReference: {fileID: 0}
+    - target: {fileID: 3889025704500831178, guid: 527e34e27c1eb524d85a0b3ca764ad58, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4455855029784024672, guid: 527e34e27c1eb524d85a0b3ca764ad58, type: 3}
       propertyPath: m_Sprite

@@ -8,6 +8,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 193021735688145473, guid: e1ee3385fb4e9244ba3a33c660484f2c, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1269698925012087321, guid: e1ee3385fb4e9244ba3a33c660484f2c, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -70,7 +74,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1269698925012087321, guid: e1ee3385fb4e9244ba3a33c660484f2c, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -0.0000076293945
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1269698925012087321, guid: e1ee3385fb4e9244ba3a33c660484f2c, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -96,6 +100,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: ZPiecePreview Variant
       objectReference: {fileID: 0}
+    - target: {fileID: 3673125992080649636, guid: e1ee3385fb4e9244ba3a33c660484f2c, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4069995339429570044, guid: e1ee3385fb4e9244ba3a33c660484f2c, type: 3}
       propertyPath: m_AnchoredPosition.x
       value: -30
@@ -116,6 +124,14 @@ PrefabInstance:
       propertyPath: m_Sprite
       value: 
       objectReference: {fileID: 1548975607, guid: 3947215736224c647a9f0e0a742d7e99, type: 3}
+    - target: {fileID: 7394048124260127687, guid: e1ee3385fb4e9244ba3a33c660484f2c, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7394048124260127687, guid: e1ee3385fb4e9244ba3a33c660484f2c, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 15
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

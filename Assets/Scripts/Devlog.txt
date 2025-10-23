@@ -107,9 +107,11 @@ Aug 2025
 12/10	* Created random level generator
 14/10	* Rewamp of the UI
 16/10	* More Rewamp of the UI
-		
+		[Build WEB: 18.8Mb]
+23/10	* Block puzzle align and scale fix
+ 
 
-		* Make numbers select menus when imputed with no game loaded
+		
 
 		* Fix alignment of block puzzle pieces
 

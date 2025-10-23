@@ -357,6 +357,7 @@ public class BlocksPuzzle : MiniGameBase
         // Works with placing the piece at the correct offset
         Vector2 pieceLocalGameAreaDropPosition = WolfheatProductions.Converter.GetMouseLocalPosition(GetComponent<RectTransform>()) - PiecesHandler.Instance.Offset;
 
+
         // WorldPiecePosition
         Vector2 worldPiecePosition = GetComponent<RectTransform>().TransformPoint(pieceLocalGameAreaDropPosition);
 
@@ -402,28 +403,26 @@ public class BlocksPuzzle : MiniGameBase
 
         Vector2 block0dropPosition = new Vector2(blocks[0].transform.localPosition.x + pieceLocalGameAreaDropPosition.x, blocks[0].transform.localPosition.y + pieceLocalGameAreaDropPosition.y);
 
+        //Vector2 adjusted = new Vector2(indexPositions[0].x*BlockSize, -indexPositions[0].y*BlockSize);
         Vector2 adjusted = new Vector2((BlockSize / 2) + indexPositions[0].x*BlockSize, -(BlockSize / 2) -indexPositions[0].y*BlockSize);
 
         // Figure out how much this moves the piece
-        Vector2 pieceMoveDelta = adjusted - block0dropPosition;
+        Vector2 pieceMoveDelta = (adjusted - block0dropPosition)*1.5f;
 
         Vector2 gameAreaPiecePosition = worldPiecePosition + pieceMoveDelta;
 
         // Now convert from world space -> piece parent local space
         Vector2 localPosInPieceParent = activePiece.transform.parent.GetComponent<RectTransform>().InverseTransformPoint(gameAreaPiecePosition);
 
-        // Get the piece position on the pieceHolder for this placement
-        Vector2 placePos = localPosInPieceParent;
-
-
         // Now check these positions
         (bool valid, bool outside) = ValidatePlacementPosition(indexPositions);
 
         if (valid) {
-            PlacePieceOnValidSpot(activePiece, indexPositions, placePos);
+            PlacePieceOnValidSpot(activePiece, indexPositions);
 
             // DOES NOT WORK
-            activePiece.transform.localPosition = placePos;
+            activePiece.transform.localPosition = localPosInPieceParent;
+            //activePiece.transform.position = worldPiecePosition;
 
             // Evaluate if winning the game
             if (EvaluateWin())
@@ -700,7 +699,7 @@ public class BlocksPuzzle : MiniGameBase
         return (true, false);
     }
 
-    private void PlacePieceOnValidSpot(MovablePiece activePiece, Vector2Int[] indexPositions, Vector2 placePos)
+    private void PlacePieceOnValidSpot(MovablePiece activePiece, Vector2Int[] indexPositions)
     {
         // Occupy board
         OccupySpots(activePiece, indexPositions);

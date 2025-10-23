@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using BreakInfinity;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class StatsPanel : MonoBehaviour
