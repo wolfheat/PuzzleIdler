@@ -159,7 +159,10 @@ public class MineSweeper : MiniGameBase
         int increase = Stats.MinesweeperRatingGain(boardDifficulty);
 
         // Award Rating and reward
-        Stats.ChangeMiniGameRating(MiniGame.MineSweeper, increase);
+        Stats.ChangeMiniGameRating(MiniGame.Minesweeper, increase);
+
+        // Add Gem
+        Stats.GemGain(GameType);
 
         // Also make this general?
         winNotice.gameObject.SetActive(true);

@@ -68,7 +68,8 @@ public class MultiplierMenu : MonoBehaviour
             Debug.Log("Creating button "+i);
             MiniGameButton button = Instantiate(miniGameButtonPrefab, miniButtonHolder.transform);
             miniGameButtons.Add(button);
-            button.SetButtonInfo(gameNames[i],multipliers[i],i,i<miniGames.Count);
+            button.SetButtonInfo(gameNames[i],multipliers[i],i,i<miniGames.Count,ImagesIcons.Instance.GetGemColor(i));
+            
             if(i < multipliers.Length -1 && i < gameNames.Length -1)
                 Instantiate(timesPrefab, miniButtonHolder.transform);
         }
@@ -113,12 +114,16 @@ public class MultiplierMenu : MonoBehaviour
 
     public void UpdateStats()
     {
+        int[] gems = Stats.MiniGameGems;
+        
         //Debug.Log("SAVESYSTEM - Updating Minigame stats");
         Stats.UpdateMiniGameTotalMultiplier();
-
         float[] multipliers = Stats.AllMiniGamesMultipliers();
+
         for (int i = 0; i < miniGameButtons.Count && i < multipliers.Length; i++) {
-            miniGameButtons[i].UpdateMultiplier(multipliers[i]); 
+            miniGameButtons[i].UpdateMultiplier(multipliers[i]);
+            miniGameButtons[i].UpdateGems(gems[i]); 
+
             //Debug.Log(i+" "+ multipliers[i]);
         }
         totalValue.text = "x " + Stats.MiniGamesMultipliersTotal.ToString("F3", CultureInfo.InvariantCulture);

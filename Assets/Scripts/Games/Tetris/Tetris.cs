@@ -674,7 +674,10 @@ public class Tetris : MiniGameBase
         
         Debug.Log("YOU LOSE");
         GameActive = false;
-        
+
+        // Add Gem
+        Stats.GemGain(GameType);
+
         // Also make this general?
         winNotice.gameObject.SetActive(true);        
         winNotice.SetWin(didWin);

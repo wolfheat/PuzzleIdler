@@ -3,7 +3,7 @@ using System.Linq;
 using BreakInfinity;
 using UnityEngine;
 
-public enum MiniGame{Chess,MineSweeper,Sudoku,Tetris, Snake, BlocksPuzzle, BubbleTanks };
+public enum MiniGame{Chess,Minesweeper,Sudoku,Tetris, Snake, BlockPuzzle, BubbleTanks };
 
 public static class Stats
 {
@@ -42,6 +42,7 @@ public static class Stats
 
     // Mini Games
     public static int[] MiniGameRatings = new int[] { 1000, 1000, 1000, 1000, 1000, 1000, 1000};
+    public static int[] MiniGameGems = new int[] { 0, 0, 0, 0, 0, 0, 0};
 
     public static float MiniGamesMultipliersTotal { get; set; } = 1;
 
@@ -184,6 +185,7 @@ public static class Stats
     private static void UpdateMinigameSaveStats()
     {
         SavingUtility.playerGameData.MiniGameRatings = MiniGameRatings;
+        SavingUtility.playerGameData.MiniGameGems = MiniGameGems;
 
         StatsUpdated?.Invoke();
 
@@ -255,7 +257,7 @@ public static class Stats
 
     public static int MinesweeperRatingGain(int boardDifficulty)
     {
-        float multiplier = MiniGameRatings[(int)MiniGame.MineSweeper] switch
+        float multiplier = MiniGameRatings[(int)MiniGame.Minesweeper] switch
         {
             < 1400 => 1,
             < 1600 => 0.8f,
@@ -269,7 +271,7 @@ public static class Stats
     public static int BlockPuzzleRatingGain()
     {
         
-        float multiplier = MiniGameRatings[(int)MiniGame.BlocksPuzzle] switch
+        float multiplier = MiniGameRatings[(int)MiniGame.BlockPuzzle] switch
         {
             < 1400 => 1,
             < 1600 => 0.8f,
@@ -290,7 +292,9 @@ public static class Stats
             MiniGameRatings[i] = Math.Clamp(MiniGameRatings[i] - amt, MiniGameMin, MiniGameMax);
         }
 
-        UpdateSaveRatings();
+        // Updage ratings
+        UpdateSaveRatings(); 
+
 
         StatsUpdated?.Invoke();
         CPSUpdated?.Invoke();
@@ -301,17 +305,41 @@ public static class Stats
     }
 
     private static void UpdateSaveRatings() => SavingUtility.playerGameData.MiniGameRatings = MiniGameRatings;
+    
+    private static void UpdateSaveGems() => SavingUtility.playerGameData.MiniGameGems = MiniGameGems;
 
-    internal static void SetMiniGameStats(int[] miniGameRatings)
+    internal static void SetMiniGameStats(int[] ratings)
     {
-        if (miniGameRatings == null)
+        if (ratings == null)
             return; // Keep the default values
 
         // Overwrite all games in the game - allows for new games to be added and save file still working. (if array placement is kept - need id save for it to work with any)
-        for (int i = 0; i < miniGameRatings.Length; i++) {
-            MiniGameRatings[i] = miniGameRatings[i];
+        for (int i = 0; i < ratings.Length; i++) {
+            MiniGameRatings[i] = ratings[i];
+        }
+    }
+    
+    internal static void SetMiniGameGems(int[] gems)
+    {
+
+        Debug.Log("Setting Mini games Gems ");  
+        if (gems == null)
+            return; // Keep the default values
+
+        Debug.Log("Setting Mini games Gems [0] =" + gems[0]);
+
+        // Overwrite all games in the game - allows for new games to be added and save file still working. (if array placement is kept - need id save for it to work with any)
+        for (int i = 0; i < gems.Length; i++) {
+            MiniGameGems[i] = gems[i];
         }
     }
 
     internal static int MiniGameRating(MiniGame game) => MiniGameRatings[(int)game];
+
+    internal static void GemGain(MiniGame gameType)
+    {
+        Debug.Log("Gaining a gem "+gameType);
+        MiniGameGems[(int)gameType]++;
+        StatsUpdated?.Invoke();
+    }
 }

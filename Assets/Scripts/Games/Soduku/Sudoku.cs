@@ -237,7 +237,10 @@ public class Sudoku : MiniGameBase, IPointerMoveHandler, IPointerDownHandler
         
         Debug.Log("YOU WIN");
         GameActive = false;
-        
+
+        // Add Gem
+        Stats.GemGain(GameType);
+
         // Also make this general?
         winNotice.gameObject.SetActive(true);        
         winNotice.SetWin(didWin);

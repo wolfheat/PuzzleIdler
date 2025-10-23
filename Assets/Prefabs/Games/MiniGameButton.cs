@@ -17,6 +17,10 @@ public class MiniGameButton : MonoBehaviour, IPointerClickHandler
 
     [SerializeField] private TextMeshProUGUI GameNameText;
     [SerializeField] private TextMeshProUGUI multiplierText;
+
+    [SerializeField] private TextMeshProUGUI gemText;
+    [SerializeField] private Image gemImage;
+
     [SerializeField] private Image image;
 
     [Header("Button Colors")]
@@ -28,12 +32,13 @@ public class MiniGameButton : MonoBehaviour, IPointerClickHandler
     [SerializeField] private Color nonExistTextColor;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    public void SetButtonInfo(string gameName, float multiplier, int indexIn, bool gameExists)
+    public void SetButtonInfo(string gameName, float multiplier, int indexIn, bool gameExists, Color gemColor)
     {
         SetColor(gameExists);
         index = indexIn;
         GameNameText.text = gameName;
         UpdateMultiplier(multiplier);
+        gemImage.color = gemColor;
     }
 
     private void SetColor(bool gameExists)
@@ -44,8 +49,11 @@ public class MiniGameButton : MonoBehaviour, IPointerClickHandler
         GameNameText.color = gameExists ? existTextColor : nonExistTextColor;
         multiplierText.color = gameExists ? existTextColor : nonExistTextColor;
     }
-
     // Update is called once per frame
     public void UpdateMultiplier(float newMultiplayer) => multiplierText.text = newMultiplayer.ToString("F3", CultureInfo.InvariantCulture);
 
+    internal void UpdateGems(int v)
+    {
+        gemText.text = v.ToString();
+    }
 }

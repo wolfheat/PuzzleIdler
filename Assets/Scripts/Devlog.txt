@@ -109,16 +109,18 @@ Aug 2025
 16/10	* More Rewamp of the UI
 		[Build WEB: 18.8Mb]
 23/10	* Block puzzle align and scale fix
- 
+		* Gems now store to save file
+		* Scene ui update
 
-		
 
-		* Fix alignment of block puzzle pieces
+		* Change name of GemsHeld to something else
 
+		* Maybe return a rotated piece as rotated and not the starting rotation
+		* Maybe place a piece dropped outside board at closest free spot, not its home?
+
+		* Implement one gem gain per game finished?
 
 		* Gems can be used to unlock features in the games? Or to improve main game.
-
-
 
 
 		* dO WE WANT SCALING OF THE BlocksPuzzle?

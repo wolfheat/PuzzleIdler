@@ -713,6 +713,9 @@ public class Chess : MiniGameBase, IPointerDownHandler, IPointerUpHandler, IPoin
         winNotice.gameObject.SetActive(true);
         winNotice.SetWin(didWin);
 
+        // Add Gem
+        Stats.GemGain(GameType);
+
         // Award Rating and reward
         Stats.ChangeMiniGameRating(GameType, didWin ? Stats.ChessGameWinRatingChange : Stats.ChessGameLossRatingChange);
         

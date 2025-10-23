@@ -478,6 +478,9 @@ public class BlocksPuzzle : MiniGameBase
         int ratingAchieved = Stats.BlockPuzzleRatingGain();
         int currentRating = Stats.MiniGameRatings[(int)GameType];
 
+        Stats.GemGain(GameType);
+
+
         int increase = Math.Min(2999, currentRating + ratingAchieved) - currentRating;
 
         if (increase <= 0) {

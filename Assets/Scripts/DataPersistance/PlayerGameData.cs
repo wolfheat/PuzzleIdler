@@ -118,6 +118,7 @@ public class PlayerGameData
 
     // MINI GAMES STATS
     public int[] MiniGameRatings { get; set; }
+    public int[] MiniGameGems { get; set; }
 
     // Held coins
     public BigDouble coins{ get; set; } 

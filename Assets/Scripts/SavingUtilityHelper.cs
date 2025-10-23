@@ -27,6 +27,11 @@ public class SavingUtilityHelper : MonoBehaviour
         // Mini Games
         Stats.SetMiniGameStats(SavingUtility.playerGameData.MiniGameRatings);
 
+        // Gems
+        Stats.SetMiniGameGems(SavingUtility.playerGameData.MiniGameGems);
+
+
+
         // Time
         long seconds = (long)(DateTime.Now - SavingUtility.playerGameData.SaveTime).TotalSeconds;
         Debug.Log("Save Date = " + SavingUtility.playerGameData.SaveTime);
