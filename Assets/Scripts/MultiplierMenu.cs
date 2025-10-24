@@ -95,6 +95,7 @@ public class MultiplierMenu : MonoBehaviour
                 continue;
             Destroy(child.gameObject);
         }
+        miniGameButtons.Clear();
     }
 
     private void SaveFileLoaded()

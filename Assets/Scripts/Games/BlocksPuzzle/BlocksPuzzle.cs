@@ -3,6 +3,7 @@ using System.Collections;
 using System.Linq;
 using System.Text;
 using TMPro;
+using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -70,6 +71,15 @@ public class BlocksPuzzle : MiniGameBase
     {
         Stats.StatsUpdated += OnStatsUpdated;
 
+        // NeededCoordinateSpace this delayed so pieces align correctly
+        StartCoroutine(DelayedRestart()); 
+    }
+
+    private IEnumerator DelayedRestart()
+    {
+        yield return null;
+        yield return null;
+        yield return null;
         RestartGame();
     }
 
