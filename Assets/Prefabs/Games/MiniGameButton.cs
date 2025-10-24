@@ -56,4 +56,6 @@ public class MiniGameButton : MonoBehaviour, IPointerClickHandler
     {
         gemText.text = v.ToString();
     }
+
+    internal void SetButtonGemColor(Color gemColor) => gemImage.color = gemColor;
 }

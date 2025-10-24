@@ -149,6 +149,7 @@ public class PiecesHandler : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
         }
 
         Vector2 mouseLocalPosition = WolfheatProductions.Converter.GetMouseLocalPosition(rectTransform);
+        Debug.Log("Mouse is locally at "+mouseLocalPosition.x+", "+mouseLocalPosition.y);
         ghostController.transform.localPosition = mouseLocalPosition;
 
     }

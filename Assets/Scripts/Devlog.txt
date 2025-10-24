@@ -115,6 +115,7 @@ Aug 2025
 
 		* Change name of GemsHeld to something else
 
+
 		* Maybe return a rotated piece as rotated and not the starting rotation
 		* Maybe place a piece dropped outside board at closest free spot, not its home?
 

@@ -39,7 +39,23 @@ public class StatsPanel : MonoBehaviour
 
 
         Stats.CPSUpdated += UpdateInfo;
-}
+    }
+
+    private void OnEnable()
+    {
+        // Activate correct Numberformation in the list
+        GreyScaleController.Instance.SetGameGreyScale(true);
+
+        // Update Panel delayed
+        StartCoroutine(DelayedUpdate());
+    }
+
+    private void OnDisable()
+    {
+        //Unset the greyscale
+        GreyScaleController.Instance.SetGameGreyScale(false);
+    }
+
 
     private void OnStatsLoaded()
     {
@@ -48,7 +64,6 @@ public class StatsPanel : MonoBehaviour
             StartCoroutine(DelayedUpdate());
     }
 
-    void OnEnable() => StartCoroutine(DelayedUpdate());
 
     private IEnumerator DelayedUpdate()
     {

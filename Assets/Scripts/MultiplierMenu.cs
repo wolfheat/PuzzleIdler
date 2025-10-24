@@ -9,7 +9,7 @@ using WolfheatProductions;
 public class MultiplierMenu : MonoBehaviour
 {
     [SerializeField] private GameObject panel;
-    private List<MiniGameButton> miniGameButtons = new();
+    [SerializeField] private List<MiniGameButton> miniGameButtons;
     [SerializeField] private List<GameObject> miniGames;
     [SerializeField] private TextMeshProUGUI totalValue;
 
@@ -52,6 +52,18 @@ public class MultiplierMenu : MonoBehaviour
         SavingUtility.LoadingComplete += SaveFileLoaded;
 
         SetAllButtonInfo();
+    }
+
+    [ContextMenu("UpdateButtonsInfo")]
+    private void UpdateAllButtonInfo()
+    {
+        float[] multipliers = Stats.AllMiniGamesMultipliers();
+        string[] gameNames = Enum.GetNames(typeof(MiniGame));
+
+        for (int i = 0; i < miniGameButtons.Count; i++) {
+            MiniGameButton button = miniGameButtons[i];
+            button.SetButtonGemColor(FindFirstObjectByType<ImagesIcons>().GetGemColor(i));
+        }
     }
 
     private void SetAllButtonInfo()

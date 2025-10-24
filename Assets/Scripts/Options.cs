@@ -39,7 +39,6 @@ public class Options : MonoBehaviour
     {
         // Cloase other panels
         settings.SetActive(false);
-
         stats.SetActive(!stats.activeSelf);
     }
 
