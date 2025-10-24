@@ -22,6 +22,24 @@ namespace WolfheatProductions
                     sb.Append(c);
             return sb.ToString();
         }
+        
+        /// <summary>
+        /// Makes sure there is a space between all words.
+        /// </summary>
+        /// <param name="s">source string.</param>
+        /// <returns>Resulting string.</returns>
+        public static string SpaceOutString(string s)
+        {
+            char[] chars = s.ToCharArray();
+            char last = 'x';
+            StringBuilder sb = new StringBuilder();
+            foreach (char c in chars) {
+                if (char.IsUpper(c) && char.IsLower(last))
+                    sb.Append(' ');
+                sb.Append(c);
+            }
+            return sb.ToString();
+        }
 
         // Takes an int array and scrambles it using FisherYates
         /// <summary>

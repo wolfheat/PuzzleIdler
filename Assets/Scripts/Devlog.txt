@@ -111,7 +111,7 @@ Aug 2025
 23/10	* Block puzzle align and scale fix
 		* Gems now store to save file
 		* Scene ui update
-
+24/10	* Made greyscale Pause Menu, separating Pause UI
 
 		* Change name of GemsHeld to something else
 

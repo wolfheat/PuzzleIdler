@@ -33,8 +33,7 @@ public class Options : MonoBehaviour
     {
         // Cloase other panels
         stats.SetActive(false);
-
-        settings.SetActive(!settings.activeSelf);
+        settings.SetActive(!settings.activeSelf);        
     }
     public void ToggleStats()
     {

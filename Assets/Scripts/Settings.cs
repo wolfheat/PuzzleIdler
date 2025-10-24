@@ -23,6 +23,13 @@ public class Settings : MonoBehaviour
     {
         // Activate correct Numberformation in the list
         UpdateDropDownInitial();
+        GreyScaleController.Instance.SetGameGreyScale(true);
+    }
+
+    private void OnDisable()
+    {
+        //Unset the greyscale
+        GreyScaleController.Instance.SetGameGreyScale(false);
     }
 
     private void UpdateDropDownInitial()

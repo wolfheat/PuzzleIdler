@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using TMPro;
 using UnityEngine;
+using WolfheatProductions;
 
 public class MultiplierMenu : MonoBehaviour
 {
@@ -68,7 +69,7 @@ public class MultiplierMenu : MonoBehaviour
             Debug.Log("Creating button "+i);
             MiniGameButton button = Instantiate(miniGameButtonPrefab, miniButtonHolder.transform);
             miniGameButtons.Add(button);
-            button.SetButtonInfo(gameNames[i],multipliers[i],i,i<miniGames.Count,ImagesIcons.Instance.GetGemColor(i));
+            button.SetButtonInfo(Converter.SpaceOutString(gameNames[i]),multipliers[i],i,i<miniGames.Count,ImagesIcons.Instance.GetGemColor(i));
             
             if(i < multipliers.Length -1 && i < gameNames.Length -1)
                 Instantiate(timesPrefab, miniButtonHolder.transform);
