@@ -148,7 +148,7 @@ public class PiecesHandler : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
 
         }
 
-        Vector2 mouseLocalPosition = WolfheatProductions.Converter.GetMouseLocalPosition(rectTransform);
+        Vector2 mouseLocalPosition = WolfheatProductions.Converter.GetMouseLocalPositionSpecificCamera(Camera.main,rectTransform);
         Debug.Log("Mouse is locally at "+mouseLocalPosition.x+", "+mouseLocalPosition.y);
         ghostController.transform.localPosition = mouseLocalPosition;
 
@@ -181,8 +181,8 @@ public class PiecesHandler : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
             Debug.Log("Piece Recttransform null");
 
         // Convert mouse position to pieceHandler position
-        Vector2 pieceOffestPosition = WolfheatProductions.Converter.GetMouseLocalPosition(piece.RectTransform, eventData);
-        Vector2 mouseLocalPosition = WolfheatProductions.Converter.GetMouseLocalPosition(gameAreaRect, eventData);
+        Vector2 pieceOffestPosition = WolfheatProductions.Converter.GetMouseLocalPositionSpecificCamera(Camera.main, piece.RectTransform, eventData);
+        Vector2 mouseLocalPosition = WolfheatProductions.Converter.GetMouseLocalPositionSpecificCamera(Camera.main, gameAreaRect, eventData);
 
         // Calculate local offset within the piece
         Offset = BlocksPuzzle.Snap ? Vector2.zero : pieceOffestPosition;

@@ -99,6 +99,18 @@ namespace WolfheatProductions
             );
             return pos;
         }
+        
+        public static Vector2 GetMouseLocalPositionSpecificCamera(Camera cam,RectTransform rectTransform, PointerEventData eventData = null)
+        {
+            Vector2 pos = new();
+            RectTransformUtility.ScreenPointToLocalPointInRectangle(
+                rectTransform,
+                eventData?.position ?? Mouse.current.position.ReadValue(),
+                cam,
+                out pos
+            );
+            return pos;
+        }
 
         /// <summary>
         /// Converts the Sent in position inside a recttransform into a Vector2Int index as if its tiles on a grid of size Boxsize.

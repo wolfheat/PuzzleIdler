@@ -112,6 +112,7 @@ Aug 2025
 		* Gems now store to save file
 		* Scene ui update
 24/10	* Made greyscale Pause Menu, separating Pause UI
+		* Refixed block puzzle mini game alignment, due to camera changes
 
 		* Change name of GemsHeld to something else
 

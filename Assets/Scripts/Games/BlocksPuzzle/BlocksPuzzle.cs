@@ -354,14 +354,15 @@ public class BlocksPuzzle : MiniGameBase
         // All blocks local position inside the piece - Can work with these offsets if valid after rotation
         Vector2[] positions = blocks.Select(x => new Vector2(x.transform.localPosition.x, x.transform.localPosition.y)).ToArray();
 
-        // Works with placing the piece at the correct offset
-        Vector2 pieceLocalGameAreaDropPosition = WolfheatProductions.Converter.GetMouseLocalPosition(GetComponent<RectTransform>()) - PiecesHandler.Instance.Offset;
+        //AI
 
+
+        // Works with placing the piece at the correct offset
+        Vector2 pieceLocalGameAreaDropPosition = WolfheatProductions.Converter.GetMouseLocalPositionSpecificCamera(Camera.main, GetComponent<RectTransform>()) - PiecesHandler.Instance.Offset;
 
         // WorldPiecePosition
         Vector2 worldPiecePosition = GetComponent<RectTransform>().TransformPoint(pieceLocalGameAreaDropPosition);
-
-        //
+                //
 
         float rotation = activePiece.transform.localEulerAngles.z;
         float radians = rotation * Mathf.Deg2Rad;
@@ -403,16 +404,32 @@ public class BlocksPuzzle : MiniGameBase
 
         Vector2 block0dropPosition = new Vector2(blocks[0].transform.localPosition.x + pieceLocalGameAreaDropPosition.x, blocks[0].transform.localPosition.y + pieceLocalGameAreaDropPosition.y);
 
+
+        
+
+
         //Vector2 adjusted = new Vector2(indexPositions[0].x*BlockSize, -indexPositions[0].y*BlockSize);
         Vector2 adjusted = new Vector2((BlockSize / 2) + indexPositions[0].x*BlockSize, -(BlockSize / 2) -indexPositions[0].y*BlockSize);
-
+        
         // Figure out how much this moves the piece
-        Vector2 pieceMoveDelta = (adjusted - block0dropPosition)*1.5f;
+        Vector2 pieceMoveDelta = (adjusted - block0dropPosition);
+        //Vector2 pieceMoveDelta = (adjusted - block0dropPosition)*1.5f;
+
+        // 3. The new local position inside GameArea
+        Vector2 gameAreaPieceLocalPos = pieceLocalGameAreaDropPosition + pieceMoveDelta;
 
         Vector2 gameAreaPiecePosition = worldPiecePosition + pieceMoveDelta;
 
         // Now convert from world space -> piece parent local space
-        Vector2 localPosInPieceParent = activePiece.transform.parent.GetComponent<RectTransform>().InverseTransformPoint(gameAreaPiecePosition);
+        //Vector2 localPosInPieceParent = activePiece.transform.parent.GetComponent<RectTransform>().InverseTransformPoint(gameAreaPiecePosition);
+
+
+        // 4. Convert from GameArea local → Piece parent local (if necessary)
+        RectTransform gameAreaRect = GetComponent<RectTransform>();
+        RectTransform pieceParentRect = activePiece.transform.parent.GetComponent<RectTransform>();
+        Vector2 localPosInPieceParent = pieceParentRect.InverseTransformPoint(
+            gameAreaRect.TransformPoint(gameAreaPieceLocalPos)
+        );
 
         // Now check these positions
         (bool valid, bool outside) = ValidatePlacementPosition(indexPositions);
@@ -435,12 +452,15 @@ public class BlocksPuzzle : MiniGameBase
 
             if (outside) {
                 // Outside - Return Home
+                Debug.Log("OUTSIDE");
                 activePiece.ReturnHome();
                 return false;
             }
-
+            Debug.Log("INSIDE");
+            Debug.Log("Return to old placed position");
             // Inside return to previously placement inside
             OccupySpots(activePiece,activePiece.OccupySpots);
+            //activePiece.ReturnHome();
             activePiece.ResetRotation();
             return false;
             
