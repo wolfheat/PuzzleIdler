@@ -12087,7 +12087,6 @@ RectTransform:
   - {fileID: 12076901}
   - {fileID: 1386881639}
   - {fileID: 958275194}
-  - {fileID: 735065224}
   - {fileID: 431113307}
   - {fileID: 533106187}
   - {fileID: 529896439}
@@ -20745,7 +20744,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2066230558249116914, guid: 540c96f4049f73546aa6be158b17bea1, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 180
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2066230558249116914, guid: 540c96f4049f73546aa6be158b17bea1, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -22991,6 +22990,7 @@ RectTransform:
   - {fileID: 404239448}
   - {fileID: 630240426}
   - {fileID: 371085288}
+  - {fileID: 735065224}
   - {fileID: 1834008979}
   - {fileID: 574048018}
   - {fileID: 1369447904}
@@ -23660,7 +23660,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2066230558249116914, guid: 540c96f4049f73546aa6be158b17bea1, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 44
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2066230558249116914, guid: 540c96f4049f73546aa6be158b17bea1, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -25603,11 +25603,11 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 107233022}
-  m_Father: {fileID: 371085288}
+  m_Father: {fileID: 665396438}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0.000019073486, y: 0}
+  m_AnchoredPosition: {x: 15.176575, y: -65}
   m_SizeDelta: {x: 1012.7759, y: 623.16}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &735065225
@@ -26949,7 +26949,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2066230558249116914, guid: 540c96f4049f73546aa6be158b17bea1, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 112
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2066230558249116914, guid: 540c96f4049f73546aa6be158b17bea1, type: 3}
       propertyPath: m_AnchoredPosition.y
