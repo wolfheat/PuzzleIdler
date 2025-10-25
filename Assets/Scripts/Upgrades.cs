@@ -1,12 +1,14 @@
 using System.Collections.Generic;
 using BreakInfinity;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Upgrades : MonoBehaviour
 {
 	[SerializeField] private InfoPanel infoPanel; 
 	[SerializeField] private Transform upgradeHolder; 
 	[SerializeField] private GameObject panel; 
+	[SerializeField] private GameObject selectionBorder; 
 	public static Upgrades Instance { get; private set; }
 
 	private UpgradeData selectedData;
@@ -20,14 +22,6 @@ public class Upgrades : MonoBehaviour
 			return;
 		}
 		Instance = this;
-	}
-
-	public void SetSelected(UpgradeData data)
-	{
-		selectedData = data;
-
-		// Show this info on the info screen
-
 	}
 
     internal void UpdateOwned(List<string> strings)
@@ -55,14 +49,14 @@ public class Upgrades : MonoBehaviour
 
 
 
-    internal void UpdateInfoPanel(UpgradeData data)
+    internal void UpdateInfoPanel(UpgradeButton button)
     {
-		bool owned = UpgradeDatas.Instance.Owns(data);
-		infoPanel?.UpdateInfo(data, owned);
-		selectedData = data;
+		bool owned = UpgradeDatas.Instance.Owns(button.Data);
+		infoPanel?.UpdateInfo(button.Data, owned);
+		selectedData = button.Data;
 
 		// also set the button
-
+		selectionBorder.transform.localPosition = button.transform.localPosition + new Vector3(button.transform.parent.GetComponent<HorizontalLayoutGroup>().padding.left,0,0);
     }
 
     internal void RequestBuyUpgrade()

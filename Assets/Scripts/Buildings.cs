@@ -58,6 +58,7 @@ public class Buildings : MonoBehaviour
         doUpdateLevel = false;
     }
 
+
     private void UpdateAvailabilityAndStats(bool includeLevel = false)
     {
         for (int i = 0; i < buildings.Count; i++) {

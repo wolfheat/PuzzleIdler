@@ -115,6 +115,9 @@ Aug 2025
 		* Refixed block puzzle mini game alignment, due to camera changes
 25/10	* Added Merge Game simple a 2048 Game
 		* Moved saving Notice
+		* Updated Upgrades Menu selection
+
+		* Change Upggrade Menu Buy Button for a better one?
 
 		* Change name of GemsHeld to something else
 
