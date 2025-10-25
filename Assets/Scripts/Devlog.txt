@@ -114,7 +114,7 @@ Aug 2025
 24/10	* Made greyscale Pause Menu, separating Pause UI
 		* Refixed block puzzle mini game alignment, due to camera changes
 25/10	* Added Merge Game simple a 2048 Game
-
+		* Moved saving Notice
 
 		* Change name of GemsHeld to something else
 
