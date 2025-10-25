@@ -113,9 +113,10 @@ Aug 2025
 		* Scene ui update
 24/10	* Made greyscale Pause Menu, separating Pause UI
 		* Refixed block puzzle mini game alignment, due to camera changes
+25/10	* Added Merge Game simple a 2048 Game
+
 
 		* Change name of GemsHeld to something else
-
 
 		* Maybe return a rotated piece as rotated and not the starting rotation
 		* Maybe place a piece dropped outside board at closest free spot, not its home?

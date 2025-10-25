@@ -3,7 +3,7 @@ using System.Linq;
 using BreakInfinity;
 using UnityEngine;
 
-public enum MiniGame{Chess,Minesweeper,Sudoku,Tetris, Snake, BlockPuzzle, BubbleTanks };
+public enum MiniGame{Chess,Minesweeper,Sudoku,Tetris, Snake, BlockPuzzle, Merge};
 
 public static class Stats
 {
@@ -15,6 +15,7 @@ public static class Stats
     public const int ChessGameLossRatingChange = -50;
     public const int ChessGameWinRatingChange = 10;
     // Minesweeper
+
     // Sudoku
     public const int SudokuGameLossRatingChange = 0;
     public const int SudokuGameWinRatingChange = 150;
