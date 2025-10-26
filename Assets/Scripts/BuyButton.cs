@@ -1,14 +1,12 @@
-using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class BuyButton : MonoBehaviour
 {
-
     [SerializeField] private TextMeshProUGUI BuyText;
-    [SerializeField] private GameObject Checkmark;
     [SerializeField] private GameObject BuyTextObject;
+    [SerializeField] private GameObject buyButtonImageObject;
 
     [SerializeField] private Color ownedColor;
     [SerializeField] private Color affordColor;
@@ -25,7 +23,10 @@ public class BuyButton : MonoBehaviour
 
     private void Owned(bool owned)
     {
-        Checkmark.SetActive(owned);
+        //Checkmark.SetActive(owned);
+        // Owned items hides the buy button entirely and shows a separate payed cost text instead?
+        buyButtonImageObject.SetActive(!owned);
+
         BuyTextObject.gameObject.SetActive(!owned);
         BuyText.color = owned ? ownedTextColor : defaultTextColor;
         imageBackground.color = owned ? ownedColor : notOwnedColor;

@@ -116,6 +116,9 @@ Aug 2025
 25/10	* Added Merge Game simple a 2048 Game
 		* Moved saving Notice
 		* Updated Upgrades Menu selection
+26/10	* Upgrade Button rewamp
+
+
 
 		* Change Upggrade Menu Buy Button for a better one?
 
