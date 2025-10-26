@@ -20381,7 +20381,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
+  m_Sprite: {fileID: 21300000, guid: b72c50053ca05434db7240fe1672b381, type: 3}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -30085,7 +30085,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &864576793
 RectTransform:
   m_ObjectHideFlags: 0
@@ -62546,7 +62546,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Klaxxon
+  m_text: Klaxon
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 4faaefc62559bd7469ce2545febfa294, type: 2}
   m_sharedMaterial: {fileID: 2986969267564585774, guid: 4faaefc62559bd7469ce2545febfa294, type: 2}
@@ -71144,7 +71144,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -1101568692, guid: 4bb0080517715ee47944566536bf9754, type: 3}
+  m_Sprite: {fileID: 1387000580, guid: 4bb0080517715ee47944566536bf9754, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1

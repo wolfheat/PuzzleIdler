@@ -4014,7 +4014,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: IconsA_149
+      name: mushroomIcon
       rect:
         serializedVersion: 2
         x: 123
@@ -5026,7 +5026,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: IconsA_198
+      name: coinOriginal
       rect:
         serializedVersion: 2
         x: 240
@@ -5293,7 +5293,6 @@ TextureImporter:
       IconsA_146: -70827929
       IconsA_147: -283571522
       IconsA_148: 368376540
-      IconsA_149: 1387000580
       IconsA_15: 1184275140
       IconsA_150: -627254223
       IconsA_151: -1154817321
@@ -5347,7 +5346,6 @@ TextureImporter:
       IconsA_195: -1559588779
       IconsA_196: 342259193
       IconsA_197: -1160313141
-      IconsA_198: 2129302473
       IconsA_199: -959307691
       IconsA_2: 1569913868
       IconsA_20: -1799602312
@@ -5440,8 +5438,10 @@ TextureImporter:
       IconsA_98: 209319478
       IconsA_99: 22062852
       coin: -1003654709
+      coinOriginal: 2129302473
       cps: 609601216
       gem: -1101568692
+      mushroomIcon: 1387000580
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

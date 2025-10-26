@@ -468,9 +468,8 @@ public class BlocksPuzzle : MiniGameBase
             Debug.Log("INSIDE");
             Debug.Log("Return to old placed position");
             // Inside return to previously placement inside
-            OccupySpots(activePiece,activePiece.OccupySpots);
-            //activePiece.ReturnHome();
-            activePiece.ResetRotation();
+            if(!OccupySpots(activePiece,activePiece.OccupySpots))
+                activePiece.ResetRotation(); // Only reset if it was placed
             return false;
             
         }
@@ -744,15 +743,16 @@ public class BlocksPuzzle : MiniGameBase
         //activePiece.transform.localPosition = placePos;
     }
 
-    private void OccupySpots(MovablePiece activePiece, Vector2Int[] indexPositions)
+    private bool OccupySpots(MovablePiece activePiece, Vector2Int[] indexPositions)
     {
-        if (indexPositions == null) return;
+        if (indexPositions == null) return false;
 
         foreach (var pos in indexPositions) {
             board[pos.y, pos.x] = (int)activePiece.Type;
             boardBlocks[pos.y, pos.x].SetType(board[pos.y, pos.x]);
             //Debug.Log("Blocks:  Piece [" + pos.x + "," + pos.y + "] => " + board[pos.y, pos.x]);
         }
+        return true;
     }
 
     internal void ClearBoardSpots(MovablePiece activePiece)

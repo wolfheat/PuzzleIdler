@@ -10,7 +10,7 @@ public class BuyButton : MonoBehaviour
 
     [SerializeField] private Color ownedColor;
     [SerializeField] private Color affordColor;
-    [SerializeField] private Color notOwnedColor;
+    [SerializeField] private Color notAffordColor;
     [SerializeField] private Color ownedTextColor;
     [SerializeField] private Color defaultTextColor;
     [SerializeField] private Image imageBackground;
@@ -28,31 +28,34 @@ public class BuyButton : MonoBehaviour
         buyButtonImageObject.SetActive(!owned);
 
         BuyTextObject.gameObject.SetActive(!owned);
+        
+        // Color of text
         BuyText.color = owned ? ownedTextColor : defaultTextColor;
-        imageBackground.color = owned ? ownedColor : notOwnedColor;
+
+        // Color of buy button if affording
+        // If can buy make green
+        
+        imageBackground.color = owned ? ownedColor : notAffordColor;
     }
 
-    public void SetCost(string costString)
+    public void SetAfford(bool afford)
     {
-        Owned(false);
-        BuyText.text = costString;
-    }
-    
-    public void SetAfford()
-    {
-        imageBackground.color = affordColor;
+        Debug.Log(afford ? "Afford Color":"Not afford color");
+        imageBackground.color = afford ? affordColor : notAffordColor;
     }
 
     internal void SetData(UpgradeData data, bool owned)
     {
         Debug.Log("Setting Button Data Owned: "+ owned+" afford: "+ (Stats.GemsHeld > data.cost));
+        
+        // Update Cost 
         BuyText.text = Stats.ReturnAsString(data.cost);
         
+        // Change to correct Button
         Owned(owned);
 
-        // If can buy make green
-        if(!owned && (Stats.GemsHeld > data.cost))
-            SetAfford();
+        // Change color from afford or not
+        SetAfford(!owned && (Stats.GemsHeld > data.cost));
     }
 
     public void ClickedBuy()

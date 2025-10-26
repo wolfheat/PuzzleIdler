@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using TMPro;
+﻿using TMPro;
 using UnityEngine;
 
 public class InfoPanel : MonoBehaviour
@@ -16,7 +13,6 @@ public class InfoPanel : MonoBehaviour
         info.text = data.Description;
 
         buyButton.SetData(data, owned);
-
     }
 
 }

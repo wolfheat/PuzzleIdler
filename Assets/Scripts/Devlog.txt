@@ -117,10 +117,8 @@ Aug 2025
 		* Moved saving Notice
 		* Updated Upgrades Menu selection
 26/10	* Upgrade Button rewamp
-
-
-
-		* Change Upggrade Menu Buy Button for a better one?
+		* More UI tweeks
+		
 
 		* Change name of GemsHeld to something else
 

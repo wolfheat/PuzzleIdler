@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using BreakInfinity;
 using UnityEngine;
@@ -12,6 +13,7 @@ public class Upgrades : MonoBehaviour
 	public static Upgrades Instance { get; private set; }
 
 	private UpgradeData selectedData;
+	private UpgradeButton selectedButton = null;
 		
 
 
@@ -23,6 +25,19 @@ public class Upgrades : MonoBehaviour
 		}
 		Instance = this;
 	}
+
+    private void OnEnable()
+    {
+		// Listen for gems held change
+		Stats.HeldGemsUpdated += UpdateAffordActive;
+    }
+	
+    private void OnDisable()
+    {
+		Stats.HeldGemsUpdated -= UpdateAffordActive;
+    }
+
+    private void UpdateAffordActive() => UpdateInfoPanel(selectedButton);
 
     internal void UpdateOwned(List<string> strings)
     {
@@ -40,23 +55,19 @@ public class Upgrades : MonoBehaviour
 				}
 			}
 		}
-
-
     }
-
-
-
-
-
 
     internal void UpdateInfoPanel(UpgradeButton button)
     {
+		if (button == null) return;
+
 		bool owned = UpgradeDatas.Instance.Owns(button.Data);
 		infoPanel?.UpdateInfo(button.Data, owned);
 		selectedData = button.Data;
+        selectedButton = button;
 
-		// also set the button
-		selectionBorder.transform.localPosition = button.transform.localPosition + new Vector3(button.transform.parent.GetComponent<HorizontalLayoutGroup>().padding.left,0,0);
+        // also set the button
+        selectionBorder.transform.localPosition = button.transform.localPosition + new Vector3(button.transform.parent.GetComponent<HorizontalLayoutGroup>().padding.left,0,0);
     }
 
     internal void RequestBuyUpgrade()

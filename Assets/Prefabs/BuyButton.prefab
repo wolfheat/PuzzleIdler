@@ -870,10 +870,10 @@ MonoBehaviour:
   buyButtonImageObject: {fileID: 1277660400628907098}
   ownedColor: {r: 0.4627451, g: 0.18039216, b: 0, a: 1}
   affordColor: {r: 0.34901962, g: 0.7647059, b: 0.36862746, a: 1}
-  notOwnedColor: {r: 0.5566038, g: 0.5566038, b: 0.5566038, a: 1}
+  notAffordColor: {r: 0.5566038, g: 0.5566038, b: 0.5566038, a: 1}
   ownedTextColor: {r: 0.5566038, g: 0.5566038, b: 0.5566038, a: 1}
   defaultTextColor: {r: 0, g: 0, b: 0, a: 0}
-  imageBackground: {fileID: 6049324715579363675}
+  imageBackground: {fileID: 2725167116911192186}
 --- !u!114 &4911091178957287742
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -15,7 +15,6 @@ MonoBehaviour:
   UpgradeName: Income Nicker
   Image: {fileID: 21300000, guid: 77c5b7ea5a40b0c47a529b48171bde8a, type: 3}
   type: 0
-  cost: 1500
+  cost: 50000
   UpgradeValue: 1.045
-  unlocked: 0
   Description: Increase CPS by 4.5%

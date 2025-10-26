@@ -81,6 +81,7 @@ public static class Stats
 
     // Action - Events
     public static Action CoinUpdated;
+    public static Action HeldGemsUpdated;
 
     public static Action CPSUpdated;
 
@@ -131,14 +132,14 @@ public static class Stats
         //Debug.Log("Addcoins");
         GemsHeld += added;
         //Debug.Log("Invoke added coins");
-        CoinUpdated?.Invoke();
+        HeldGemsUpdated?.Invoke();
         return added;
     }
     public static void AddGems(BigDouble amt)
     {
         Debug.Log("   Adding gems "+amt);
         GemsHeld += amt;
-        CoinUpdated?.Invoke();
+        HeldGemsUpdated?.Invoke();
     }
 
     internal static void AddGPS(BigDouble amt)
@@ -174,6 +175,7 @@ public static class Stats
     {
         GemsHeld -= cost;
         Debug.Log("Removed gems, now have "+GemsHeld);
+        HeldGemsUpdated?.Invoke();
     }
     
     internal static void RemoveCoins(BigDouble cost)
