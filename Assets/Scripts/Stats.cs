@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using BreakInfinity;
 using UnityEngine;
+using WolfheatProductions.SoundMaster;
 
 public enum MiniGame{Chess,Minesweeper,Sudoku,Tetris, Snake, BlockPuzzle, Merge};
 
@@ -182,6 +183,10 @@ public static class Stats
     {
         CoinsHeld -= cost;
         Debug.Log("Removed coins, now have "+CoinsHeld);
+
+        // Play CoinSound
+        SoundMaster.Instance.PlaySound(SoundName.BuySound);
+
     }
 
     //MINI GAMES - HANDLING

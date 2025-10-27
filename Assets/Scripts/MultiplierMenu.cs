@@ -5,6 +5,7 @@ using System.Globalization;
 using TMPro;
 using UnityEngine;
 using WolfheatProductions;
+using WolfheatProductions.SoundMaster;
 
 public class MultiplierMenu : MonoBehaviour
 {
@@ -118,6 +119,9 @@ public class MultiplierMenu : MonoBehaviour
 
     public void TogglePanel()
     {
+
+        SoundMaster.Instance.PlaySound(SoundName.MenuChangeSuccess);
+
         active = !active;
         // Animate it to become this value
         Debug.Log("Toggle Minigame Panel: "+active);

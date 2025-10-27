@@ -2,6 +2,7 @@
 using System.Linq;
 using BreakInfinity;
 using UnityEngine;
+using WolfheatProductions.SoundMaster;
 
 public class UpgradeDatas : MonoBehaviour
 {
@@ -138,8 +139,12 @@ public class UpgradeDatas : MonoBehaviour
         // Double check that player can afford before buying
         BigDouble cost = selectedData.cost;
 
-        if (Stats.GemsHeld < cost)
+        if (Stats.GemsHeld < cost) {
+            SoundMaster.Instance.PlaySound(SoundName.BuyFailSound);
+            Debug.Log("Upgrades - Player Can not afford, play fail sound" + selectedData.UpgradeName);
+
             return;
+        }
 
         Debug.Log("Player can afford this upgrade");
 

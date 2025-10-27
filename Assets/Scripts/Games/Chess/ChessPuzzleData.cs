@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-[CreateAssetMenu(fileName = "fileName", menuName = "ScriptableObjects/ChessPuzzle")]
+[CreateAssetMenu(menuName = "MiniGames/Chess/ChessPuzzle", fileName = "ChessPuzzle")]
 public class ChessPuzzleData : ScriptableObject
 {
     public int[] setup = new int[64];

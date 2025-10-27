@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-[CreateAssetMenu(menuName = "ResearchReward", fileName = "Scriptable Objects/")]
+[CreateAssetMenu(menuName = "Datas/ResearchReward", fileName = "ResearchReward")]
 public class ResearchReward : ScriptableObject
 {
     public float totalPercent;

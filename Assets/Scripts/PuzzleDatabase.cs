@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "fileName", menuName = "ScriptableObjects/PuzzleDatabase")]
+[CreateAssetMenu(menuName = "MiniGames/PuzzleDatabase", fileName = "fileName")]
 public class PuzzleDatabase : ScriptableObject
 {
     public List<StringList> data;

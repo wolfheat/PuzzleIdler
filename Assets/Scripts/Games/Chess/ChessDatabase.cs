@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-[CreateAssetMenu(fileName = "fileName", menuName = "ScriptableObjects/ChessDatabase")]
+[CreateAssetMenu(menuName = "MiniGames/Chess/ChessDatabase", fileName = "fileName")]
 public class ChessDatabase : ScriptableObject
 {
     public string[] levels;

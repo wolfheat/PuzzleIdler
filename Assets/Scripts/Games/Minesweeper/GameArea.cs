@@ -1048,7 +1048,7 @@ public class GameArea : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, I
 
         UpdatePressedNeighbors(eventData);
 
-        // Store the downpress onlu to use for fast move
+        // Store the downpress only to use for fast move
         lastMouseDownPos = GetMouseLocalPosition(eventData);
     }
 

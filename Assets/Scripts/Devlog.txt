@@ -118,7 +118,18 @@ Aug 2025
 		* Updated Upgrades Menu selection
 26/10	* Upgrade Button rewamp
 		* More UI tweeks
-		
+27/10	* Implemented new Sound Master System with basic functionalities
+		* More implementations of Sound Master
+
+
+		* Sound Master needs
+		* Handle Separate SoundLibraries creationg enums - they now overwrite?
+		* Handle Mixers
+
+
+		* Minimizing games menu should close games?
+		* Decrease click helper time in minesweeper
+
 
 		* Change name of GemsHeld to something else
 

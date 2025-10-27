@@ -4,6 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using WolfheatProductions.SoundMaster;
 
 public class MiniGameButton : MonoBehaviour, IPointerClickHandler
 {
@@ -11,6 +12,7 @@ public class MiniGameButton : MonoBehaviour, IPointerClickHandler
     public void OnPointerClick()
     {
         MultiplierMenu.Instance.ToggleGame(index);
+        SoundMaster.Instance.PlaySound(SoundName.MenuToggleMiniGame);
     }
 
     int index = 0;

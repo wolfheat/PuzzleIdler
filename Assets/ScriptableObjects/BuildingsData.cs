@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-[CreateAssetMenu(menuName = "BuildingData",fileName = "Scriptable Objects/")]
+[CreateAssetMenu(menuName = "Datas/BuildingData", fileName = "BuildingData")]
 public class BuildingsData : ScriptableObject
 {
     public string BuildingName;

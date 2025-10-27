@@ -4,7 +4,7 @@ using UnityEngine;
 
 public enum ResearchRewardType { CPS, GPS }
 
-[CreateAssetMenu(menuName = "ResearchData", fileName = "Scriptable Objects/")]
+[CreateAssetMenu(menuName = "Datas/ResearchData", fileName = "ResearchData")]
 public class ResearchData : ScriptableObject
 {
     public string ResearchName;

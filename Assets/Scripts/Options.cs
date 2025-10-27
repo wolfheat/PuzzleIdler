@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using WolfheatProductions.SoundMaster;
 
 public class Options : MonoBehaviour
 {
@@ -21,6 +22,8 @@ public class Options : MonoBehaviour
         CloseAll();
         OpenPanel(newSelected);
         active = newSelected;
+        SoundMaster.Instance.PlaySound(SoundName.MenuChangeSuccess);
+
     }
 
     private void CloseAll()
@@ -33,13 +36,15 @@ public class Options : MonoBehaviour
     {
         // Cloase other panels
         stats.SetActive(false);
-        settings.SetActive(!settings.activeSelf);        
+        settings.SetActive(!settings.activeSelf);
+        SoundMaster.Instance.PlaySound(SoundName.MenuChangeSuccess);
     }
     public void ToggleStats()
     {
         // Cloase other panels
         settings.SetActive(false);
         stats.SetActive(!stats.activeSelf);
+        SoundMaster.Instance.PlaySound(SoundName.MenuChangeSuccess);
     }
 
     private void OpenPanel(int newPanel) => panels[newPanel].SetActive(true);

@@ -2,7 +2,7 @@
 using UnityEngine;
 public enum UpgradeType{IncomeBoosters,GemBoosters};
 
-[Serializable][CreateAssetMenu(menuName = "UpgradeData",fileName = "Scriptable Objects/")]
+[Serializable][CreateAssetMenu(menuName = "Datas/UpgradeData", fileName = "UpgradeData")]
 public class UpgradeData : ScriptableObject
 {
     public string UpgradeName;
