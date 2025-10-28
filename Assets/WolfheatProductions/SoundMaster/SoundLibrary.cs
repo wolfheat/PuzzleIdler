@@ -89,12 +89,12 @@ namespace WolfheatProductions.SoundMaster
 
     /*
     // Generated classes from the data
-    public enum SoundName { None };
+    public enum Effects { None };
 
     // This method is generated and keeps track of how the generated enums matches the sounds guid
     public static class SoundLookup_Generated
     {
-        public static Dictionary<SoundName,string> EnumToGuid = new();
+        public static Dictionary<Effects,string> EnumToGuid = new();
     }
     */
 }

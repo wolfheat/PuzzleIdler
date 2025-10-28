@@ -1,0 +1,54 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 872fc59ddff96e64c9f639690ac2b9c3, type: 3}
+  m_Name: ChessSounds
+  m_EditorClassIdentifier: Assembly-CSharp::SoundLibrary
+  sounds:
+  - guid: 5214f54b-68dd-41bc-bfa0-0d3111e57bc8
+    name: WinChess
+    clips:
+    - {fileID: 8300000, guid: fb0fc85aa4cf1c14e94d64bd430d7202, type: 3}
+    volume: 1
+    pitch: 1
+  - guid: 468ccdda-5c50-4b42-a93d-72fb7c075989
+    name: LoseChess
+    clips:
+    - {fileID: 8300000, guid: 3fbd9a350566ecb4b89c03d57ec4bca6, type: 3}
+    volume: 1
+    pitch: 1
+  - guid: 4f4bf653-5a43-4f2f-ae76-340aa2a348f7
+    name: ChessMovePiece
+    clips:
+    - {fileID: 8300000, guid: 9616d10e54e466e4da60fa02012e82a6, type: 3}
+    - {fileID: 8300000, guid: f8f8d8a32468f404887bb4cf0e0a5d7b, type: 3}
+    - {fileID: 8300000, guid: 82ff50628356b3243a63afa6513f091d, type: 3}
+    - {fileID: 8300000, guid: 5d2079b53d8ea6846aaca85f1f799685, type: 3}
+    volume: 1
+    pitch: 1
+  - guid: d5b30a80-3bfe-4cd0-a442-ec98f6af7da3
+    name: ChessCapturePiece
+    clips:
+    - {fileID: 8300000, guid: 46cd0a678ee109a4a8e25a68fdac4076, type: 3}
+    volume: 1
+    pitch: 1
+  - guid: cd8cb5be-8bb7-4e3a-827b-300c5c3d3100
+    name: ChessCheck
+    clips:
+    - {fileID: 8300000, guid: 273a5a51a5199e344a23162ac71b6e77, type: 3}
+    volume: 1
+    pitch: 1
+  - guid: 45b02296-52a0-4417-8aaf-d36589d67250
+    name: ChessCastle
+    clips:
+    - {fileID: 8300000, guid: 56d7451ae1e4fc643a03a00328946275, type: 3}
+    volume: 1
+    pitch: 1

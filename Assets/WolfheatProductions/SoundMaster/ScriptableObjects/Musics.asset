@@ -14,10 +14,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SoundLibrary
   sounds:
   - guid: 719d7fd7-afb8-4630-a32f-60596110c5ec
-    name: 
+    name: MainMusic
     clips:
     - {fileID: 8300000, guid: 2cd5a031f30fac24f8078c0901fee1b2, type: 3}
-    - {fileID: 8300000, guid: d3df6d9992e9bf247ad5dfd2c1bd81ec, type: 3}
+    volume: 0.052
+    pitch: 1
+  - guid: 0d6f3e0d-f8d7-4f68-8ab9-79c3a7d98cf4
+    name: GameMusic
+    clips:
     - {fileID: 8300000, guid: d3df6d9992e9bf247ad5dfd2c1bd81ec, type: 3}
     volume: 0.052
     pitch: 1

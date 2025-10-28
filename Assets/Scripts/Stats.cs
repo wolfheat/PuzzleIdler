@@ -88,6 +88,7 @@ public static class Stats
 
     // Stats Settigns - Notation etc
     public static NumberNotation ActiveNumberNotation = NumberNotation.Scientific;
+    public static bool UseMusic = false;
 
 
     public static void SetActiveNumberNotation(NumberNotation newNotation) => ActiveNumberNotation = newNotation;

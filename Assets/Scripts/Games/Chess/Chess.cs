@@ -5,6 +5,7 @@ using System.Text;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using WolfheatProductions.SoundMaster;
 
 public struct FullChessMove
 {
@@ -430,7 +431,8 @@ public class Chess : MiniGameBase, IPointerDownHandler, IPointerUpHandler, IPoin
                 if (pieces[fullChessMove.other.from.x, fullChessMove.other.from.y] != null) {
                     Destroy(pieces[fullChessMove.other.from.x, fullChessMove.other.from.y].gameObject);
                     pieces[fullChessMove.other.from.x, fullChessMove.other.from.y] = null;
-                }
+                }// Move
+                SoundMaster.Instance.PlaySound(SoundName.ChessCapturePiece);
             }
             else {
                 Debug.Log("Moving the other place");
@@ -444,7 +446,14 @@ public class Chess : MiniGameBase, IPointerDownHandler, IPointerUpHandler, IPoin
 
                 pieces[fullChessMove.other.to.x, fullChessMove.other.to.y] = otherPiece;
                 pieces[fullChessMove.other.from.x, fullChessMove.other.from.y] = null;
+
+                // Castle
+                SoundMaster.Instance.PlaySound(SoundName.ChessCastle);
             }
+        }
+        else {
+            // Move
+            SoundMaster.Instance.PlaySound(SoundName.ChessMovePiece);
         }
 
 
@@ -561,6 +570,9 @@ public class Chess : MiniGameBase, IPointerDownHandler, IPointerUpHandler, IPoin
 
         // Here we got a valid move - Main move and potentially other move
         
+        
+
+
         // Store this move as last performed for next check - this only counts for the computer move, after computer move this should be reset to another value
         lastPerformedMove = fullChessMove.performed;
 
@@ -574,6 +586,8 @@ public class Chess : MiniGameBase, IPointerDownHandler, IPointerUpHandler, IPoin
                     Destroy(pieces[fullChessMove.other.from.x, fullChessMove.other.from.y].gameObject);
                     pieces[fullChessMove.other.from.x, fullChessMove.other.from.y] = null;
                 }
+                // Capture
+                SoundMaster.Instance.PlaySound(SoundName.ChessCapturePiece);
             }
             else {
                 Debug.Log("Moving the other place");
@@ -587,7 +601,15 @@ public class Chess : MiniGameBase, IPointerDownHandler, IPointerUpHandler, IPoin
 
                 pieces[fullChessMove.other.to.x, fullChessMove.other.to.y] = otherPiece;
                 pieces[fullChessMove.other.from.x, fullChessMove.other.from.y] = null;
+
+
+                // Capture
+                SoundMaster.Instance.PlaySound(SoundName.ChessCastle);
             }
+        }
+        else {
+            // Move
+            SoundMaster.Instance.PlaySound(SoundName.ChessMovePiece);
         }
 
 
@@ -669,8 +691,8 @@ public class Chess : MiniGameBase, IPointerDownHandler, IPointerUpHandler, IPoin
             return;
 
 
-        // Win Notice
 
+        // Win Notice
         if (!correct) {
             Debug.Log("MOVE PLAYED THAT WAS NOT THE SUPPLIED WINNING ONE - CHECK FOR MATE");
             // Check for checkmate move everytime and if one is played it always are winning move
@@ -718,7 +740,9 @@ public class Chess : MiniGameBase, IPointerDownHandler, IPointerUpHandler, IPoin
 
         // Award Rating and reward
         Stats.ChangeMiniGameRating(GameType, didWin ? Stats.ChessGameWinRatingChange : Stats.ChessGameLossRatingChange);
-        
+
+        SoundMaster.Instance.PlaySound(SoundName.WinChess);
+
         // Stats own Event Action StatsUpdated will run and update this game panel correctly
     }
 
