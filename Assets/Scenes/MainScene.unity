@@ -30562,6 +30562,8 @@ MonoBehaviour:
   soundLibraries:
   - {fileID: 11400000, guid: 4b2afaeb1e678f34d92e97931375cb30, type: 2}
   - {fileID: 11400000, guid: 1caf06f7a20a6a5429913dc73313790e, type: 2}
+  - {fileID: 11400000, guid: 061ed3f8af701cb4e8865df4d393d68e, type: 2}
+  - {fileID: 11400000, guid: c81da3d948b169749a10f7e1d3b21fe6, type: 2}
   effectsPoolSize: 20
 --- !u!1 &923425823
 GameObject:

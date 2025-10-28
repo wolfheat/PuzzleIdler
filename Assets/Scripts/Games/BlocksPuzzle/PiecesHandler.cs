@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
+using WolfheatProductions.SoundMaster;
 
 public class PiecesHandler : MonoBehaviour, IPointerUpHandler, IPointerDownHandler, IPointerMoveHandler
 {
@@ -161,6 +162,8 @@ public class PiecesHandler : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
         activePiece.gameObject.SetActive(true);
         ghostController.Hide();
         activePiece = null;
+
+        SoundMaster.Instance.PlaySound(SoundName.BlockPlace);
     }
 
     public void StartMovePiece(PointerEventData eventData, MovablePiece piece)
@@ -199,6 +202,9 @@ public class PiecesHandler : MonoBehaviour, IPointerUpHandler, IPointerDownHandl
         BlocksPuzzle.Instance.ClearBoardSpots(activePiece);
 
         ghostController.transform.localPosition = BlocksPuzzle.Snap ? Vector2.zero : mouseLocalPosition;
+
+
+        SoundMaster.Instance.PlaySound(SoundName.BlockPickup);
     }
 
     public void OnPointerUp(PointerEventData eventData)

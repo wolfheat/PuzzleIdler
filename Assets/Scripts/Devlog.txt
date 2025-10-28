@@ -123,6 +123,7 @@ Aug 2025
 28/10	* Reworked the Sound Master, it is now responsible of creating global Enums for all sounds and the Musics
 		* Fixed Editor Scripts for Sound Libraries
 		* Music Loops
+		* Added sound Clips for Merge and Block Puzzle
 
 		* Sound Master needs
 			* Handle Mixers			

@@ -5,6 +5,7 @@ using System.Text;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using WolfheatProductions.SoundMaster;
 
 public class BlocksPuzzle : MiniGameBase
 {
@@ -468,8 +469,10 @@ public class BlocksPuzzle : MiniGameBase
             Debug.Log("INSIDE");
             Debug.Log("Return to old placed position");
             // Inside return to previously placement inside
-            if(!OccupySpots(activePiece,activePiece.OccupySpots))
+            if (OccupySpots(activePiece, activePiece.OccupySpots)) {
+                Debug.Log("BlockPuzzle - Return Item To its placed rotation");
                 activePiece.ResetRotation(); // Only reset if it was placed
+            }
             return false;
             
         }
@@ -521,6 +524,8 @@ public class BlocksPuzzle : MiniGameBase
 
         // Popup - also make reusable TODO
         ShowRatingIncreaseText(increase);
+
+        SoundMaster.Instance.PlaySound(SoundName.WinChess);
     }
 
     private void ShowRatingIncreaseText(int increase)

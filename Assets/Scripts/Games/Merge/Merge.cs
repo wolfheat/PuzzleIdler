@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using WolfheatProductions.SoundMaster;
 public class Merge : MiniGameBase
 {
 
@@ -99,9 +100,13 @@ public class Merge : MiniGameBase
     {
         if (!GameActive) return;
 
-        bool didMove = TryMove(context.ReadValue<Vector2>());
+        (bool didMove, bool newBest) = TryMove(context.ReadValue<Vector2>());
         if (didMove) {
             StartCoroutine(WaitForAnimation());
+            SoundMaster.Instance.PlaySound(newBest ? SoundName.MergeNewBest : SoundName.MergeSound);
+        }
+        else {
+            SoundMaster.Instance.PlaySound(SoundName.MergeFailed);
         }   
     }
 
@@ -187,6 +192,8 @@ public class Merge : MiniGameBase
 
         // Popup - also make reusable TODO
         ShowRatingIncreaseText(increase);
+
+        SoundMaster.Instance.PlaySound(SoundName.LoseChess);
     }
 
     private void ShowRatingIncreaseText(int increase)
@@ -247,7 +254,7 @@ public class Merge : MiniGameBase
         return true;
     }
 
-    private bool TryMove(Vector2 vector2)   
+    private (bool,bool) TryMove(Vector2 vector2)   
     {
         Debug.Log("Moving [" + vector2.x + "," + vector2.y + "]");
         Vector2Int move = new Vector2Int(Mathf.RoundToInt(vector2.x),-Mathf.RoundToInt(vector2.y));
@@ -273,6 +280,7 @@ public class Merge : MiniGameBase
         }
 
         bool change = false;
+        bool newBest = false;
         // Only handle down?
         Debug.Log("Handle all tiles checking ");
         for (int j = colStartIndex; j != colEndIndex; j += colStep) {
@@ -305,6 +313,7 @@ public class Merge : MiniGameBase
                         if(newMergeValue > bestLevel) {
                             bestLevel = newMergeValue;
                             UpdateGameValueText();
+                            newBest = true;
                         }
 
                         // Mark the moved tile to be deleted
@@ -333,7 +342,7 @@ public class Merge : MiniGameBase
 
             }
         }
-        return change;
+        return (change, newBest);
     }
 
     private bool Inside(int i, int j) => i >= 0 && j >= 0 && i < tiles.GetLength(0) && j < tiles.GetLength(1);

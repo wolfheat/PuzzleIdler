@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 872fc59ddff96e64c9f639690ac2b9c3, type: 3}
+  m_Name: MergeSounds
+  m_EditorClassIdentifier: Assembly-CSharp::SoundLibrary
+  sounds:
+  - name: MergeSound
+    clips:
+    - {fileID: 8300000, guid: 9deabd80c02a3fc4984ea68030ff72ea, type: 3}
+    - {fileID: 8300000, guid: 777da990318c0e04b97ad0ebefc5292b, type: 3}
+    - {fileID: 8300000, guid: 9fb4ea70e6a0f1449908d8a2f385ed6a, type: 3}
+    volume: 0.149
+    pitch: 0.824
+  - name: MergeFailed
+    clips:
+    - {fileID: 8300000, guid: 648a9992dbfb7c14e9bf8d76dbbcc579, type: 3}
+    volume: 1
+    pitch: 1
+  - name: MergeNewBest
+    clips:
+    - {fileID: 8300000, guid: 4cf650c038210d648800d7d6dcf725ae, type: 3}
+    volume: 1
+    pitch: 1
+  - name: PlaceBlock
+    clips:
+    - {fileID: 8300000, guid: 6fccef82679db7d44b87e9783c27f2ef, type: 3}
+    volume: 1
+    pitch: 1

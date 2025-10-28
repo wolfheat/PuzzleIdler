@@ -15,6 +15,12 @@ namespace WolfheatProductions.SoundMaster
         ChessCapturePiece,
         ChessCheck,
         ChessCastle,
+        BlockPlace,
+        BlockPickup,
+        MergeSound,
+        MergeFailed,
+        MergeNewBest,
+        PlaceBlock,
     }
 
     public enum MusicName
