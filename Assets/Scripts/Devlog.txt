@@ -121,11 +121,11 @@ Aug 2025
 27/10	* Implemented new Sound Master System with basic functionalities
 		* More implementations of Sound Master
 28/10	* Reworked the Sound Master, it is now responsible of creating global Enums for all sounds and the Musics
+		* Fixed Editor Scripts for Sound Libraries
+		* Music Loops
 
 		* Sound Master needs
-		* Handle Separate SoundLibraries creationg enums - they now overwrite?
-		* Handle Mixers
-
+			* Handle Mixers			
 
 		* Minimizing games menu should close games?
 		* Decrease click helper time in minesweeper

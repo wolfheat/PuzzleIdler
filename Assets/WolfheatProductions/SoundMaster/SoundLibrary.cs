@@ -17,7 +17,7 @@ namespace WolfheatProductions.SoundMaster
         // Sound Lookup Dictionary 
         private Dictionary<string, Sound> lookUp = new();
 
-
+        /*
 #if UNITY_EDITOR
         private void OnValidate()
         {
@@ -34,7 +34,6 @@ namespace WolfheatProductions.SoundMaster
             }
         }
 #endif
-
 
         public void GenerateLookup()
         {
@@ -54,6 +53,7 @@ namespace WolfheatProductions.SoundMaster
 
             return lookUp.ContainsKey(guid) ? lookUp[guid] : new Sound();
         }
+        */
 
         public Sound GetSound(SoundName enumName) => sounds.Find(x => x.name == enumName.ToString());
     }
@@ -61,19 +61,20 @@ namespace WolfheatProductions.SoundMaster
     [Serializable]
     public class Sound
     {
-        [HideInInspector] public string guid;
-        [Header("Enum")]
+        //[HideInInspector] public string guid;
+        //[Header("Enum")]
         public string name;
 
-        [Header("Audio Clips")]
+        //[Header("Audio Clips")]
         public AudioClip[] clips;
 
-        [Header("Settings")]
+        //[Header("Settings")]
         [UnityEngine.Range(0f, 1f)]
         public float volume = 1f;
         [UnityEngine.Range(0.8f, 1.2f)]
         public float pitch = 1f;
 
+        /*
 #if UNITY_EDITOR
 
         public void SetNewGUID() => guid = System.Guid.NewGuid().ToString();
@@ -84,6 +85,7 @@ namespace WolfheatProductions.SoundMaster
         }
 
 #endif
+        */
     }
 
 

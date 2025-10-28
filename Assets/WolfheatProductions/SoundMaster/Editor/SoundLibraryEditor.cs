@@ -11,11 +11,7 @@ public class SoundLibraryEditor : Editor
     {
         DrawDefaultInspector();
 
-        SoundLibrary bank = (SoundLibrary)target;
-
-        if (GUILayout.Button("Generate Sound Code")) {
-            GenerateEnumAndLookup(bank);
-        }
+        SoundLibrary bank = (SoundLibrary)target;        
     }
     string GetCurrentFileName([System.Runtime.CompilerServices.CallerFilePath] string fileName = null) { return fileName; }
 
@@ -60,6 +56,7 @@ public class SoundLibraryEditor : Editor
         lookupBuilder.AppendLine("    public static readonly Dictionary<"+enumName+", string> IdToGuid = new()");
         lookupBuilder.AppendLine("    {");
 
+            /*
         foreach (var entry in bank.Sounds) {
             if (entry.clips.Length == 0) continue;
 #if UNITY_EDITOR
@@ -69,6 +66,7 @@ public class SoundLibraryEditor : Editor
             enumBuilder.AppendLine($"    {safeName},");
             lookupBuilder.AppendLine($"        {{ {enumName}.{safeName}, \"{entry.guid}\" }},");
         }
+            */
 
         enumBuilder.AppendLine("}");
         lookupBuilder.AppendLine("    };");

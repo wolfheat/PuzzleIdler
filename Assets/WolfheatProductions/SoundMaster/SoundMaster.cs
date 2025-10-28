@@ -122,7 +122,8 @@ namespace WolfheatProductions.SoundMaster
 			musicAudioSource.clip = clip;
 			musicAudioSource.volume = sound.volume;
 			musicAudioSource.pitch = sound.pitch;
-            musicAudioSource.Play();
+			musicAudioSource.loop = true;
+			musicAudioSource.Play();
         }
 
         // Using Enum to get the same String by name
